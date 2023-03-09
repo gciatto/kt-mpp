@@ -3,23 +3,34 @@ dokka = "1.8.10"
 konf = "1.1.2"
 kotest = "5.5.5"
 kotlin = "1.8.10"
+ktlint = "11.3.1"
+detekt = "1.22.0"
 
 [libraries]
 classgraph = "io.github.classgraph:classgraph:4.8.156"
+detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
 konf-yaml = { module = "com.uchuhimo:konf-yaml", version.ref = "konf" }
 kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
+npmPublish = "dev.petuska:npm-publish-gradle-plugin:3.2.1"
 
 [bundles]
 kotlin-testing = [ "kotest-junit5-jvm", "kotest-assertions-core-jvm" ]
 
 [plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 gitSemVer = "org.danilopianini.git-sensitive-semantic-versioning:1.1.4"
 gradlePluginPublish = "com.gradle.plugin-publish:1.1.0"
 jacoco-testkit = "pl.droidsonroids.jacoco.testkit:1.0.9"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.29.2"
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+ktlint-idea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
 multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.4.19"
 publishOnCentral = "org.danilopianini.publish-on-central:3.4.0"
 taskTree = "com.dorongold.task-tree:2.1.1"

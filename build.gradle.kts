@@ -20,15 +20,15 @@ plugins {
 /*
  * Project information
  */
-group = "org.danilopianini"
-description = "A template repository for kickstarting Gradle Plugins"
+group = "io.gciatto"
+description = "Kotlin multi-platform and multi-project configurations plugin for Gradle "
 inner class ProjectInfo {
-    val longName = "Template for Gradle Plugins"
-    val website = "https://github.com/DanySK/$name"
+    val longName = "Advanced Kotlin multi-platform plugin for Gradle Plugins"
+    val website = "https://github.com/gciatto/$name"
     val vcsUrl = "$website.git"
     val scm = "scm:git:$website.git"
     val pluginImplementationClass = "$group.template.HelloGradle"
-    val tags = listOf("template", "kickstart", "example")
+    val tags = listOf("kotlin", "multi-platform", "dokka", "maven", "detekt", "kt-lint", "plugin")
 }
 val info = ProjectInfo()
 
@@ -37,10 +37,12 @@ gitSemVer {
 }
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
 }
 
 multiJvm {
+    jvmVersionForCompilation.set(11)
     maximumSupportedJvmVersion.set(latestJavaSupportedByGradle)
 }
 
@@ -48,6 +50,12 @@ dependencies {
     api(gradleApi())
     api(gradleKotlinDsl())
     api(kotlin("stdlib-jdk8"))
+    implementation(libs.kotlin.bom)
+    implementation(libs.kotlin.gradlePlugin)
+    implementation(libs.npmPublish)
+    implementation(libs.dokka)
+    implementation(libs.ktlint)
+    implementation(libs.detekt)
     testImplementation(gradleTestKit())
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)
@@ -114,8 +122,8 @@ publishOnCentral {
     projectDescription.set(description ?: TODO("Missing description"))
     projectUrl.set(info.website)
     scmConnection.set(info.scm)
-    repository("https://maven.pkg.github.com/DanySK/${rootProject.name}".lowercase(), name = "github") {
-        user.set("danysk")
+    repository("https://maven.pkg.github.com/gciatto/${rootProject.name}".lowercase(), name = "github") {
+        user.set("gciatto")
         password.set(System.getenv("GITHUB_TOKEN"))
     }
     publishing {
@@ -124,9 +132,9 @@ publishOnCentral {
                 pom {
                     developers {
                         developer {
-                            name.set("Danilo Pianini")
-                            email.set("danilo.pianini@gmail.com")
-                            url.set("http://www.danilopianini.org/")
+                            name.set("Giovanni Ciatto")
+                            email.set("giovanni.ciatto@gmail.com")
+                            url.set("https://www.about.me/gciatto")
                         }
                     }
                 }

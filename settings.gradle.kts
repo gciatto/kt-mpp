@@ -20,4 +20,4 @@ gitHooks {
     createHooks(true)
 }
 
-rootProject.name = "Template-for-Gradle-Plugins"
+rootProject.name = "kt-mpp"
