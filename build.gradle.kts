@@ -21,14 +21,14 @@ plugins {
  * Project information
  */
 group = "io.gciatto"
-description = "Kotlin multi-platform and multi-project configurations plugin for Gradle "
+description = "Kotlin multi-platform and multi-project configurations plugin for Gradle"
 inner class ProjectInfo {
     val longName = "Advanced Kotlin multi-platform plugin for Gradle Plugins"
     val website = "https://github.com/gciatto/$name"
     val vcsUrl = "$website.git"
     val scm = "scm:git:$website.git"
-    val pluginImplementationClass = "$group.template.HelloGradle"
-    val tags = listOf("kotlin", "multi-platform", "dokka", "maven", "detekt", "kt-lint", "plugin")
+    val pluginImplementationClass = "$group.kt.mpp"
+    val tags = listOf("kotlin", "multi-platform")
 }
 val info = ProjectInfo()
 
@@ -147,12 +147,47 @@ gradlePlugin {
     plugins {
         website.set(info.website)
         vcsUrl.set(info.vcsUrl)
-        create("") {
-            id = "$group.${project.name}"
-            displayName = info.longName
-            description = project.description
-            implementationClass = info.pluginImplementationClass
-            tags.set(info.tags)
+
+        fun innerPlugin(
+            name: String,
+            confName: String = name,
+            descr: String,
+            klass: String,
+            vararg moreTags: String
+        ) = create("kotlin-$name") {
+            id = "$group.${project.name}.$name"
+            displayName = "Default $confName configuration for Kotlin multi-platform projects"
+            description = "${project.description}: $descr"
+            implementationClass = "${info.pluginImplementationClass}.$klass"
+            tags.set(info.tags + listOf(*moreTags))
         }
+
+        innerPlugin(
+            name = "bug-finder",
+            descr = "bug-finder (currently, Detekt)",
+            klass = "KotlinBugFinder",
+            moreTags = arrayOf("bug-finder", "detekt")
+        )
+
+        innerPlugin(
+            name = "doc",
+            descr = "documentation generator (currently, Dokka)",
+            klass = "KotlinDoc",
+            moreTags = arrayOf("doc", "dokka")
+        )
+
+        innerPlugin(
+            name = "linter",
+            descr = "linter (currently, KtLint)",
+            klass = "KotlinLinter",
+            moreTags = arrayOf("linter", "ktlint")
+        )
+
+        innerPlugin(
+            name = "maven",
+            descr = "maven publication",
+            klass = "PublishOnMaven",
+            moreTags = arrayOf("maven")
+        )
     }
 }
