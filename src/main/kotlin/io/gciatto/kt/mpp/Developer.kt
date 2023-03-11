@@ -1,6 +1,7 @@
-import Organization.Companion.getOrg
+package io.gciatto.kt.mpp
+
+import io.gciatto.kt.mpp.Organization.Companion.getOrg
 import org.gradle.api.Project
-import org.gradle.api.publish.maven.MavenPomDeveloper
 import org.gradle.api.publish.maven.MavenPomDeveloperSpec
 
 data class Developer(val name: String, val url: String?, val email: String?, val org: Organization?) {
@@ -10,6 +11,11 @@ data class Developer(val name: String, val url: String?, val email: String?, val
         "url" to url,
         "email" to email,
     )
+
+    override fun toString(): String =
+        name + (email?.let { " <$email>" } ?: "") +
+                (url?.let { " (homepage: $url)" } ?: "") +
+                (org?.let { " @ $org" } ?: "")
 
     fun applyTo(maven: MavenPomDeveloperSpec) {
         maven.developer { dev ->

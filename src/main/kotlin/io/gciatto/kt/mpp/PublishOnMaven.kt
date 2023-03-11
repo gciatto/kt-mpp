@@ -1,6 +1,6 @@
 package io.gciatto.kt.mpp
 
-import Developer.Companion.getAllDevs
+import io.gciatto.kt.mpp.Developer.Companion.getAllDevs
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
@@ -12,6 +12,7 @@ import org.gradle.plugins.signing.SigningExtension
 
 class PublishOnMaven : AbstractProjectPlugin() {
 
+    @Suppress("MemberVisibilityCanBePrivate")
     lateinit var publishableClassifiers: DomainObjectSet<String>
 
     private fun Project.configureMavenRepository() {
@@ -26,6 +27,11 @@ class PublishOnMaven : AbstractProjectPlugin() {
                             it.username = mavenUsername
                             it.password = mavenPassword
                         }
+                        log("configure Maven repository ${maven.name} " +
+                                "(URL: ${maven.url}, username: ${maven.credentials.username}, " +
+                                "password: ${"".padEnd(maven.credentials.password?.length ?: 0, '*')})")
+                    } else {
+                        log("configure Maven repository ${maven.name} with no credentials")
                     }
                 }
             }
@@ -40,10 +46,15 @@ class PublishOnMaven : AbstractProjectPlugin() {
                 if (arrayOf(signingKey, signingPassword).none { it.isNullOrBlank() }) {
                     useInMemoryPgpKeys(signingKey, signingPassword)
                     sign(publications)
+                    log("configure signing for publications: ${publications.names.joinToString()}")
+                } else {
+                    log("one property in {signingKey, signingPassword} is unset, " +
+                            "hence Maven publications won't be signed")
                 }
                 val signAll = project.tasks.create("signAllPublications")
                 project.tasks.withType(Sign::class.java) {
-                    signAll.dependsOn(this)
+                    signAll.dependsOn(it)
+                    log("create signAllPublications tasks depending on ${it.path}")
                 }
             }
         }
@@ -71,30 +82,55 @@ class PublishOnMaven : AbstractProjectPlugin() {
             afterEvaluate { project ->
                 publications.withType(MavenPublication::class.java) { pub ->
                     pub.groupId = project.group.toString()
+                    log("set groupId of publication ${pub.name}: ${pub.groupId}")
                     pub.version = project.version.toString()
+                    log("set version of publication ${pub.name}: ${pub.version}")
                     project.tasks.withType(Jar::class.java) {
                         if ("Html" in name && it.archiveClassifier.getOrElse("") in publishableClassifiers) {
                             pub.artifact(it)
+                            log("add artifact to publication ${pub.name}: ${it.archiveFileName.get()}")
                         }
                     }
                     pub.pom { pom ->
-                        pom.name.set(getOptionalProperty("projectLongName"))
-                        pom.description.set(getOptionalProperty("projectDescription"))
-                        pom.url.set(getOptionalProperty("projectHomepage"))
+                        getOptionalProperty("projectLongName")?.let {
+                            pom.name.set(it)
+                            log("set POM name in publication ${pub.name}: $it")
+                        } ?: log("property projectLongName unset")
+                        getOptionalProperty("projectDescription")?.let {
+                            pom.description.set(it)
+                            log("set POM description in publication ${pub.name}: $it")
+                        } ?: log("property projectDescription unset")
+                        getOptionalProperty("projectHomepage")?.let {
+                            pom.url.set(it)
+                            log("set POM URL in publication ${pub.name}: $it")
+                        } ?: log("property projectHomepage unset")
                         pom.licenses { licenses ->
-                            licenses.license {
-                                it.name.set(getOptionalProperty("projectLicense"))
-                                it.url.set(getOptionalProperty("projectLicenseUrl"))
+                            licenses.license { license ->
+                                getOptionalProperty("projectLicense")?.let {
+                                    license.name.set(it)
+                                    log("add POM license in publication ${pub.name}: $it")
+                                } ?: log("property projectLicense unset")
+                                getOptionalProperty("projectLicenseUrl")?.let {
+                                    license.url.set(it)
+                                    log("add POM license URL in publication ${pub.name}: $it")
+                                } ?: log("property projectLicenseUrl unset")
                             }
                         }
                         pom.developers { devs ->
                             for (dev in project.getAllDevs()) {
                                 dev.applyTo(devs)
+                                log("add POM developer publication ${pub.name}: $dev")
                             }
                         }
-                        pom.scm {
-                            it.connection.set(getOptionalProperty("scmConnection"))
-                            it.url.set(getOptionalProperty("scmUrl"))
+                        pom.scm { scm ->
+                            getOptionalProperty("scmConnection")?.let {
+                                scm.connection.set(it)
+                                log("add POM SCM connection in publication ${pub.name}: $it")
+                            } ?: log("property scmConnection unset")
+                            getOptionalProperty("scmUrl")?.let {
+                                scm.url.set(it)
+                                log("add POM SCM URL in publication ${pub.name}: $it")
+                            } ?: log("property scmUrl unset")
                         }
                     }
                 }

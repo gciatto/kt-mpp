@@ -189,5 +189,12 @@ gradlePlugin {
             klass = "PublishOnMaven",
             moreTags = arrayOf("maven")
         )
+
+        innesPlugin(
+            name = "print-versions",
+            descr = "version revealer",
+            klass = "PrintVersions",
+            moreTags = arrayOf("version")
+        )
     }
 }
