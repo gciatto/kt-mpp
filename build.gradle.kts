@@ -184,13 +184,20 @@ gradlePlugin {
         )
 
         innerPlugin(
-            name = "maven",
+            name = "maven-publish",
             descr = "maven publication",
             klass = "PublishOnMaven",
             moreTags = arrayOf("maven")
         )
 
-        innesPlugin(
+        innerPlugin(
+            name = "npm-publish",
+            descr = "npm publication",
+            klass = "PublishOnNpm",
+            moreTags = arrayOf("npm")
+        )
+
+        innerPlugin(
             name = "print-versions",
             descr = "version revealer",
             klass = "PrintVersions",

@@ -13,5 +13,6 @@ class PrintVersions : AbstractProjectPlugin() {
             it.group = versioning
             it.doLast { println(project.npmCompliantVersion) }
         }
+        log("apply print-versions plugin")
     }
 }
