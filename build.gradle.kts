@@ -154,7 +154,7 @@ gradlePlugin {
             descr: String,
             klass: String,
             vararg moreTags: String
-        ) = create("kotlin-$name") {
+        ) = create(name) {
             id = "$group.${project.name}.$name"
             displayName = "Default $confName configuration for Kotlin multi-platform projects"
             description = "${project.description}: $descr"
@@ -163,21 +163,21 @@ gradlePlugin {
         }
 
         innerPlugin(
-            name = "bug-finder",
+            name = "kotlin-bug-finder",
             descr = "bug-finder (currently, Detekt)",
             klass = "KotlinBugFinder",
             moreTags = arrayOf("bug-finder", "detekt")
         )
 
         innerPlugin(
-            name = "doc",
+            name = "kotlin-doc",
             descr = "documentation generator (currently, Dokka)",
             klass = "KotlinDoc",
             moreTags = arrayOf("doc", "dokka")
         )
 
         innerPlugin(
-            name = "linter",
+            name = "kotlin-linter",
             descr = "linter (currently, KtLint)",
             klass = "KotlinLinter",
             moreTags = arrayOf("linter", "ktlint")
@@ -202,6 +202,13 @@ gradlePlugin {
             descr = "version revealer",
             klass = "PrintVersions",
             moreTags = arrayOf("version")
+        )
+
+        innerPlugin(
+            name = "koltin-js-only",
+            descr = "JS only project configuration",
+            klass = "KotlinJsOnly",
+            moreTags = arrayOf("js")
         )
     }
 }
