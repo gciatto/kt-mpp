@@ -23,4 +23,6 @@ val defaultJsProject: ProjectConfiguration = buildSet {
     addAll(baseProject)
 }
 
-val defaultOtherProject: ProjectConfiguration = emptySet()
+val defaultOtherProject: ProjectConfiguration = buildSet {
+    add(Plugins.versions)
+}
