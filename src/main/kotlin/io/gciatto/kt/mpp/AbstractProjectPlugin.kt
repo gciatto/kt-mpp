@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionContainer
+import kotlin.reflect.KClass
 
 abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun Project.log(message: String, logLevel: LogLevel = LogLevel.LIFECYCLE) {
@@ -16,11 +17,11 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     final override fun apply(target: Project) =
         target.applyThisPlugin()
 
-    protected inline fun <reified T : Plugin<Project>> Project.apply(): T =
-        plugins.apply(T::class.java)
+    protected fun <T : Plugin<Project>> Project.apply(klass: KClass<T>): T =
+        plugins.apply(klass.java)
 
-    protected inline fun <reified T> Project.configure(action: T.() -> Unit) {
-        extensions.getByType(T::class.java).run(action)
+    protected fun <T : Any> Project.configure(klass: KClass<T>, action: T.() -> Unit) {
+        extensions.getByType(klass.java).run(action)
     }
 
     protected fun Project.getProperty(name: String): String =
@@ -40,8 +41,11 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     protected val Project.isRootProject
         get() = this == rootProject
 
-    protected inline fun <reified T> ExtensionContainer.create(name: String, vararg constructorArguments: Any): T =
-        create(name, T::class.java, *constructorArguments)
+    protected fun <T : Any> ExtensionContainer.create(
+        name: String,
+        klass: KClass<T>,
+        vararg constructorArguments: Any
+    ): T = create(name, klass.java, *constructorArguments)
 
-    protected inline fun <reified T> ExtensionContainer.getByType(): T = getByType(T::class.java)
+    protected fun <T : Any> ExtensionContainer.getByType(klass: KClass<T>): T = getByType(klass.java)
 }

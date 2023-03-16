@@ -22,7 +22,7 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             addMainDependencies(target = "jdk8")
             addTestDependencies(target = "junit")
         }
-        configure<JavaPluginExtension> {
+        configure(JavaPluginExtension::class) {
             withSourcesJar()
             log("configure JVM library to include sources JAR")
         }

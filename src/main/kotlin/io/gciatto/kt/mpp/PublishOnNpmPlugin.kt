@@ -9,9 +9,9 @@ import org.gradle.api.logging.LogLevel
 class PublishOnNpmPlugin : AbstractProjectPlugin() {
     @Suppress("CyclomaticComplexMethod")
     override fun Project.applyThisPlugin() {
-        val npmPublish = apply<NpmPublishPlugin>()
+        val npmPublish = apply(NpmPublishPlugin::class)
         log("apply ${npmPublish::class.java.name} plugin")
-        configure<NpmPublishExtension> {
+        configure(NpmPublishExtension::class) {
             getOptionalProperty("npmOrganization")?.let {
                 organization.set(it)
             } ?: log("property npmOrganization unset", LogLevel.WARN)

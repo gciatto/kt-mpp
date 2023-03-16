@@ -14,7 +14,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         log("apply ${kotlinPlugin()} plugin")
         val ktTargetJvmDisable = getBooleanProperty("ktTargetJvmDisable")
         val ktTargetJsDisable = getBooleanProperty("ktTargetJsDisable")
-        configure<KotlinMultiplatformExtension> {
+        configure(KotlinMultiplatformExtension::class) {
             if (ktTargetJvmDisable) {
                 log("disable JVM target", LogLevel.WARN)
             } else {

@@ -8,10 +8,9 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 class LinterPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
-        apply<KtlintPlugin>()
-        apply<KtlintIdeaPlugin>()
-
-        configure<KtlintExtension> {
+        apply(KtlintPlugin::class)
+        apply(KtlintIdeaPlugin::class)
+        configure(KtlintExtension::class) {
             // version.set("0.22.0")
             debug.set(false)
             verbose.set(true)
@@ -20,7 +19,6 @@ class LinterPlugin : AbstractProjectPlugin() {
             outputColorName.set("RED")
             ignoreFailures.set(false)
             enableExperimentalRules.set(true)
-
             reporters {
                 it.reporter(ReporterType.PLAIN)
                 it.reporter(ReporterType.CHECKSTYLE)

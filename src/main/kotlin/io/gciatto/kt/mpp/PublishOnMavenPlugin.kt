@@ -17,7 +17,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     lateinit var publishableClassifiers: DomainObjectSet<String>
 
     private fun Project.configureMavenRepository() {
-        configure<PublishingExtension> {
+        configure(PublishingExtension::class) {
             repositories { repos ->
                 repos.maven { maven ->
                     getOptionalProperty("mavenRepo")?.let {
@@ -46,8 +46,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.configureSigning() {
-        configure<PublishingExtension> {
-            configure<SigningExtension> {
+        configure(PublishingExtension::class) {
+            configure(SigningExtension::class) {
                 val signingKey: String? = getOptionalProperty("signingKey")
                 val signingPassword: String? = getOptionalProperty("signingPassword")
                 if (arrayOf(signingKey, signingPassword).none { it.isNullOrBlank() }) {
@@ -72,8 +72,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.addMissingPublications() {
-        configure<PublishingExtension> {
-            configure<SigningExtension> {
+        configure(PublishingExtension::class) {
+            configure(SigningExtension::class) {
                 plugins.withId("org.jetbrains.kotlin.jvm") {
                     publications.maybeCreate("jvm", MavenPublication::class.java).run {
                         from(components.getAt("java"))
@@ -92,7 +92,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     @Suppress("CyclomaticComplexMethod")
     private fun Project.lazilyConfigurePOM() {
-        configure<PublishingExtension> {
+        configure(PublishingExtension::class) {
             afterEvaluate { project ->
                 publications.withType(MavenPublication::class.java) { pub ->
                     pub.groupId = project.group.toString()

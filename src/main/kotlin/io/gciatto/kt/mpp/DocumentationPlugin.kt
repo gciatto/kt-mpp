@@ -18,7 +18,7 @@ class DocumentationPlugin : AbstractProjectPlugin() {
         }
     }
     override fun Project.applyThisPlugin() {
-        val dokka = apply<DokkaPlugin>()
+        val dokka = apply(DokkaPlugin::class)
         log("apply ${dokka::class.java.name} as doc generator")
         if (project == rootProject) {
             tasks.withType(DokkaMultiModuleTask::class.java) {

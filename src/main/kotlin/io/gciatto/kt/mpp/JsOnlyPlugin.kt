@@ -9,7 +9,7 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
-        configure<KotlinJsProjectExtension> {
+        configure(KotlinJsProjectExtension::class) {
             js {
                 useCommonJs()
                 log("configure kotlin js to use CommonJS")

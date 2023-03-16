@@ -68,31 +68,5 @@ fun PackageJson.person(developer: Developer): Person =
         it.url.set(developer.url)
     }
 
-fun Project.subprojects(names: Iterable<String>): Set<Project> {
-    return subprojects.filter { it.name in names }.toSet()
-}
-
-fun Project.subprojects(first: String, vararg others: String): Set<Project> {
-    val names = setOf(first, *others)
-    return subprojects(names)
-}
-
-fun Project.subprojects(names: Iterable<String>, except: Iterable<String> = emptySet(), action: Project.() -> Unit) {
-    rootProject.subprojects {
-        if (name.let { it in names && it !in except }) {
-            action()
-        }
-    }
-}
-
-fun Project.subprojects(names: Iterable<String>, except: String, action: Project.() -> Unit) {
-    subprojects(names, setOf(except), action)
-}
-
-fun Project.subprojects(first: String, vararg others: String, action: Project.() -> Unit) {
-    val names = setOf(first, *others)
-    subprojects(names, emptySet(), action)
-}
-
 val Provider<MinimalExternalModuleDependency>.version
     get() = this.get().versionConstraint.requiredVersion
