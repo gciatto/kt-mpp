@@ -8,6 +8,7 @@ import org.gradle.api.logging.LogLevel
 
 
 class PublishOnNpm : AbstractProjectPlugin() {
+    @Suppress("CyclomaticComplexMethod")
     override fun Project.applyThisPlugin() {
         val npmPublish = apply<NpmPublishPlugin>()
         log("apply ${npmPublish::class.java.name} plugin")

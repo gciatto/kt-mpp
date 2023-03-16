@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import java.util.Locale
 
-
+@Suppress("TooManyFunctions")
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
 
     companion object {
@@ -112,12 +112,18 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     context(Project)
-    protected fun KotlinDependencyHandler.addTestDependencies(target: String = targetName, skipAnnotations: Boolean = false) {
+    protected fun KotlinDependencyHandler.addTestDependencies(
+        target: String = targetName,
+        skipAnnotations: Boolean = false
+    ) {
         DependencyScope.of(this).addTestDependencies(target, skipAnnotations)
     }
 
     context(Project)
-    protected fun DependencyHandlerScope.addTestDependencies(target: String = targetName, skipAnnotations: Boolean = false) {
+    protected fun DependencyHandlerScope.addTestDependencies(
+        target: String = targetName,
+        skipAnnotations: Boolean = false
+    ) {
         DependencyScope.of(this).addTestDependencies(target, skipAnnotations)
     }
 

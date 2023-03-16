@@ -82,6 +82,7 @@ class PublishOnMaven : AbstractProjectPlugin() {
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun Project.lazilyConfigurePOM() {
         configure<PublishingExtension> {
             afterEvaluate { project ->

@@ -7,7 +7,7 @@ import org.gradle.api.logging.LogLevel
 
 abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun Project.log(message: String, logLevel: LogLevel = LogLevel.LIFECYCLE) {
-        logger.log(logLevel, "${name}: $message")
+        logger.log(logLevel, "$name: $message")
     }
 
     protected abstract fun Project.applyThisPlugin()

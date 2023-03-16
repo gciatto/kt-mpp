@@ -106,6 +106,11 @@ tasks.withType<Test>().configureEach {
     }
 }
 
+detekt {
+    config.from(".detekt-config.yml")
+    buildUponDefaultConfig = true
+}
+
 signing {
     if (System.getenv()["CI"].equals("true", ignoreCase = true)) {
         val signingKey: String? by project
