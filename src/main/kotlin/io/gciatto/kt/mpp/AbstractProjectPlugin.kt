@@ -4,6 +4,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.plugins.ExtensionContainer
 
 abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun Project.log(message: String, logLevel: LogLevel = LogLevel.LIFECYCLE) {
@@ -35,4 +36,12 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         path.split(":").let {
             it.subList(0, it.lastIndex) + name
         }.joinToString(":")
+
+    protected val Project.isRootProject
+        get() = this == rootProject
+
+    protected inline fun <reified T> ExtensionContainer.create(name: String, vararg constructorArguments: Any): T =
+        create(name, T::class.java, *constructorArguments)
+
+    protected inline fun <reified T> ExtensionContainer.getByType(): T = getByType(T::class.java)
 }

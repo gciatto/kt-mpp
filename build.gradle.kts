@@ -229,5 +229,12 @@ gradlePlugin {
             klass = "KotlinMultiplatform",
             moreTags = arrayOf("multiplatform")
         )
+
+        innerPlugin(
+            name = "multi-platform-multi-project",
+            descr = "multi-platform & multi-project utilities",
+            klass = "MultiPlatformMultiProject",
+            moreTags = arrayOf()
+        )
     }
 }

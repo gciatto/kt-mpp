@@ -30,7 +30,7 @@ fun Project.jvmVersion(provider: Provider<String>) {
     }
     tasks.withType<KotlinCompile> {
         kotlinOptions {
-            logger.log(LogLevel.LIFECYCLE, "${rootProject.name} set ${path}.jvmTarget=$version")
+            logger.log(LogLevel.LIFECYCLE, "${rootProject.name} set $path.jvmTarget=$version")
             jvmTarget = version.toString()
         }
     }
@@ -92,15 +92,6 @@ fun Project.subprojects(names: Iterable<String>, except: String, action: Project
 fun Project.subprojects(first: String, vararg others: String, action: Project.() -> Unit) {
     val names = setOf(first, *others)
     subprojects(names, emptySet(), action)
-}
-
-fun Iterable<Project>.except(names: Iterable<String>): Set<Project> {
-    return filter { it.name !in names }.toSet()
-}
-
-fun Iterable<Project>.except(first: String, vararg others: String): Set<Project> {
-    val names = setOf(first, *others)
-    return except(names)
 }
 
 val Provider<MinimalExternalModuleDependency>.version
