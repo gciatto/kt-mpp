@@ -1,6 +1,7 @@
 @file:Suppress("OPT_IN_USAGE")
 
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -30,6 +31,7 @@ inner class ProjectInfo {
     val pluginImplementationClass = "$group.kt.mpp"
     val tags = listOf("kotlin", "multi-platform")
 }
+
 val info = ProjectInfo()
 
 gitSemVer {
@@ -148,11 +150,27 @@ publishOnCentral {
     }
 }
 
+class PluginDescriptor(val name: String, val fullClass: String) {
+    val simpleClass: String
+        get() = fullClass.split(".").last()
+
+    val simpleName: String
+        get() = name.split(".").last()
+
+    val kotlinId: String
+        get() = simpleName.split("-")
+            .mapIndexed { i, s -> if (i > 0) s.capitalized() else s }
+            .joinToString("")
+
+    fun generateKotlinMethod(): String =
+        "val $kotlinId = PluginDescriptor(\"$name\", $simpleClass::class)\n"
+}
+
 gradlePlugin {
     plugins {
         website.set(info.website)
         vcsUrl.set(info.vcsUrl)
-
+        val pluginsClasses = mutableSetOf<PluginDescriptor>()
         fun innerPlugin(
             name: String,
             confName: String = name,
@@ -165,6 +183,7 @@ gradlePlugin {
             description = "${project.description}: $descr"
             implementationClass = "${info.pluginImplementationClass}.$klass"
             tags.set(info.tags + listOf(*moreTags))
+            pluginsClasses += PluginDescriptor(id, implementationClass)
         }
 
         innerPlugin(
@@ -210,21 +229,21 @@ gradlePlugin {
         )
 
         innerPlugin(
-            name = "koltin-js-only",
+            name = "kotlin-js-only",
             descr = "JS only project configuration",
             klass = "KotlinJsOnly",
             moreTags = arrayOf("js")
         )
 
         innerPlugin(
-            name = "koltin-jvm-only",
+            name = "kotlin-jvm-only",
             descr = "JVM only project configuration",
             klass = "KotlinJvmOnly",
             moreTags = arrayOf("jvm")
         )
 
         innerPlugin(
-            name = "koltin-mpp",
+            name = "kotlin-mpp",
             descr = "multi-platform project configuration",
             klass = "KotlinMultiplatform",
             moreTags = arrayOf("multiplatform")
@@ -236,5 +255,23 @@ gradlePlugin {
             klass = "MultiPlatformMultiProject",
             moreTags = arrayOf()
         )
+
+        tasks.create("generatePluginsInfo") {
+            group = "build"
+            val targetFile = file("src/main/kotlin/io/gciatto/kt/mpp/Plugins.kt")
+            outputs.file(targetFile)
+            doLast {
+                @Suppress("ktlint")
+                val text = "@file:Suppress(\"MaxLineLength\")\n" +
+                    "package io.gciatto.kt.mpp\n\n" +
+                    "object Plugins {\n" +
+                    "    /* ktlint-disable */\n" +
+                    pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
+                    "    /* ktlint-enable */\n" +
+                    "}\n"
+                targetFile.writeText(text)
+            }
+            tasks.getByName("compileKotlin").dependsOn(this)
+        }
     }
 }

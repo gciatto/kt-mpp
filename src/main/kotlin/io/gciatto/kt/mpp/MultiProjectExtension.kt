@@ -1,6 +1,7 @@
 package io.gciatto.kt.mpp
 
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 
 enum class ProjectType {
     KOTLIN, JVM, JS, OTHER
@@ -40,6 +41,16 @@ sealed interface MutableMultiProjectExtension : MultiProjectExtension {
     fun jsProjects(identifier: String, vararg other: String)
 
     fun otherProjects(identifier: String, vararg other: String)
+
+    var ktProjectTemplate: ProjectConfiguration
+
+    var jvmProjectTemplate: ProjectConfiguration
+
+    var jsProjectTemplate: ProjectConfiguration
+
+    var otherProjectTemplate: ProjectConfiguration
+
+    fun applyProjectTemplates()
 }
 
 internal class RootMultiProjectExtension(project: Project) : MutableMultiProjectExtension {
@@ -123,6 +134,26 @@ internal class RootMultiProjectExtension(project: Project) : MutableMultiProject
 
     private fun selectProjectByNameOrPath(identifier: String): Project? =
         rootProject.allProjects.filter { it.name == identifier || it.path == identifier }.firstOrNull()
+
+    override var ktProjectTemplate: ProjectConfiguration = defaultKtProject
+
+    override var jvmProjectTemplate: ProjectConfiguration = defaultJvmProject
+
+    override var jsProjectTemplate: ProjectConfiguration = defaultJsProject
+
+    override var otherProjectTemplate: ProjectConfiguration = defaultOtherProject
+
+    override fun applyProjectTemplates() {
+        val projectSets = listOf(ktProjects, jvmProjects, jsProjects, otherProjects)
+        val projectTemplates = listOf(ktProjectTemplate, jvmProjectTemplate, jsProjectTemplate, otherProjectTemplate)
+        for ((projectSet, template) in projectSets.zip(projectTemplates)) {
+            for (project in projectSet) {
+                for (plugin in template) {
+                    project.apply(plugin = plugin.name)
+                }
+            }
+        }
+    }
 
     companion object {
         private val Project.allProjects: Sequence<Project>

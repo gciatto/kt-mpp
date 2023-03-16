@@ -4,7 +4,7 @@ import org.gradle.api.Project
 
 class MultiPlatformMultiProject : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
-        val extension: MultiProjectExtension = if (isRootProject) {
+        if (isRootProject) {
             extensions.create<RootMultiProjectExtension>("multiPlatformMultiProject", this)
         } else {
             val rootExtension = rootProject.extensions.getByType<MutableMultiProjectExtension>()
