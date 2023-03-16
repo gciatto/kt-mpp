@@ -8,6 +8,8 @@ enum class ProjectType {
 }
 
 sealed interface MultiProjectExtension {
+    val defaultProjectType: ProjectType
+
     val ktProjects: Set<Project>
 
     val jvmProjects: Set<Project>
@@ -26,6 +28,8 @@ sealed interface MultiProjectExtension {
 }
 
 sealed interface MutableMultiProjectExtension : MultiProjectExtension {
+    override var defaultProjectType: ProjectType
+
     override var ktProjects: Set<Project>
 
     override var jvmProjects: Set<Project>
@@ -57,7 +61,7 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
 
     private val rootProject: Project = project.rootProject
 
-    var defaultProjectType: ProjectType = ProjectType.KOTLIN
+    override var defaultProjectType: ProjectType = ProjectType.KOTLIN
 
     private var ktProjectsCache: Set<Project>? = null
 
