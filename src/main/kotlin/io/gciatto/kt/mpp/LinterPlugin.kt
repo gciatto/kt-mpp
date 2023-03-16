@@ -6,7 +6,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintIdeaPlugin
 import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
-class KotlinLinter : AbstractProjectPlugin() {
+class LinterPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         apply<KtlintPlugin>()
         apply<KtlintIdeaPlugin>()

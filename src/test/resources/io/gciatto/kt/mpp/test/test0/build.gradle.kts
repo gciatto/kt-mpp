@@ -1,5 +1,5 @@
 plugins {
-    id("org.danilopianini.Template-for-Gradle-Plugins")
+    id("io.gciatto.kt-mpp.kotlin-mpp")
 }
 hello {
     author.set("Danilo Pianini")

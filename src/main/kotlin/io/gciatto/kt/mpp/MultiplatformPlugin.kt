@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
-class KotlinMultiplatform : AbstractKotlinProjectPlugin("multiplatform") {
+class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")

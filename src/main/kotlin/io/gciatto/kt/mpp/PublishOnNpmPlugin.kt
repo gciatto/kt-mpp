@@ -6,8 +6,7 @@ import dev.petuska.npm.publish.extension.NpmPublishExtension
 import io.gciatto.kt.mpp.Developer.Companion.getAllDevs
 import org.gradle.api.logging.LogLevel
 
-
-class PublishOnNpm : AbstractProjectPlugin() {
+class PublishOnNpmPlugin : AbstractProjectPlugin() {
     @Suppress("CyclomaticComplexMethod")
     override fun Project.applyThisPlugin() {
         val npmPublish = apply<NpmPublishPlugin>()
@@ -23,8 +22,11 @@ class PublishOnNpm : AbstractProjectPlugin() {
             getBooleanProperty("npmDryRun").let {
                 dry.set(it)
                 if (it) {
-                    log("dry-run mode for ${npmPublish::class.java.name} plugin" +
-                            ": no package will actually be release on NPM!", LogLevel.WARN)
+                    log(
+                        "dry-run mode for ${npmPublish::class.java.name} plugin" +
+                            ": no package will actually be release on NPM!",
+                        LogLevel.WARN
+                    )
                 }
             }
             registries { registries ->

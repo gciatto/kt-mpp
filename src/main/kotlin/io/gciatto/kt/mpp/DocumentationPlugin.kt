@@ -8,7 +8,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
 
-class KotlinDoc : AbstractProjectPlugin() {
+class DocumentationPlugin : AbstractProjectPlugin() {
     private inline fun <reified A : Zip> Project.createJavadocArchiveTask(dependingOn: AbstractDokkaTask): A {
         return tasks.create("${dependingOn.name}${A::class.simpleName}", A::class.java) {
             it.group = "documentation"

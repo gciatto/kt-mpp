@@ -4,7 +4,7 @@ import io.gitlab.arturbosch.detekt.DetektPlugin
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Project
 
-class KotlinBugFinder : AbstractProjectPlugin() {
+class BugFinderPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val detekt = apply<DetektPlugin>()
         log("apply ${detekt::class.java.name} as bug finder")

@@ -187,72 +187,72 @@ gradlePlugin {
         }
 
         innerPlugin(
-            name = "kotlin-bug-finder",
+            name = "bug-finder",
             descr = "bug-finder (currently, Detekt)",
-            klass = "KotlinBugFinder",
+            klass = "BugFinderPlugin",
             moreTags = arrayOf("bug-finder", "detekt")
         )
 
         innerPlugin(
-            name = "kotlin-doc",
+            name = "documentation",
             descr = "documentation generator (currently, Dokka)",
-            klass = "KotlinDoc",
-            moreTags = arrayOf("doc", "dokka")
+            klass = "DocumentationPlugin",
+            moreTags = arrayOf("documentation", "dokka")
         )
 
         innerPlugin(
-            name = "kotlin-linter",
+            name = "linter",
             descr = "linter (currently, KtLint)",
-            klass = "KotlinLinter",
+            klass = "LinterPlugin",
             moreTags = arrayOf("linter", "ktlint")
         )
 
         innerPlugin(
             name = "maven-publish",
             descr = "maven publication",
-            klass = "PublishOnMaven",
+            klass = "PublishOnMavenPlugin",
             moreTags = arrayOf("maven")
         )
 
         innerPlugin(
             name = "npm-publish",
             descr = "npm publication",
-            klass = "PublishOnNpm",
+            klass = "PublishOnNpmPlugin",
             moreTags = arrayOf("npm")
         )
 
         innerPlugin(
-            name = "print-versions",
+            name = "versions",
             descr = "version revealer",
-            klass = "PrintVersions",
+            klass = "PrintVersionsPlugin",
             moreTags = arrayOf("version")
         )
 
         innerPlugin(
-            name = "kotlin-js-only",
+            name = "js-only",
             descr = "JS only project configuration",
-            klass = "KotlinJsOnly",
+            klass = "JsOnlyPlugin",
             moreTags = arrayOf("js")
         )
 
         innerPlugin(
-            name = "kotlin-jvm-only",
+            name = "jvm-only",
             descr = "JVM only project configuration",
-            klass = "KotlinJvmOnly",
+            klass = "JvmOnlyPlugin",
             moreTags = arrayOf("jvm")
         )
 
         innerPlugin(
-            name = "kotlin-mpp",
+            name = "multiplatform",
             descr = "multi-platform project configuration",
-            klass = "KotlinMultiplatform",
+            klass = "MultiplatformPlugin",
             moreTags = arrayOf("multiplatform")
         )
 
         innerPlugin(
-            name = "multi-platform-multi-project",
-            descr = "multi-platform & multi-project utilities",
-            klass = "MultiPlatformMultiProject",
+            name = "multi-project-helper",
+            descr = "multi-platform & multi-project helper plugin",
+            klass = "MultiProjectHelperPlugin",
             moreTags = arrayOf()
         )
 

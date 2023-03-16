@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 
-class KotlinJsOnly : AbstractKotlinProjectPlugin("js") {
+class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")

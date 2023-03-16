@@ -6,7 +6,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-class KotlinJvmOnly : AbstractKotlinProjectPlugin("jvm") {
+class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")

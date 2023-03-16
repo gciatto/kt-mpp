@@ -3,23 +3,23 @@ package io.gciatto.kt.mpp
 typealias ProjectConfiguration = Set<PluginDescriptor<*>>
 
 val baseProject: ProjectConfiguration = buildSet {
-    add(Plugins.kotlinDoc)
-    add(Plugins.kotlinLinter)
-    add(Plugins.kotlinBugFinder)
+    add(Plugins.documentation)
+    add(Plugins.linter)
+    add(Plugins.bugFinder)
 }
 
 val defaultKtProject: ProjectConfiguration = buildSet {
-    add(Plugins.kotlinMpp)
+    add(Plugins.multiplatform)
     addAll(baseProject)
 }
 
 val defaultJvmProject: ProjectConfiguration = buildSet {
-    add(Plugins.kotlinJvmOnly)
+    add(Plugins.jvmOnly)
     addAll(baseProject)
 }
 
 val defaultJsProject: ProjectConfiguration = buildSet {
-    add(Plugins.kotlinJsOnly)
+    add(Plugins.jsOnly)
     addAll(baseProject)
 }
 

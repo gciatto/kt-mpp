@@ -11,7 +11,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 
-class PublishOnMaven : AbstractProjectPlugin() {
+class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     @Suppress("MemberVisibilityCanBePrivate")
     lateinit var publishableClassifiers: DomainObjectSet<String>
@@ -30,9 +30,13 @@ class PublishOnMaven : AbstractProjectPlugin() {
                             it.username = mavenUsername
                             it.password = mavenPassword
                         }
-                        log("configure Maven repository ${maven.name} " +
+                        /* ktlint-disable */
+                        log(
+                            "configure Maven repository ${maven.name} " +
                                 "(URL: ${maven.url}, username: ${maven.credentials.username}, " +
-                                "password: ${"".padEnd(maven.credentials.password?.length ?: 0, '*')})")
+                                "password: ${"".padEnd(maven.credentials.password?.length ?: 0, '*')})"
+                        )
+                        /* ktlint-enable */
                     } else {
                         log("configure Maven repository ${maven.name} with no credentials", LogLevel.WARN)
                     }
@@ -51,8 +55,12 @@ class PublishOnMaven : AbstractProjectPlugin() {
                     sign(publications)
                     log("configure signing for publications: ${publications.names.joinToString()}")
                 } else {
-                    log("one property in {signingKey, signingPassword} is unset, " +
-                            "hence Maven publications won't be signed")
+                    /* ktlint-disable */
+                    log(
+                        "one property in {signingKey, signingPassword} is unset, " +
+                            "hence Maven publications won't be signed"
+                    )
+                    /* ktlint-enable */
                 }
                 val signAll = project.tasks.create("signAllPublications")
                 project.tasks.withType(Sign::class.java) {
