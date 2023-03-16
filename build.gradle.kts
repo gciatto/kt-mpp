@@ -210,5 +210,12 @@ gradlePlugin {
             klass = "KotlinJsOnly",
             moreTags = arrayOf("js")
         )
+
+        innerPlugin(
+            name = "koltin-jvm-only",
+            descr = "JVM only project configuration",
+            klass = "KotlinJvmOnly",
+            moreTags = arrayOf("jvm")
+        )
     }
 }

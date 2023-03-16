@@ -1,6 +1,5 @@
 package io.gciatto.kt.mpp
 
-import org.gradle.api.NamedDomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -28,4 +27,9 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected fun Project.getOptionalProperty(name: String): String? =
         findProperty(name)?.toString()
+
+    protected fun Task.sibling(name: String) =
+        path.split(":").let {
+            it.subList(0, it.lastIndex) + name
+        }.joinToString(":")
 }
