@@ -28,6 +28,9 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun Project.getOptionalProperty(name: String): String? =
         findProperty(name)?.toString()
 
+    protected fun Project.getBooleanProperty(name: String, default: Boolean = false): Boolean =
+        findProperty(name)?.toString()?.toBooleanStrictOrNull() ?: default
+
     protected fun Task.sibling(name: String) =
         path.split(":").let {
             it.subList(0, it.lastIndex) + name

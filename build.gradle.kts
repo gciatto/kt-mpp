@@ -77,7 +77,7 @@ kotlin {
         compilations.all {
             kotlinOptions {
                 allWarningsAsErrors = true
-                freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-receivers")
             }
         }
     }
@@ -216,6 +216,13 @@ gradlePlugin {
             descr = "JVM only project configuration",
             klass = "KotlinJvmOnly",
             moreTags = arrayOf("jvm")
+        )
+
+        innerPlugin(
+            name = "koltin-mpp",
+            descr = "multi-platform project configuration",
+            klass = "KotlinMultiplatform",
+            moreTags = arrayOf("multiplatform")
         )
     }
 }

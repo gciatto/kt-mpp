@@ -19,8 +19,12 @@ class PublishOnNpm : AbstractProjectPlugin() {
                 readme.set(it)
             }
             // bundleKotlinDependencies.set(true)
-            getOptionalProperty("npmDryRun").let {
-                dry.set(it?.toBoolean() ?: false)
+            getBooleanProperty("npmDryRun").let {
+                dry.set(it)
+                if (it) {
+                    log("dry-run mode for ${npmPublish::class.java.name} plugin" +
+                            ": no package will actually be release on NPM!", LogLevel.WARN)
+                }
             }
             registries { registries ->
                 registries.npmjs { npm ->
