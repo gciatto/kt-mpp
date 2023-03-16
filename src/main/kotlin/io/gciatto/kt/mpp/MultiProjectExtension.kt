@@ -53,7 +53,7 @@ sealed interface MutableMultiProjectExtension : MultiProjectExtension {
     fun applyProjectTemplates()
 }
 
-internal class RootMultiProjectExtension(project: Project) : MutableMultiProjectExtension {
+internal open class RootMultiProjectExtension(project: Project) : MutableMultiProjectExtension {
 
     private val rootProject: Project = project.rootProject
 
@@ -166,5 +166,5 @@ internal class RootMultiProjectExtension(project: Project) : MutableMultiProject
     }
 }
 
-internal class MultiProjectExtensionView(delegate: MultiProjectExtension) :
+internal open class MultiProjectExtensionView(delegate: MultiProjectExtension) :
     MultiProjectExtension by delegate
