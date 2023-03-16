@@ -1,0 +1,5 @@
+include("a")
+include("b")
+include("c")
+include("d")
+include("full")
