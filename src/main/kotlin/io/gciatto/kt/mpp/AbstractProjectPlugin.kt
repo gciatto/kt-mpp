@@ -27,9 +27,9 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     private fun Project.helpMessage(name: String, mandatory: Boolean): String {
         val result = StringBuilder()
         if (mandatory) {
-            result.append("Mandatory property $name is missing. What you can do:\n")
+            result.append("mandatory property $name is missing. What you can do:\n")
         } else {
-            result.append("Optional property $name is missing. This is not an issue, but here's what you can do:\n")
+            result.append("optional property $name is missing. This is not an issue, but here's what you can do:\n")
         }
         result.append("1. invoke Gradle with -P$name=<value> option;\n")
         result.append("2. invoke Gradle after setting ORG_GRADLE_PROJECT_$name=<value> environment variable;\n")
