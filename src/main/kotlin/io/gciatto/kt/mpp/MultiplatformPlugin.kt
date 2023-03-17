@@ -26,10 +26,10 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 js { configureJs() }
             }
             dependenciesFor("commonMain") {
-                addMainDependencies(project, "common")
+                addMainDependencies(project, "common", skipBom = false)
             }
             dependenciesFor("commonTest") {
-                addCommonTestDependencies(project)
+                addTestDependencies(project, "common", skipAnnotations = false)
             }
         }
     }

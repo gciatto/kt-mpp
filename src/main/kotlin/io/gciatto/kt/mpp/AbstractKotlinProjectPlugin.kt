@@ -1,6 +1,7 @@
 package io.gciatto.kt.mpp
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
@@ -58,14 +59,19 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         }
     }
 
+    private fun Any.toDependencyNotation(): String = when (this) {
+        is Dependency -> listOfNotNull(group, name, version).joinToString(":")
+        else -> toString()
+    }
+
     private fun DependencyScope.addMainDependencies(project: Project, target: String, skipBom: Boolean) {
         val kotlinStdlib = kotlin("stdlib-$target")
         api(kotlinStdlib)
-        project.log("add api dependency to $kotlinStdlib")
+        project.log("add api dependency to ${kotlinStdlib.toDependencyNotation()}")
         if (!skipBom) {
             val kotlinBom = kotlin("bom")
             implementation(kotlinBom)
-            project.log("add implementation dependency to $kotlinBom")
+            project.log("add implementation dependency to ${kotlinBom.toDependencyNotation()}")
         }
     }
 
@@ -81,27 +87,14 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         skipBom: Boolean = false
     ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
-    private fun DependencyScope.addCommonTestDependencies(project: Project, target: String) {
-        val testLib = kotlin("test-$target")
-        test(testLib)
-        project.log("add test dependency to $testLib")
-        val annotationsLib = kotlin("test-annotations-$target")
-        test(annotationsLib)
-        project.log("add test dependency to $annotationsLib")
-    }
-
-    protected fun KotlinDependencyHandler.addCommonTestDependencies(project: Project, target: String = "common") {
-        DependencyScope.of(this).addCommonTestDependencies(project, target)
-    }
-
     private fun DependencyScope.addTestDependencies(project: Project, target: String, skipAnnotations: Boolean) {
         val testLib = kotlin("test-$target")
         test(testLib)
-        project.log("add test dependency to $testLib")
+        project.log("add test dependency to ${testLib.toDependencyNotation()}")
         if (!skipAnnotations) {
             val annotationsLib = kotlin("test-annotations-$target")
             test(annotationsLib)
-            project.log("add test dependency to $annotationsLib")
+            project.log("add test dependency to ${annotationsLib.toDependencyNotation()}")
         }
     }
 
