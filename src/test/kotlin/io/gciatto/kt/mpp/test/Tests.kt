@@ -42,7 +42,13 @@ class Tests : StringSpec(
                 }
                 log.debug("Test has been copied into $testFolder and is ready to get executed")
                 test.description {
-                    File(testFolder.root, "gradle.properties").writeText(testkitProperties)
+                    File(testFolder.root, "gradle.properties").let {
+                        if (it.exists()) {
+                            it.appendText(testkitProperties)
+                        } else {
+                            it.writeText(testkitProperties)
+                        }
+                    }
                     val result = GradleRunner.create()
                         .withProjectDir(testFolder.root)
                         .withPluginClasspath()
