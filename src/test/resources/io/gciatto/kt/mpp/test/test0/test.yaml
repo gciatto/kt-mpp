@@ -1,7 +1,8 @@
 tests:
-  - description: "A greeting should get printed"
+  - description: "Root project should be multiplatform"
     configuration:
-      tasks: hello
+      tasks: ":tasks"
+      options: "--stacktrace"
     expectation:
-      output_contains: "Hello from Danilo Pianini"
-      success: hello
+      output_contains: Tasks runnable from root project 'test0'
+      success: ':tasks'

@@ -14,11 +14,13 @@ import java.util.Locale
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
 
     companion object {
-        private val SUPPORTED_TARGETS = setOf("jvm", "js")
+        private val SUPPORTED_TARGETS = setOf("jvm", "js", "multiplatform")
     }
 
     private val targetName: String = targetName.lowercase(Locale.getDefault()).also {
-        require(it in SUPPORTED_TARGETS)
+        require(it in SUPPORTED_TARGETS) {
+            "Unsupported target: $it. Supported targets are: ${SUPPORTED_TARGETS.joinToString()}"
+        }
     }
 
     protected fun kotlinPlugin(name: String = targetName) =

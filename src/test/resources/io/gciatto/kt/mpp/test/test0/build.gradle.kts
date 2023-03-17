@@ -11,4 +11,5 @@ multiProjectHelper {
     jvmProjects(":subproject-jvm")
     jsProjects(":subproject-js")
     otherProjects(":subproject-other")
+    applyProjectTemplates()
 }
