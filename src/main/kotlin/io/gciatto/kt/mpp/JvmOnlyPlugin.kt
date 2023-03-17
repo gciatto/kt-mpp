@@ -19,8 +19,8 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             }
         }
         dependencies {
-            addMainDependencies(target = "jdk8")
-            addTestDependencies(target = "junit")
+            addMainDependencies(project, target = "jdk8")
+            addTestDependencies(project, target = "junit")
         }
         configure(JavaPluginExtension::class) {
             withSourcesJar()

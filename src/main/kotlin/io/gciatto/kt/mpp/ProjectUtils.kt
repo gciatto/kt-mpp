@@ -52,9 +52,9 @@ fun Project.nodeVersion(default: Provider<String>, override: Any? = null) {
 fun Project.packageJson(handler: PackageJson.() -> Unit) {
     plugins.withType<NpmPublishPlugin> {
         configure<NpmPublishExtension> {
-            packages {
-                it.all {
-                    packageJson(handler)
+            packages { npmPackages ->
+                npmPackages.all { npmPackage ->
+                    npmPackage.packageJson(handler)
                 }
             }
         }

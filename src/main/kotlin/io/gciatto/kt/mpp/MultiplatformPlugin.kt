@@ -26,10 +26,10 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 js { configureJs() }
             }
             dependenciesFor("commonMain") {
-                addMainDependencies("common")
+                addMainDependencies(project, "common")
             }
             dependenciesFor("commonTest") {
-                addCommonTestDependencies()
+                addCommonTestDependencies(project)
             }
         }
     }
@@ -50,10 +50,10 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             }
         }
         dependenciesFor("jvmMain") {
-            addMainDependencies("jdk8", skipBom = true)
+            addMainDependencies(project, "jdk8", skipBom = true)
         }
         dependenciesFor("jvmTest") {
-            addTestDependencies("junit", skipAnnotations = true)
+            addTestDependencies(project, "junit", skipAnnotations = true)
         }
     }
 
@@ -67,10 +67,10 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         }
         configureNodeJs()
         dependenciesFor("jsMain") {
-            addMainDependencies("js", skipBom = true)
+            addMainDependencies(project, "js", skipBom = true)
         }
         dependenciesFor("jsTest") {
-            addTestDependencies("js", skipAnnotations = true)
+            addTestDependencies(project, "js", skipAnnotations = true)
         }
     }
 }

@@ -2,7 +2,6 @@ package io.gciatto.kt.mpp
 
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.DependencyHandlerScope
-import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
@@ -59,75 +58,64 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         }
     }
 
-    context(Project)
-    private fun DependencyScope.addMainDependencies(target: String, skipBom: Boolean) {
+    private fun DependencyScope.addMainDependencies(project: Project, target: String, skipBom: Boolean) {
         val kotlinStdlib = kotlin("stdlib-$target")
         api(kotlinStdlib)
-        log("add api dependency to $kotlinStdlib")
+        project.log("add api dependency to $kotlinStdlib")
         if (!skipBom) {
             val kotlinBom = kotlin("bom")
             implementation(kotlinBom)
-            log("add implementation dependency to $kotlinBom")
+            project.log("add implementation dependency to $kotlinBom")
         }
     }
 
-    context(Project)
-    protected fun DependencyHandlerScope.addMainDependencies(target: String, skipBom: Boolean = false) {
-        DependencyScope.of(this).addMainDependencies(target, skipBom)
-    }
+    protected fun DependencyHandlerScope.addMainDependencies(
+        project: Project,
+        target: String,
+        skipBom: Boolean = false
+    ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
-    context(Project)
-    protected fun KotlinDependencyHandler.addMainDependencies(target: String, skipBom: Boolean = false) {
-        DependencyScope.of(this).addMainDependencies(target, skipBom)
-    }
+    protected fun KotlinDependencyHandler.addMainDependencies(
+        project: Project,
+        target: String,
+        skipBom: Boolean = false
+    ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
-    context(Project)
-    private fun DependencyScope.addCommonTestDependencies(target: String) {
+    private fun DependencyScope.addCommonTestDependencies(project: Project, target: String) {
         val testLib = kotlin("test-$target")
         test(testLib)
-        log("add test dependency to $testLib")
+        project.log("add test dependency to $testLib")
         val annotationsLib = kotlin("test-annotations-$target")
         test(annotationsLib)
-        log("add test dependency to $annotationsLib")
+        project.log("add test dependency to $annotationsLib")
     }
 
-    context(Project)
-    protected fun KotlinDependencyHandler.addCommonTestDependencies(target: String = "common") {
-        DependencyScope.of(this).addCommonTestDependencies(target)
+    protected fun KotlinDependencyHandler.addCommonTestDependencies(project: Project, target: String = "common") {
+        DependencyScope.of(this).addCommonTestDependencies(project, target)
     }
 
-    context(Project)
-    protected fun DependencyHandlerScope.addCommonTestDependencies(target: String = "common") {
-        DependencyScope.of(this).addCommonTestDependencies(target)
-    }
-
-    context(Project)
-    private fun DependencyScope.addTestDependencies(target: String, skipAnnotations: Boolean) {
+    private fun DependencyScope.addTestDependencies(project: Project, target: String, skipAnnotations: Boolean) {
         val testLib = kotlin("test-$target")
         test(testLib)
-        log("add test dependency to $testLib")
+        project.log("add test dependency to $testLib")
         if (!skipAnnotations) {
             val annotationsLib = kotlin("test-annotations-$target")
             test(annotationsLib)
-            log("add test dependency to $annotationsLib")
+            project.log("add test dependency to $annotationsLib")
         }
     }
 
-    context(Project)
     protected fun KotlinDependencyHandler.addTestDependencies(
+        project: Project,
         target: String = targetName,
         skipAnnotations: Boolean = false
-    ) {
-        DependencyScope.of(this).addTestDependencies(target, skipAnnotations)
-    }
+    ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
-    context(Project)
     protected fun DependencyHandlerScope.addTestDependencies(
+        project: Project,
         target: String = targetName,
         skipAnnotations: Boolean = false
-    ) {
-        DependencyScope.of(this).addTestDependencies(target, skipAnnotations)
-    }
+    ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
     protected fun Project.addTaskAliases() {
         tasks.register("${targetName}Test") {
