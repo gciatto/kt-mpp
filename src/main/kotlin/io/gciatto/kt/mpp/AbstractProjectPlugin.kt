@@ -9,14 +9,15 @@ import org.gradle.api.publish.maven.MavenPublication
 import java.io.File
 import kotlin.reflect.KClass
 
+@Suppress("TooManyFunctions")
 abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected abstract fun Project.applyThisPlugin()
 
     final override fun apply(target: Project) {
         val propertiesHelper = target.extensions.run {
-            findByType(PropertiesHelperExtension::class.java) ?:
-                create("propertiesHelper", PropertiesHelperExtension::class.java).also {
+            findByType(PropertiesHelperExtension::class.java)
+                ?: create("propertiesHelper", PropertiesHelperExtension::class.java).also {
                     target.addPropertiesHelperTasks(it)
                     target.log("add propertiesHelper extension")
                 }
@@ -122,11 +123,13 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         log("let version of NPM publication be equal to the project's one")
     }
 
+    @Suppress("MagicNumber")
     protected fun String?.asField() = when {
         this == null -> "null"
         else -> "'${replace("'", "\\'")}'"
     }
 
+    @Suppress("MagicNumber")
     protected fun String?.asPassword() = when {
         this == null -> "null"
         else -> (1..kotlin.math.min(length, 8)).map { '*' }.joinToString("")

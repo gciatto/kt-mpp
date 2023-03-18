@@ -1,8 +1,11 @@
 @file:Suppress("OPT_IN_USAGE")
 
+import de.aaschmid.gradle.plugins.cpd.Cpd
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.configurationcache.extensions.capitalized
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
+import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -271,7 +274,12 @@ gradlePlugin {
                     "}\n"
                 targetFile.writeText(text)
             }
+            tasks.getByName("sourcesJar").dependsOn(this)
             tasks.getByName("compileKotlin").dependsOn(this)
+            tasks.getByName("detekt").dependsOn(this)
+            tasks.withType(DokkaTask::class.java) { dependsOn(this@create) }
+            tasks.withType(Cpd::class.java) { dependsOn(this@create) }
+            tasks.withType(BaseKtLintCheckTask::class.java) { dependsOn(this@create) }
         }
     }
 }
