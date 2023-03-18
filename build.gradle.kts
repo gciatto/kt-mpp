@@ -24,7 +24,7 @@ plugins {
 /*
  * Project information
  */
-group = "io.gciatto"
+group = "io.github.gciatto"
 description = "Kotlin multi-platform and multi-project configurations plugin for Gradle"
 inner class ProjectInfo {
     val longName = "Advanced Kotlin multi-platform plugin for Gradle Plugins"
@@ -261,18 +261,21 @@ gradlePlugin {
 
         tasks.create("generatePluginsInfo") {
             group = "build"
-            val targetFile = file("src/main/kotlin/io/gciatto/kt/mpp/Plugins.kt")
-            outputs.file(targetFile)
-            doLast {
-                @Suppress("ktlint")
-                val text = "@file:Suppress(\"MaxLineLength\")\n" +
-                    "package io.gciatto.kt.mpp\n\n" +
-                    "object Plugins {\n" +
-                    "    /* ktlint-disable */\n" +
-                    pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
-                    "    /* ktlint-enable */\n" +
-                    "}\n"
-                targetFile.writeText(text)
+            val pkg = project.group.toString().replace('.', '/')
+            sourceSets.main {
+                val targetFile = kotlin.srcDirs.first { it.name == "kotlin" }.resolve("$pkg/kt/mpp/Plugins.kt")
+                outputs.file(targetFile)
+                doLast {
+                    @Suppress("ktlint")
+                    val text = "@file:Suppress(\"MaxLineLength\")\n" +
+                        "package ${project.group}.kt.mpp\n\n" +
+                        "object Plugins {\n" +
+                        "    /* ktlint-disable */\n" +
+                        pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
+                        "    /* ktlint-enable */\n" +
+                        "}\n"
+                    targetFile.writeText(text)
+                }
             }
             tasks.getByName("sourcesJar").dependsOn(this)
             tasks.getByName("compileKotlin").dependsOn(this)
