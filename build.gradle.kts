@@ -224,7 +224,7 @@ gradlePlugin {
         innerPlugin(
             name = "versions",
             descr = "version revealer",
-            klass = "PrintVersionsPlugin",
+            klass = "VersionsPlugin",
             moreTags = arrayOf("version")
         )
 
