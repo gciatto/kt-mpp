@@ -45,8 +45,8 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         log("configure Kotlin JVM target to accept Java sources")
         compilations.all { compilation ->
             compilation.kotlinOptions {
-                configureKotlinOptions()
-                configureJvmKotlinOptions()
+                configureKotlinOptions(compilation.compilationName)
+                configureJvmKotlinOptions(compilation.compilationName)
             }
         }
         dependenciesFor("jvmMain") {
@@ -61,8 +61,8 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     private fun KotlinJsTargetDsl.configureJs() {
         compilations.all { compilation ->
             compilation.kotlinOptions {
-                configureKotlinOptions()
-                configureJsKotlinOptions()
+                configureKotlinOptions(compilation.compilationName)
+                configureJsKotlinOptions(compilation.compilationName)
             }
         }
         configureNodeJs()

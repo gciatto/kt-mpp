@@ -15,8 +15,8 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
                 log("configure kotlin js to use CommonJS")
                 compilations.all { compilation ->
                     compilation.kotlinOptions {
-                        configureKotlinOptions()
-                        configureJsKotlinOptions()
+                        configureKotlinOptions(compilation.compilationName)
+                        configureJsKotlinOptions(compilation.compilationName)
                     }
                 }
                 configureNodeJs()

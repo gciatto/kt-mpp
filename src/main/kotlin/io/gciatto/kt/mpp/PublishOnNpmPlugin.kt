@@ -3,37 +3,52 @@ package io.gciatto.kt.mpp
 import org.gradle.api.Project
 import dev.petuska.npm.publish.NpmPublishPlugin
 import dev.petuska.npm.publish.extension.NpmPublishExtension
+import dev.petuska.npm.publish.extension.domain.NpmRegistry
 import io.gciatto.kt.mpp.Developer.Companion.getAllDevs
 import org.gradle.api.logging.LogLevel
 
 class PublishOnNpmPlugin : AbstractProjectPlugin() {
+    context (Project)
+    private fun configureRegistry(registry: NpmRegistry) {
+        registry.uri.map { log("configure publication on registry: $it") }
+        getOptionalProperty("npmToken")?.let {
+            registry.authToken.set(it)
+            log("use NPM token for publication: ${it.asPassword()}")
+        }
+    }
+
     @Suppress("CyclomaticComplexMethod")
     override fun Project.applyThisPlugin() {
         val npmPublish = apply(NpmPublishPlugin::class)
         log("apply ${npmPublish::class.java.name} plugin")
         configure(NpmPublishExtension::class) {
             getOptionalProperty("npmOrganization")?.let {
-                organization.set(it)
-            } ?: log("property npmOrganization unset", LogLevel.WARN)
-            rootProject.file("README.md").takeIf { it.exists() }?.let {
-                readme.set(it)
+                if (it.isNotBlank()) {
+                    organization.set(it)
+                    log("set NPM organization: $it")
+                }
             }
+            listOf(project, rootProject).map { it.file("README.md") }.firstOrNull { it.exists() }?.let {
+                readme.set(it)
+                log("include file ${it.path} into NPM publication")
+            }
+            syncNpmVersionWithProject()
             // bundleKotlinDependencies.set(true)
             getBooleanProperty("npmDryRun").let {
                 dry.set(it)
                 if (it) {
                     log(
-                        "dry-run mode for ${npmPublish::class.java.name} plugin" +
-                            ": no package will actually be release on NPM!",
+                        "dry-run mode for NPM publishing plugin: no package will actually be release on NPM!",
                         LogLevel.WARN
                     )
                 }
             }
             registries { registries ->
-                registries.npmjs { npm ->
-                    getOptionalProperty("npmToken")?.let {
-                        npm.authToken.set(it)
-                    } ?: log("property npmToken unset", LogLevel.WARN)
+                val npmRepo = getOptionalProperty("npmRepo")
+                if (npmRepo.isNullOrBlank()) {
+                    registries.npmjs { configureRegistry(it) }
+                } else {
+                    registries.create("customNpmRegistry") { it.uri.set(uri(npmRepo)) }
                 }
             }
             packages { packages ->
@@ -44,11 +59,11 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                         getOptionalProperty("projectHomepage")?.let {
                             homepage.set(it)
                             log("set package.json homepage to $it")
-                        } ?: log("property projectHomepage unset", LogLevel.WARN)
+                        }
                         getOptionalProperty("projectDescription")?.let {
                             description.set(it)
                             log("set package.json description to '$it'")
-                        } ?: log("property projectDescription unset", LogLevel.WARN)
+                        }
                         val developers = project.getAllDevs()
                         if (developers.isNotEmpty()) {
                             val mainDeveloper = developers.first()
@@ -65,24 +80,24 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                         getOptionalProperty("projectLicense")?.let {
                             license.set(it)
                             log("set package.json license to $it")
-                        } ?: log("property projectLicense unset", LogLevel.WARN)
+                        }
                         private.set(false)
                         bugs { bugs ->
                             getOptionalProperty("issuesUrl")?.let {
                                 bugs.url.set(it)
                                 log("set package.json bug URL to $it")
-                            } ?: log("property issuesUrl unset", LogLevel.WARN)
+                            }
                             getOptionalProperty("issuesEmail")?.let {
                                 bugs.email.set(it)
                                 log("set package.json bug email to $it")
-                            } ?: log("property issuesEmail unset", LogLevel.WARN)
+                            }
                         }
                         repository { repos ->
                             repos.type.set("git")
                             getOptionalProperty("scmUrl")?.let {
                                 repos.url.set(it)
                                 log("set package.json repo URL to $it")
-                            } ?: log("property scmUrl unset", LogLevel.WARN)
+                            }
                         }
                     }
                 }

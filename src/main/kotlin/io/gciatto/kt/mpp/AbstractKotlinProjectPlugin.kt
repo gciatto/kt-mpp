@@ -27,35 +27,35 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         "org.jetbrains.kotlin.$name"
 
     context(Project)
-    protected fun KotlinJvmOptions.configureJvmKotlinOptions() {
+    protected fun KotlinJvmOptions.configureJvmKotlinOptions(compilation: String) {
         val ktCompilerArgsJvm = getProperty("ktCompilerArgsJvm").split(";").filter { it.isNotBlank() }
         if (ktCompilerArgsJvm.isNotEmpty()) {
             freeCompilerArgs += ktCompilerArgsJvm
-            log("add JVM-specific free compiler args: ${ktCompilerArgsJvm.joinToString()}")
+            log("add JVM-specific free compiler args for $compilation: ${ktCompilerArgsJvm.joinToString()}")
         }
     }
 
     context(Project)
-    protected fun KotlinJsOptions.configureJsKotlinOptions() {
+    protected fun KotlinJsOptions.configureJsKotlinOptions(compilation: String) {
         main = "noCall"
         log("configure kotlin JS compiler to avoid calling main")
         val ktCompilerArgsJs = getProperty("ktCompilerArgsJs").split(";").filter { it.isNotBlank() }
         if (ktCompilerArgsJs.isNotEmpty()) {
             freeCompilerArgs += ktCompilerArgsJs
-            log("add JS-specific free compiler args: ${ktCompilerArgsJs.joinToString()}")
+            log("add JS-specific free compiler args for $compilation: ${ktCompilerArgsJs.joinToString()}")
         }
     }
 
     context(Project)
-    protected fun KotlinCommonOptions.configureKotlinOptions() {
+    protected fun KotlinCommonOptions.configureKotlinOptions(compilation: String) {
         allWarningsAsErrors = getBooleanProperty("allWarningsAsErrors", default = true)
         if (allWarningsAsErrors) {
-            log("consider all warnings as errors when compiling Kotlin sources")
+            log("consider all warnings as errors when compiling Kotlin sources in $compilation")
         }
         val ktCompilerArgs = getProperty("ktCompilerArgs").split(";").filter { it.isNotBlank() }
         if (ktCompilerArgs.isNotEmpty()) {
             freeCompilerArgs += ktCompilerArgs
-            log("add free compiler args: ${ktCompilerArgs.joinToString()}")
+            log("add free compiler args for $compilation: ${ktCompilerArgs.joinToString()}")
         }
     }
 

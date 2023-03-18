@@ -1,16 +1,15 @@
 package io.gciatto.kt.mpp
 
+import dev.petuska.npm.publish.extension.NpmPublishExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionContainer
+import org.gradle.api.publish.maven.MavenPublication
 import kotlin.reflect.KClass
 
 abstract class AbstractProjectPlugin : Plugin<Project> {
-    protected fun Project.log(message: String, logLevel: LogLevel = LogLevel.LIFECYCLE) {
-        logger.log(logLevel, "$name: $message")
-    }
 
     protected abstract fun Project.applyThisPlugin()
 
@@ -56,7 +55,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     }
 
     protected fun Project.getBooleanProperty(name: String, default: Boolean = false): Boolean =
-        findProperty(name)?.toString()?.toBooleanStrictOrNull() ?: default
+        getOptionalProperty(name)?.toBooleanStrictOrNull() ?: default
 
     protected fun Task.sibling(name: String) =
         path.split(":").let {
@@ -73,4 +72,28 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     ): T = create(name, klass.java, *constructorArguments)
 
     protected fun <T : Any> ExtensionContainer.getByType(klass: KClass<T>): T = getByType(klass.java)
+
+    context(Project)
+    protected fun MavenPublication.copyMavenGroupAndVersionFromProject() {
+        groupId = project.group.toString()
+        log("set groupId of publication $name: $groupId")
+        version = project.version.toString()
+        log("set version of publication $name: $version")
+    }
+
+    context(Project)
+    protected fun NpmPublishExtension.syncNpmVersionWithProject() {
+        version.set(provider { project.npmCompliantVersion })
+        log("let version of NPM publication be equal to the project's one")
+    }
+
+    protected fun String?.asField() = when {
+        this == null -> "null"
+        else -> "'${replace("'", "\\'")}'"
+    }
+
+    protected fun String?.asPassword() = when {
+        this == null -> "null"
+        else -> (1..kotlin.math.min(length, 8)).map { '*' }.joinToString("")
+    }
 }

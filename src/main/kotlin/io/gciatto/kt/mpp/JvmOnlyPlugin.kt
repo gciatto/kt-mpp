@@ -14,8 +14,8 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         log("apply java-library plugin")
         tasks.withType(KotlinCompile::class.java) { task ->
             task.kotlinOptions {
-                configureKotlinOptions()
-                configureJvmKotlinOptions()
+                configureKotlinOptions(task.name)
+                configureJvmKotlinOptions(task.name)
             }
         }
         dependencies {

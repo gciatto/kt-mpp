@@ -22,7 +22,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 repos.maven { maven ->
                     getOptionalProperty("mavenRepo")?.let {
                         maven.url = uri(it)
-                    } ?: log("property mavenRepo unset", LogLevel.WARN)
+                    }
                     val mavenUsername: String? = getOptionalProperty("mavenUsername")
                     val mavenPassword: String? = getOptionalProperty("mavenPassword")
                     if (mavenUsername != null && mavenPassword != null) {
@@ -33,8 +33,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                         /* ktlint-disable */
                         log(
                             "configure Maven repository ${maven.name} " +
-                                "(URL: ${maven.url}, username: ${maven.credentials.username}, " +
-                                "password: ${"".padEnd(maven.credentials.password?.length ?: 0, '*')})"
+                                "(URL: ${maven.url}, username: ${maven.credentials.username.asField()}, " +
+                                "password: ${maven.credentials.password.asPassword()})"
                         )
                         /* ktlint-enable */
                     } else {
@@ -57,7 +57,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 } else {
                     /* ktlint-disable */
                     log(
-                        "one property in {signingKey, signingPassword} is unset, " +
+                        "one property in {signingKey, signingPassword} is unset or blank, " +
                             "hence Maven publications won't be signed"
                     )
                     /* ktlint-enable */
@@ -95,10 +95,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         configure(PublishingExtension::class) {
             afterEvaluate { project ->
                 publications.withType(MavenPublication::class.java) { pub ->
-                    pub.groupId = project.group.toString()
-                    log("set groupId of publication ${pub.name}: ${pub.groupId}")
-                    pub.version = project.version.toString()
-                    log("set version of publication ${pub.name}: ${pub.version}")
+                    pub.copyMavenGroupAndVersionFromProject()
                     project.tasks.withType(Jar::class.java) {
                         if ("Html" in name && it.archiveClassifier.getOrElse("") in publishableClassifiers) {
                             pub.artifact(it)
@@ -109,25 +106,25 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                         getOptionalProperty("projectLongName")?.let {
                             pom.name.set(it)
                             log("set POM name in publication ${pub.name}: $it")
-                        } ?: log("property projectLongName unset", LogLevel.WARN)
+                        }
                         getOptionalProperty("projectDescription")?.let {
                             pom.description.set(it)
                             log("set POM description in publication ${pub.name}: $it")
-                        } ?: log("property projectDescription unset", LogLevel.WARN)
+                        }
                         getOptionalProperty("projectHomepage")?.let {
                             pom.url.set(it)
                             log("set POM URL in publication ${pub.name}: $it")
-                        } ?: log("property projectHomepage unset", LogLevel.WARN)
+                        }
                         pom.licenses { licenses ->
                             licenses.license { license ->
                                 getOptionalProperty("projectLicense")?.let {
                                     license.name.set(it)
                                     log("add POM license in publication ${pub.name}: $it")
-                                } ?: log("property projectLicense unset", LogLevel.WARN)
+                                }
                                 getOptionalProperty("projectLicenseUrl")?.let {
                                     license.url.set(it)
                                     log("add POM license URL in publication ${pub.name}: $it")
-                                } ?: log("property projectLicenseUrl unset", LogLevel.WARN)
+                                }
                             }
                         }
                         pom.developers { devs ->
@@ -140,11 +137,11 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                             getOptionalProperty("scmConnection")?.let {
                                 scm.connection.set(it)
                                 log("add POM SCM connection in publication ${pub.name}: $it")
-                            } ?: log("property scmConnection unset", LogLevel.WARN)
+                            }
                             getOptionalProperty("scmUrl")?.let {
                                 scm.url.set(it)
                                 log("add POM SCM URL in publication ${pub.name}: $it")
-                            } ?: log("property scmUrl unset", LogLevel.WARN)
+                            }
                         }
                     }
                 }

@@ -18,20 +18,24 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
+    logger.log(logLevel, "$name: $message")
+}
+
 fun Project.jvmVersion(provider: Provider<String>) {
     val version = provider.map { JavaVersion.toVersion(it) }.getOrElse(JavaVersion.current())
     plugins.withType<JavaPlugin> {
         configure<JavaPluginExtension> {
             targetCompatibility = version
-            logger.log(LogLevel.LIFECYCLE, "${rootProject.name} set java.targetCompatibility=$targetCompatibility")
+            log("set java.targetCompatibility=$targetCompatibility")
             sourceCompatibility = version
-            logger.log(LogLevel.LIFECYCLE, "${rootProject.name} set java.sourceCompatibility=$sourceCompatibility")
+            log("set java.sourceCompatibility=$sourceCompatibility")
         }
     }
     tasks.withType<KotlinCompile> {
         kotlinOptions {
-            logger.log(LogLevel.LIFECYCLE, "${rootProject.name} set $path.jvmTarget=$version")
             jvmTarget = version.toString()
+            log("set $path.jvmTarget=$jvmTarget")
         }
     }
 }
@@ -44,7 +48,7 @@ fun Project.nodeVersion(default: Provider<String>, override: Any? = null) {
         configure<NodeJsRootExtension> {
             val requestedVersion = override?.toString() ?: default.takeIf { it.isPresent }?.get() ?: nodeVersion
             nodeVersion = NodeVersions.toFullVersion(requestedVersion)
-            logger.log(LogLevel.LIFECYCLE, "${rootProject.name} set nodeVersion=$nodeVersion")
+            log("set nodeVersion=$nodeVersion")
         }
     }
 }
@@ -68,5 +72,5 @@ fun PackageJson.person(developer: Developer): Person =
         it.url.set(developer.url)
     }
 
-val Provider<MinimalExternalModuleDependency>.version
+val Provider<MinimalExternalModuleDependency>.version: String
     get() = this.get().versionConstraint.requiredVersion
