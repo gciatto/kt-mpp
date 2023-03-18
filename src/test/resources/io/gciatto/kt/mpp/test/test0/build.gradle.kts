@@ -4,7 +4,8 @@ plugins {
     id("io.gciatto.kt-mpp.multi-project-helper")
 }
 
-version = "1.0.0-example"
+group = "io.gciatto.example"
+version = "1.0.0"
 
 multiProjectHelper {
     defaultProjectType = ProjectType.KOTLIN

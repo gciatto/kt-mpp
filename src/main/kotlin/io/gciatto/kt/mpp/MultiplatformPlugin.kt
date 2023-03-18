@@ -73,4 +73,14 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             addTestDependencies(project, "js", skipAnnotations = true)
         }
     }
+
+    override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(allWarningsAsErrors)
+        addProperty(ktCompilerArgs)
+        addProperty(ktCompilerArgsJvm)
+        addProperty(ktCompilerArgsJs)
+        addProperty(mochaTimeout)
+        addProperty(ktTargetJvmDisable)
+        addProperty(ktTargetJsDisable)
+    }
 }

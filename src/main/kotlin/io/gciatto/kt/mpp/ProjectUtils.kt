@@ -17,6 +17,13 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.File
+
+internal val Project.gradlePropertiesFile: File
+    get() = projectDir.resolve("gradle.properties")
+
+internal val Project.gradlePropertiesPath: String
+    get() = gradlePropertiesFile.path
 
 fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
     logger.log(logLevel, "$name: $message")

@@ -28,4 +28,11 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
         }
         addTaskAliases()
     }
+
+    override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(allWarningsAsErrors)
+        addProperty(ktCompilerArgs)
+        addProperty(ktCompilerArgsJs)
+        addProperty(mochaTimeout)
+    }
 }

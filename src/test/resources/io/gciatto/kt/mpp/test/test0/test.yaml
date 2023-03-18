@@ -2,7 +2,10 @@ tests:
   - description: "Root project should be multiplatform"
     configuration:
       tasks: ":tasks"
-      options: "--stacktrace"
+      options:
+        - "--stacktrace"
     expectation:
-      output_contains: Tasks runnable from root project 'test0'
       success: ':tasks'
+      output_contains:
+        - Tasks runnable from root project 'test0'
+

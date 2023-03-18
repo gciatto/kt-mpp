@@ -16,6 +16,27 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     @Suppress("MemberVisibilityCanBePrivate")
     lateinit var publishableClassifiers: DomainObjectSet<String>
 
+    override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(mavenRepo)
+        addProperty(mavenUsername)
+        addProperty(mavenPassword)
+        addProperty(signingKey)
+        addProperty(signingPassword)
+        addProperty(projectLongName)
+        addProperty(projectDescription)
+        addProperty(projectHomepage)
+        addProperty(projectLicense)
+        addProperty(projectLicenseUrl)
+        addProperty(scmConnection)
+        addProperty(scmUrl)
+        addProperty(developerIdName)
+        addProperty(developerIdUrl)
+        addProperty(developerIdEmail)
+        addProperty(developerIdOrg)
+        addProperty(orgName)
+        addProperty(orgUrl)
+    }
+
     private fun Project.configureMavenRepository() {
         configure(PublishingExtension::class) {
             repositories { repos ->

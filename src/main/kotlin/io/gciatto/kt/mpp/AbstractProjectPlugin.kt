@@ -4,17 +4,59 @@ import dev.petuska.npm.publish.extension.NpmPublishExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.publish.maven.MavenPublication
+import java.io.File
 import kotlin.reflect.KClass
 
 abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected abstract fun Project.applyThisPlugin()
 
-    final override fun apply(target: Project) =
+    final override fun apply(target: Project) {
+        val propertiesHelper = target.extensions.run {
+            findByType(PropertiesHelperExtension::class.java) ?:
+                create("propertiesHelper", PropertiesHelperExtension::class.java).also {
+                    target.addPropertiesHelperTasks(it)
+                    target.log("add propertiesHelper extension")
+                }
+        }
+        propertiesHelper.declareProperties()
         target.applyThisPlugin()
+    }
+
+    private fun Project.addPropertiesHelperTasks(ext: PropertiesHelperExtension) {
+        val explainProperties = tasks.maybeCreate("explainProperties").run {
+            group = "properties"
+            doLast {
+                println(ext.generateExplanatoryText())
+            }
+        }
+        val generateGradlePropertiesFile = tasks.maybeCreate("generateGradlePropertiesFile").run {
+            group = "properties"
+            doLast {
+                if (!ext.overwriteGradlePropertiesFile && gradlePropertiesFile.exists()) {
+                    val tmp = File.createTempFile("gradle", "properties")
+                    if (!tmp.renameTo(tmp)) {
+                        error("Cannot move $gradlePropertiesPath to temp directory")
+                    }
+                    gradlePropertiesFile.bufferedWriter().use { writer ->
+                        writer.append(ext.generateGradlePropertiesText())
+                        tmp.bufferedReader().use { reader ->
+                            reader.lines().forEach(writer::append)
+                        }
+                    }
+                } else {
+                    gradlePropertiesFile.writeText(ext.generateGradlePropertiesText())
+                }
+            }
+        }
+        log("add tasks ${explainProperties.path}, ${generateGradlePropertiesFile.path}")
+    }
+
+    protected open fun PropertiesHelperExtension.declareProperties() {
+        // does nothing by default
+    }
 
     protected fun <T : Plugin<Project>> Project.apply(klass: KClass<T>): T =
         plugins.apply(klass.java)
@@ -23,33 +65,26 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         extensions.getByType(klass.java).run(action)
     }
 
-    private fun Project.helpMessage(name: String, mandatory: Boolean): String {
-        val result = StringBuilder()
-        if (mandatory) {
-            result.append("mandatory property $name is missing. What you can do:\n")
-        } else {
-            result.append("optional property $name is missing. This is not an issue, but here's what you can do:\n")
-        }
-        result.append("1. invoke Gradle with -P$name=<value> option;\n")
-        result.append("2. invoke Gradle after setting ORG_GRADLE_PROJECT_$name=<value> environment variable;\n")
-        val gradlePropertiesFile = projectDir.resolve("gradle.properties").absolutePath
-        result.append("3. add a line containing $name=<value> in the file $gradlePropertiesFile .\n")
-        result.append("We recommend to do step 3. in any case, using a (possibly blank) default value, ")
-        result.append("to avoid this message to be logged in the future.")
-        return result.toString()
-    }
+    private val Project.propertiesHelper: PropertiesHelperExtension
+        get() = extensions.getByType(PropertiesHelperExtension::class.java)
 
     protected fun Project.getProperty(name: String): String {
         if (name !in properties) {
-            log(helpMessage(name, mandatory = true), LogLevel.ERROR)
+            logMissingProperty(name)
         }
         return property(name).toString()
+    }
+
+    private fun Project.logMissingProperty(name: String) {
+        val descriptor = propertiesHelper.properties[name]
+            ?: error("Unregistered property in project ${project.name}: $name")
+        descriptor.logHelpIfNecessary(project)
     }
 
     protected fun Project.getOptionalProperty(name: String): String? {
         val result = findProperty(name)?.toString()
         if (result == null) {
-            log(helpMessage(name, mandatory = false), LogLevel.WARN)
+            logMissingProperty(name)
         }
         return result
     }

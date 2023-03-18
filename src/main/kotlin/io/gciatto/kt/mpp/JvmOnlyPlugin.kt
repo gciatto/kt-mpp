@@ -28,4 +28,11 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         }
         addTaskAliases()
     }
+
+    override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(allWarningsAsErrors)
+        addProperty(ktCompilerArgs)
+        addProperty(ktCompilerArgsJvm)
+        addProperty(mochaTimeout)
+    }
 }

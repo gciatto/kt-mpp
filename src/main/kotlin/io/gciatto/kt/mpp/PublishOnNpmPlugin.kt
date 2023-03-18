@@ -17,6 +17,25 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
         }
     }
 
+    override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(npmOrganization)
+        addProperty(npmDryRun)
+        addProperty(npmRepo)
+        addProperty(npmToken)
+        addProperty(projectHomepage)
+        addProperty(projectDescription)
+        addProperty(projectLicense)
+        addProperty(issuesUrl)
+        addProperty(issuesEmail)
+        addProperty(scmUrl)
+        addProperty(developerIdName)
+        addProperty(developerIdUrl)
+        addProperty(developerIdEmail)
+        addProperty(developerIdOrg)
+        addProperty(orgName)
+        addProperty(orgUrl)
+    }
+
     @Suppress("CyclomaticComplexMethod")
     override fun Project.applyThisPlugin() {
         val npmPublish = apply(NpmPublishPlugin::class)
@@ -48,7 +67,10 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                 if (npmRepo.isNullOrBlank()) {
                     registries.npmjs { configureRegistry(it) }
                 } else {
-                    registries.create("customNpmRegistry") { it.uri.set(uri(npmRepo)) }
+                    registries.create("customNpmRegistry") {
+                        it.uri.set(uri(npmRepo))
+                        configureRegistry(it)
+                    }
                 }
             }
             packages { packages ->
