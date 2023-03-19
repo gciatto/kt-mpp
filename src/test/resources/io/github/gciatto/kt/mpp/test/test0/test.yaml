@@ -8,4 +8,10 @@ tests:
       success: ':tasks'
       output_contains:
         - Tasks runnable from root project 'test0'
-
+  - description: "Print properties explanation"
+    configuration:
+      tasks: ":full:explainProperties"
+      options:
+        - "--stacktrace"
+    expectation:
+      success: ':full:explainProperties'
