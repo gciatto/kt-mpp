@@ -1,3 +1,54 @@
+## 1.0.0 (2023-03-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* move to group/package io.github.gciatto
+* add properties helper extension
+* rename version plugin, and let it adjust maven version&group from rootProject
+* remove inline functions from projects
+* version plugin takes version from rootProject && it is applied to projects by default
+* consistent naming of plugins
+* adapt versions and build configuration to new project
+
+### Features
+
+* adapt versions and build configuration to new project ([a9f822b](https://github.com/gciatto/kt-mpp/commit/a9f822b50eba25e20ce4bb4b37006e888a75bed7))
+* add multi-project extension and plugin ([4ead3d7](https://github.com/gciatto/kt-mpp/commit/4ead3d7cd8195406545b33f19d0857133eba8d58))
+* add properties helper extension ([a7a7a48](https://github.com/gciatto/kt-mpp/commit/a7a7a484a5ef159cf84b55d34ae202a61b8f58da))
+* add readme with instructions ([223df53](https://github.com/gciatto/kt-mpp/commit/223df53309b041f1bc5bfeab9db8917dc7f656fe))
+* **ci:** rely on task uploadAllPluginMarkersToMavenCentralNexus for release ([b1e946c](https://github.com/gciatto/kt-mpp/commit/b1e946c340264382440495ee3968da579b0073ab))
+* consistent naming of plugins ([3cb353c](https://github.com/gciatto/kt-mpp/commit/3cb353cd5ca0802af9a4e58f7b46063b2c6c3a36))
+* defaultProjectType in MultiProjectExtension interface ([3dd6bcf](https://github.com/gciatto/kt-mpp/commit/3dd6bcfce9d2c40a864ab2943945444722a8154f))
+* let plugins auto configure kotlin, jvm, and node versions from version catalogs ([95ab800](https://github.com/gciatto/kt-mpp/commit/95ab800ef02f28a300595e2536010c9d3356164a))
+* move to group/package io.github.gciatto ([9556d0b](https://github.com/gciatto/kt-mpp/commit/9556d0b6470c4f49e18c4c4279d0b41b9943148f))
+* plugins template ([ca8c45e](https://github.com/gciatto/kt-mpp/commit/ca8c45ec1d92000717524b60cbade6c67f391355))
+* remove inline functions from projects ([1253dca](https://github.com/gciatto/kt-mpp/commit/1253dca612c81b94eae246bd9c6ec869df4b7004))
+* rename version plugin, and let it adjust maven version&group from rootProject ([0c719cd](https://github.com/gciatto/kt-mpp/commit/0c719cdc9fc0519386f3cabc08d505eaeae38cbb))
+* **test:** set up test project ([148f579](https://github.com/gciatto/kt-mpp/commit/148f5793a54d1886b073f77b0e5e1050d10362ae))
+* version plugin takes version from rootProject && it is applied to projects by default ([0b3e950](https://github.com/gciatto/kt-mpp/commit/0b3e950ae67baa94c2ce93a7e7e4a9fcdfa10926))
+
+
+### Bug Fixes
+
+* **build:** proper task dependencies for :generatePluginsInfo ([e652531](https://github.com/gciatto/kt-mpp/commit/e652531ca4abaacf2166bb73b1c4a4a2da83acf1))
+* **ci:** use gciatto user for deploy on central ([304d323](https://github.com/gciatto/kt-mpp/commit/304d32352163c265ac1b1b00864b97d1e6992c99))
+* **ci:** use task uploadAllPublicationsToMavenCentralNexus ([8fc7edf](https://github.com/gciatto/kt-mpp/commit/8fc7edfb78df8d4b5ae86b1b2f6acf0ed82ba4ab))
+* open extension classes ([a632268](https://github.com/gciatto/kt-mpp/commit/a632268698b071c007b448611517c38e1f0e77ee))
+* **test:** avoid test replaces gradle.properties ([5c9ac47](https://github.com/gciatto/kt-mpp/commit/5c9ac4790dbdef64b42e250a84702fa8b171f054))
+* **test:** improve warnings in tests ([5b0257e](https://github.com/gciatto/kt-mpp/commit/5b0257e1f3dfc7952509d95d29dd18482f23e71f))
+* **test:** prevent broken context implementation from breaking gradle run ([3b0e70c](https://github.com/gciatto/kt-mpp/commit/3b0e70c964ebb1c946e27ddca39a18cd3ff8e4db))
+* **test:** prevent broken context implementation from breaking gradle run ([4a0e1fe](https://github.com/gciatto/kt-mpp/commit/4a0e1fe757f9eaf811abaf2338b716cf20657fc2))
+* **test:** wrong project names in settings.gradle.kts ([f649a69](https://github.com/gciatto/kt-mpp/commit/f649a691b41759dd5df716160eb282249235893f))
+
+
+### General maintenance
+
+* remove useless code ([813f2d4](https://github.com/gciatto/kt-mpp/commit/813f2d46f35c4057929f41b16efc510e9089c6bf))
+* **style:** address detekt issues ([7a27026](https://github.com/gciatto/kt-mpp/commit/7a2702615a30d054dcf1067736a2fe8ca3af8da9))
+* **wip:** improve testing ([4c8f288](https://github.com/gciatto/kt-mpp/commit/4c8f2888ad4bfbc31f514b86adb5cfe73353aa8d))
+* **wip:** port jvm-only ([dd85734](https://github.com/gciatto/kt-mpp/commit/dd85734beabd1d85592fd8075d6224469d1d6b0f))
+
 ## [1.0.32](https://github.com/DanySK/Template-for-Gradle-Plugins/compare/1.0.31...1.0.32) (2023-03-04)
 
 
