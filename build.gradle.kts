@@ -286,3 +286,13 @@ gradlePlugin {
         }
     }
 }
+
+tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
+    group = "publishing"
+    description = "Quick way to call tasks upload*PluginMarkerMavenToMavenCentralNexus altogether"
+    tasks.withType<PublishToMavenRepository> {
+        if (name.startsWith("upload") && name.endsWith("PluginMarkerMavenToMavenCentralNexus")) {
+            this@create.dependsOn(this)
+        }
+    }
+}
