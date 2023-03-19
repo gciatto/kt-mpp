@@ -9,6 +9,8 @@ class JsOnlyPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("js") 
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
+        configureKotlinVersionFromCatalogIfPossible()
+        configureNodeVersionFromCatalogIfPossible()
         configure(KotlinJsProjectExtension::class) {
             js {
                 useCommonJs()
@@ -34,5 +36,7 @@ class JsOnlyPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("js") 
         addProperty(ktCompilerArgs)
         addProperty(ktCompilerArgsJs)
         addProperty(mochaTimeout)
+        addProperty(versionsFromCatalog)
+        addProperty(nodeVersion)
     }
 }

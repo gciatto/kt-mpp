@@ -29,6 +29,24 @@ fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
     logger.log(logLevel, "$name: $message")
 }
 
+fun Project.kotlinVersion(version: String) = kotlinVersion(provider { version })
+
+fun Project.kotlinVersion(provider: Provider<String>) {
+    configurations.all { configuration ->
+        configuration.resolutionStrategy.eachDependency { dependency ->
+            if (dependency.requested.let { it.group == "org.jetbrains.kotlin" && it.name.startsWith("kotlin") }) {
+                provider.map {
+                    dependency.useVersion(it)
+                    dependency.because("All Kotlin modules should use the same version, and compiler uses $it")
+                    log("enforce version for Kotlin dependencies: $it")
+                }
+            }
+        }
+    }
+}
+
+fun Project.jvmVersion(version: String) = jvmVersion(provider { version })
+
 fun Project.jvmVersion(provider: Provider<String>) {
     val version = provider.map { JavaVersion.toVersion(it) }.getOrElse(JavaVersion.current())
     plugins.withType<JavaPlugin> {
@@ -50,10 +68,15 @@ fun Project.jvmVersion(provider: Provider<String>) {
 val Project.npmCompliantVersion: String
     get() = version.toString().split("+")[0]
 
+fun Project.nodeVersion(default: String, override: Any? = null) =
+    nodeVersion(provider { default }, override)
+
 fun Project.nodeVersion(default: Provider<String>, override: Any? = null) {
     plugins.withType<NodeJsRootPlugin> {
         configure<NodeJsRootExtension> {
-            val requestedVersion = override?.toString() ?: default.takeIf { it.isPresent }?.get() ?: nodeVersion
+            val requestedVersion = override?.toString()?.takeIf { it.isNotBlank() }
+                ?: default.takeIf { it.isPresent }?.get()
+                ?: nodeVersion
             nodeVersion = NodeVersions.toFullVersion(requestedVersion)
             log("set nodeVersion=$nodeVersion")
         }

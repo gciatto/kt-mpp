@@ -258,4 +258,21 @@ interface DefaultProperties {
             mandatory = false,
             defaultValue = ""
         )
+
+    val versionsFromCatalog: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "versionsFromCatalog",
+            description = "The name of the catalog from which Kotlin, JVM, and Node versions should be taken." +
+                "Leave empty in case all declared catalogs should be considered, as well as if no one should.",
+            mandatory = false,
+            defaultValue = ""
+        )
+
+    val nodeVersion: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "nodeVersion",
+            description = "The version of NodeJS to use for running Kotlin JS scripts",
+            mandatory = false,
+            defaultValue = ""
+        )
 }

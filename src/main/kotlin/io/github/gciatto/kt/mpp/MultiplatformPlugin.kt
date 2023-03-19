@@ -8,10 +8,13 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
-class MultiplatformPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("multiplatform") {
+class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
+        configureKotlinVersionFromCatalogIfPossible()
+        configureJvmVersionFromCatalogIfPossible()
+        configureNodeVersionFromCatalogIfPossible()
         val ktTargetJvmDisable = getBooleanProperty("ktTargetJvmDisable")
         val ktTargetJsDisable = getBooleanProperty("ktTargetJsDisable")
         configure(KotlinMultiplatformExtension::class) {
@@ -82,5 +85,7 @@ class MultiplatformPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin
         addProperty(mochaTimeout)
         addProperty(ktTargetJvmDisable)
         addProperty(ktTargetJsDisable)
+        addProperty(versionsFromCatalog)
+        addProperty(nodeVersion)
     }
 }

@@ -6,12 +6,14 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-class JvmOnlyPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("jvm") {
+class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
         apply(plugin = "java-library")
         log("apply java-library plugin")
+        configureKotlinVersionFromCatalogIfPossible()
+        configureJvmVersionFromCatalogIfPossible()
         tasks.withType(KotlinCompile::class.java) { task ->
             task.kotlinOptions {
                 configureKotlinOptions(task.name)
@@ -34,5 +36,6 @@ class JvmOnlyPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("jvm"
         addProperty(ktCompilerArgs)
         addProperty(ktCompilerArgsJvm)
         addProperty(mochaTimeout)
+        addProperty(versionsFromCatalog)
     }
 }
