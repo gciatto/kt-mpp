@@ -16,8 +16,8 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         configureJvmVersionFromCatalogIfPossible()
         tasks.withType(KotlinCompile::class.java) { task ->
             task.kotlinOptions {
-                configureKotlinOptions(task.name)
-                configureJvmKotlinOptions(task.name)
+                configureKotlinOptions(targetCompilationId(task))
+                configureJvmKotlinOptions(targetCompilationId(task))
             }
         }
         dependencies {

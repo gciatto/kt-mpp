@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 
-class JsOnlyPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("js") {
+class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
@@ -17,8 +17,8 @@ class JsOnlyPlugin : io.github.gciatto.kt.mpp.AbstractKotlinProjectPlugin("js") 
                 log("configure kotlin js to use CommonJS")
                 compilations.all { compilation ->
                     compilation.kotlinOptions {
-                        configureKotlinOptions(compilation.compilationName)
-                        configureJsKotlinOptions(compilation.compilationName)
+                        configureKotlinOptions(targetCompilationId(compilation))
+                        configureJsKotlinOptions(targetCompilationId(compilation))
                     }
                 }
                 configureNodeJs()

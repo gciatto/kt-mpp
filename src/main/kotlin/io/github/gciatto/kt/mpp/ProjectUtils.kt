@@ -38,11 +38,11 @@ fun Project.kotlinVersion(provider: Provider<String>) {
                 provider.map {
                     dependency.useVersion(it)
                     dependency.because("All Kotlin modules should use the same version, and compiler uses $it")
-                    log("enforce version for Kotlin dependencies: $it")
                 }
             }
         }
     }
+    provider.map { log("enforce version for Kotlin dependencies: $it") }
 }
 
 fun Project.jvmVersion(version: String) = jvmVersion(provider { version })

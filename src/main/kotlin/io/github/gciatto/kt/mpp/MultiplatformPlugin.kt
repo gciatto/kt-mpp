@@ -34,6 +34,13 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             dependenciesFor("commonTest") {
                 addTestDependencies(project, "common", skipAnnotations = false)
             }
+            targets.all { target ->
+                target.compilations.all { compilation ->
+                    compilation.kotlinOptions {
+                        configureKotlinOptions(target.targetCompilationId(compilation))
+                    }
+                }
+            }
         }
     }
 
@@ -48,8 +55,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         log("configure Kotlin JVM target to accept Java sources")
         compilations.all { compilation ->
             compilation.kotlinOptions {
-                configureKotlinOptions(compilation.compilationName)
-                configureJvmKotlinOptions(compilation.compilationName)
+                configureJvmKotlinOptions(targetCompilationId(compilation))
             }
         }
         dependenciesFor("jvmMain") {
@@ -64,8 +70,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     private fun KotlinJsTargetDsl.configureJs() {
         compilations.all { compilation ->
             compilation.kotlinOptions {
-                configureKotlinOptions(compilation.compilationName)
-                configureJsKotlinOptions(compilation.compilationName)
+                configureJsKotlinOptions(targetCompilationId(compilation))
             }
         }
         configureNodeJs()
