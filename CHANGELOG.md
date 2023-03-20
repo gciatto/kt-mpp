@@ -1,3 +1,33 @@
+## [1.1.0](https://github.com/gciatto/kt-mpp/compare/1.0.0...1.1.0) (2023-03-20)
+
+
+### Features
+
+* **doc:** extend readme ([fa84dd8](https://github.com/gciatto/kt-mpp/commit/fa84dd8df200214609a34400eb33fb5ce739e4f6))
+
+
+### Bug Fixes
+
+* kotlin compiler options in multi-projects projects ([75b94f3](https://github.com/gciatto/kt-mpp/commit/75b94f33efd96c10932954613ed8c7d6e8b99964))
+* kotlinVersion utility now actually enforces kotlin versions ([415eb66](https://github.com/gciatto/kt-mpp/commit/415eb66e0ce3f88d4f60685ac66026049c2ff939))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v3.4.0 ([8ce3864](https://github.com/gciatto/kt-mpp/commit/8ce3864c38677e871c691e3fc9f8e3dad04ac819))
+* **deps:** update danysk/action-checkout action to v0.2.6 ([0339666](https://github.com/gciatto/kt-mpp/commit/0339666c297a2e9e2c2eb8226ca7fbc9b7b3974a))
+
+
+### Dependency updates
+
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.157 ([730d968](https://github.com/gciatto/kt-mpp/commit/730d968a0c91e5992d3567f3f80e0c309a8fb784))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.17 ([96e4365](https://github.com/gciatto/kt-mpp/commit/96e4365e13acb9a81152786895ce9d459e5e7cb0))
+
+
+### General maintenance
+
+* **test:** simplify test framework ([cbe581b](https://github.com/gciatto/kt-mpp/commit/cbe581bf41e0e1cb6cde92311de16a14457024e7))
+
 ## 1.0.0 (2023-03-19)
 
 
