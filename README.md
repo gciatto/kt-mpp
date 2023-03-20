@@ -218,3 +218,39 @@ Overall, you may need to define, provide the following properties:
 - `issuesUrl` (optional): issue tracking web page URL (useful for Maven/NPM publications).
 
 - `issuesEmail` (optional): issue tracking email (useful for Maven/NPM publications).
+
+## How to use
+
+1. Create a `gradle/libs.versions.toml` file in your project's root directory, e.g.:
+
+    ```yaml
+    [versions]
+    kotlin = "1.8.10"
+    jvm = "1.8"
+    node = "16-latest"
+    ktMpp = "<VERSION_HERE>"
+    
+    [libraries]
+    kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+    
+    [plugins]
+    ktMpp-bugFinder = { id = "io.github.gciatto.kt-mpp.bug-finder", version.ref = "ktMpp" }
+    ktMpp-documentation = { id = "io.github.gciatto.kt-mpp.documentation", version.ref = "ktMpp" }
+    ktMpp-linter = { id = "io.github.gciatto.kt-mpp.linter", version.ref = "ktMpp" }
+    ktMpp-mavenPublish = { id = "io.github.gciatto.kt-mpp.maven-publish", version.ref = "ktMpp" }
+    ktMpp-npmPublish = { id = "io.github.gciatto.kt-mpp.npm-publish", version.ref = "ktMpp" }
+    ktMpp-versions = { id = "io.github.gciatto.kt-mpp.versions", version.ref = "ktMpp" }
+    ktMpp-jsOnly = { id = "io.github.gciatto.kt-mpp.js-only", version.ref = "ktMpp" }
+    ktMpp-jvmOnly = { id = "io.github.gciatto.kt-mpp.jvm-only", version.ref = "ktMpp" }
+    ktMpp-multiplatform = { id = "io.github.gciatto.kt-mpp.multiplatform", version.ref = "ktMpp" }
+    ktMpp-multiProjectHelper = { id = "io.github.gciatto.kt-mpp.multi-project-helper", version.ref = "ktMpp" }
+    ```
+   
+2. Fill your root project's `build.gradle.kts` file as follows:
+
+    ```kotlin
+    @Suppress("DSL_SCOPE_VIOLATION")
+    plugins {
+        alias(libs.plugins.ktMpp.<SPECIFIC PLUGIN HERE>)
+    }
+    ```
