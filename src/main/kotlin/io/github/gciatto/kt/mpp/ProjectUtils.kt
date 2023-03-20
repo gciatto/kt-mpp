@@ -32,17 +32,16 @@ fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
 fun Project.kotlinVersion(version: String) = kotlinVersion(provider { version })
 
 fun Project.kotlinVersion(provider: Provider<String>) {
+    val version = provider.getOrElse(KotlinVersion.CURRENT.toString())
     configurations.all { configuration ->
         configuration.resolutionStrategy.eachDependency { dependency ->
             if (dependency.requested.let { it.group == "org.jetbrains.kotlin" && it.name.startsWith("kotlin") }) {
-                provider.map {
-                    dependency.useVersion(it)
-                    dependency.because("All Kotlin modules should use the same version, and compiler uses $it")
-                }
+                dependency.useVersion(version)
+                dependency.because("All Kotlin modules should use the same version, and compiler uses $version")
             }
         }
     }
-    provider.map { log("enforce version for Kotlin dependencies: $it") }
+    log("enforce version for Kotlin dependencies: $version")
 }
 
 fun Project.jvmVersion(version: String) = jvmVersion(provider { version })
