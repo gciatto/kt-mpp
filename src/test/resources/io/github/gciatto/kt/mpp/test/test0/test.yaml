@@ -4,6 +4,7 @@ tests:
       tasks: ":tasks"
       options:
         - "--stacktrace"
+        - "--info"
     expectation:
       success: ':tasks'
       output_contains:

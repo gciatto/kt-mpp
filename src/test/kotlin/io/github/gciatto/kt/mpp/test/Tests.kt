@@ -18,10 +18,6 @@ import java.io.File
 
 class Tests : StringSpec(
     {
-        val testkitProperties = javaClass.classLoader.getResource("testkit-gradle.properties")?.readText()
-        checkNotNull(testkitProperties) {
-            "No file testkit-gradle.properties was generated"
-        }
         val scan = ClassGraph()
             .enableAllInfo()
             .acceptPackages(Tests::class.java.`package`.name)
@@ -42,17 +38,11 @@ class Tests : StringSpec(
                 }
                 log.debug("Test has been copied into $testFolder and is ready to get executed")
                 test.description {
-                    File(testFolder.root, "gradle.properties").let {
-                        if (it.exists()) {
-                            it.appendText(testkitProperties)
-                        } else {
-                            it.writeText(testkitProperties)
-                        }
-                    }
                     val result = GradleRunner.create()
                         .withProjectDir(testFolder.root)
                         .withPluginClasspath()
                         .withArguments(test.configuration.tasks + test.configuration.options)
+//                        .withDebug(true)
                         .run { if (test.expectation.failure.isEmpty()) build() else buildAndFail() }
                     println(result.tasks)
                     println(result.output)
