@@ -20,16 +20,13 @@ class DocumentationPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val dokka = apply(DokkaPlugin::class)
         log("apply ${dokka::class.java.name} as doc generator")
-        if (project == rootProject) {
-            tasks.withType(DokkaMultiModuleTask::class.java) {
-                val task = createJavadocArchiveTask<Zip>(dependingOn = it)
-                log("create ${task.path} task depending on ${it.path}")
-            }
-        } else {
-            tasks.withType(DokkaTask::class.java) {
-                val task = createJavadocArchiveTask<Jar>(dependingOn = it)
-                log("create ${task.path} task depending on ${it.path}")
-            }
+        tasks.withType(DokkaMultiModuleTask::class.java) {
+            val task = createJavadocArchiveTask<Zip>(dependingOn = it)
+            log("create ${task.path} task depending on ${it.path}")
+        }
+        tasks.withType(DokkaTask::class.java) {
+            val task = createJavadocArchiveTask<Jar>(dependingOn = it)
+            log("create ${task.path} task depending on ${it.path}")
         }
     }
 }
