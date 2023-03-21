@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/gciatto/kt-mpp/compare/1.1.1...1.2.0) (2023-03-21)
+
+
+### Features
+
+* dokkaArtifactInMavenPublication property to regulate which doc artifact should be included in maven publications ([774498b](https://github.com/gciatto/kt-mpp/commit/774498be0a9d4af4076428a3aed11e0aaab02ab7))
+
 ## [1.1.1](https://github.com/gciatto/kt-mpp/compare/1.1.0...1.1.1) (2023-03-21)
 
 
