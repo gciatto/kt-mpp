@@ -67,7 +67,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                 if (npmRepo.isNullOrBlank()) {
                     registries.npmjs { configureRegistry(it) }
                 } else {
-                    registries.create("customNpmRegistry") {
+                    registries.create("custom") {
                         it.uri.set(uri(npmRepo))
                         configureRegistry(it)
                     }
