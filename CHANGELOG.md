@@ -1,3 +1,15 @@
+## [1.1.1](https://github.com/gciatto/kt-mpp/compare/1.1.0...1.1.1) (2023-03-21)
+
+
+### Bug Fixes
+
+* dokka jar/zip generation for rootProjects without sub-projects ([fa474df](https://github.com/gciatto/kt-mpp/commit/fa474dfff323a16cd1e203ae58d5e16e7eeda703))
+
+
+### Dependency updates
+
+* **deps:** update plugin com.gradle.enterprise to v3.12.5 ([e7be7d4](https://github.com/gciatto/kt-mpp/commit/e7be7d49db45d257ae58f81858ef7e569413ee51))
+
 ## [1.1.0](https://github.com/gciatto/kt-mpp/compare/1.0.0...1.1.0) (2023-03-20)
 
 
