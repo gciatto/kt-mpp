@@ -219,6 +219,8 @@ Overall, you may need to define, provide the following properties:
 
 - `issuesEmail` (optional): issue tracking email (useful for Maven/NPM publications).
 
+- `dokkaArtifactInMavenPublication` (optional, default value: `"html"`): the Dokka artifact type to be used for Maven publications (one of {`"html"`, `gfm`, `javadoc`, `jekyll`})
+
 ## How to use
 
 1. Create a `gradle/libs.versions.toml` file in your project's root directory, e.g.:

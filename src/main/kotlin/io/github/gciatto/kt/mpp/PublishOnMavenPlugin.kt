@@ -118,7 +118,9 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 publications.withType(MavenPublication::class.java) { pub ->
                     pub.copyMavenGroupAndVersionFromProject()
                     project.tasks.withType(Jar::class.java) {
-                        if ("Html" in name && it.archiveClassifier.getOrElse("") in publishableClassifiers) {
+                        val suffix = getOptionalProperty("dokkaArtifactInMavenPublication") ?: "Html"
+                        val classifier = it.archiveClassifier.getOrElse("")
+                        if (it.name.contains(suffix, true) && classifier in publishableClassifiers) {
                             pub.artifact(it)
                             log("add artifact to publication ${pub.name}: ${it.archiveFileName.get()}")
                         }

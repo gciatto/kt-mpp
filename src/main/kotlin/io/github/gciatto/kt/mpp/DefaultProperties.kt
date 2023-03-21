@@ -275,4 +275,13 @@ interface DefaultProperties {
             mandatory = false,
             defaultValue = ""
         )
+
+    val dokkaArtifactInMavenPublication: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "dokkaArtifactInMavenPublication",
+            description = "The Dokka artifact type to be used for Maven publications" +
+                " (one of {'html', 'gfm', 'javadoc', 'jekyll'})",
+            mandatory = true,
+            defaultValue = "html"
+        )
 }
