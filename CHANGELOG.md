@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/gciatto/kt-mpp/compare/1.2.0...1.2.1) (2023-03-21)
+
+
+### Bug Fixes
+
+* more readable custom JS registry name ([a87fb61](https://github.com/gciatto/kt-mpp/commit/a87fb612deba0421f3e12963ece4eca9983422db))
+
 ## [1.2.0](https://github.com/gciatto/kt-mpp/compare/1.1.1...1.2.0) (2023-03-21)
 
 
