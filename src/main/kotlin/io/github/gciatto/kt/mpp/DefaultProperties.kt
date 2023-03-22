@@ -97,6 +97,14 @@ interface DefaultProperties {
             defaultValue = false
         )
 
+    val ktTargetNativeDisable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "ktTargetNativeDisable",
+            description = "If true, disables the Native target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
     val mavenPassword: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "mavenPassword",

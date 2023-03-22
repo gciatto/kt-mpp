@@ -3,8 +3,10 @@ package io.github.gciatto.kt.mpp
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.get
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
@@ -17,6 +19,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         configureNodeVersionFromCatalogIfPossible()
         val ktTargetJvmDisable = getBooleanProperty("ktTargetJvmDisable")
         val ktTargetJsDisable = getBooleanProperty("ktTargetJsDisable")
+        val ktTargetNativeDisable = getBooleanProperty("ktTargetNativeDisable")
         configure(KotlinMultiplatformExtension::class) {
             if (ktTargetJvmDisable) {
                 log("disable JVM target", LogLevel.WARN)
@@ -27,6 +30,11 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 log("disable JS target", LogLevel.WARN)
             } else {
                 js { configureJs() }
+            }
+            if (ktTargetNativeDisable) {
+                log("disable Native target", LogLevel.WARN)
+            } else {
+                configureNative()
             }
             dependenciesFor("commonMain") {
                 addMainDependencies(project, "common", skipBom = false)
@@ -46,7 +54,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
 
     private fun KotlinMultiplatformExtension.dependenciesFor(
         sourceSet: String,
-        action: KotlinDependencyHandler.() -> Unit
+        action: KotlinDependencyHandler.() -> Unit,
     ) = sourceSets.getByName(sourceSet).dependencies(action)
 
     context(Project, KotlinMultiplatformExtension)
@@ -82,6 +90,29 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         }
     }
 
+    private fun KotlinMultiplatformExtension.configureNative() {
+        // TODO: Setup nativeMain and nativeTest source sets
+        val nativeSetup: KotlinNativeTarget.() -> Unit = {
+            compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
+            compilations["test"].defaultSourceSet.dependsOn(sourceSets["nativeTest"])
+            binaries {
+                sharedLib()
+                staticLib()
+            }
+        }
+        // TODO: enable selectively the targets based on properties
+        linuxX64(nativeSetup)
+        linuxArm64(nativeSetup)
+
+        mingwX64(nativeSetup)
+
+        macosX64(nativeSetup)
+        macosArm64(nativeSetup)
+        ios(nativeSetup)
+        watchos(nativeSetup)
+        tvos(nativeSetup)
+    }
+
     override fun PropertiesHelperExtension.declareProperties() {
         addProperty(allWarningsAsErrors)
         addProperty(ktCompilerArgs)
@@ -90,6 +121,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         addProperty(mochaTimeout)
         addProperty(ktTargetJvmDisable)
         addProperty(ktTargetJsDisable)
+        addProperty(ktTargetNativeDisable)
         addProperty(versionsFromCatalog)
         addProperty(nodeVersion)
     }
