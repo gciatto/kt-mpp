@@ -14,3 +14,21 @@ multiProjectHelper {
     otherProjects(":subproject-other")
     applyProjectTemplates()
 }
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    extensions.findByType(PublishingExtension::class.java)?.run {
+        publications {
+            configureEach {
+                repositories {
+                    mavenLocal {
+                        url = rootProject.uri("build/.m2/repository")
+                        println(url)
+                    }
+                }
+            }
+        }
+    }
+}

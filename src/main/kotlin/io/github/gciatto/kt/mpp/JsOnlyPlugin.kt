@@ -26,7 +26,7 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
         }
         dependencies {
             addMainDependencies(project, target = "js")
-            addTestDependencies(project, target = "js")
+            addTestDependencies(project, target = "js", skipAnnotations = true)
         }
         addTaskAliases()
     }

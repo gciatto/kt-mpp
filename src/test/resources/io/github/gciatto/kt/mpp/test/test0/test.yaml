@@ -16,3 +16,14 @@ tests:
         - "--stacktrace"
     expectation:
       success: ':full:explainProperties'
+  - description: "Upload to Maven implies sources and javadoc being generated"
+    configuration:
+      tasks: "publishToMavenLocal"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:publishToMavenLocal"
+        - ":subproject-js:publishToMavenLocal"
+        - ":subproject-mp:publishToMavenLocal"
+        - ":subproject-other:publishToMavenLocal"

@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
+import java.nio.charset.Charset
 
 internal val Project.gradlePropertiesFile: File
     get() = projectDir.resolve("gradle.properties")
@@ -43,6 +44,19 @@ fun Project.kotlinVersion(provider: Provider<String>) {
     }
     log("enforce version for Kotlin dependencies: $version")
 }
+
+private fun String.getAsFile(charset: Charset = Charsets.UTF_8) =
+    File(this).readText(charset)
+
+fun String.getAsEitherFileOrValue(project: Project, charset: Charset = Charsets.UTF_8): String =
+    if (startsWith("file:")) {
+        replace("\$rootProject", project.rootProject.projectDir.absolutePath)
+            .replace("\$project", project.projectDir.absolutePath)
+            .replace("file:", "")
+            .getAsFile(charset)
+    } else {
+        this
+    }
 
 fun Project.jvmVersion(version: String) = jvmVersion(provider { version })
 

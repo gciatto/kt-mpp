@@ -27,6 +27,10 @@ class DocumentationPlugin : AbstractProjectPlugin() {
         tasks.withType(DokkaTask::class.java) {
             val task = createJavadocArchiveTask<Jar>(dependingOn = it)
             log("create ${task.path} task depending on ${it.path}")
+            tasks.named("assemble").configure { assemble ->
+                assemble.dependsOn(it)
+                log("make ${assemble.path} task dependant on ${it.path}")
+            }
         }
     }
 }

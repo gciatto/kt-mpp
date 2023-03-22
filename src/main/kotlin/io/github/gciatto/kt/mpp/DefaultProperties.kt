@@ -281,7 +281,7 @@ interface DefaultProperties {
             name = "dokkaArtifactInMavenPublication",
             description = "The Dokka artifact type to be used for Maven publications" +
                 " (one of {'html', 'gfm', 'javadoc', 'jekyll'})",
-            mandatory = true,
+            mandatory = false,
             defaultValue = "html"
         )
 }

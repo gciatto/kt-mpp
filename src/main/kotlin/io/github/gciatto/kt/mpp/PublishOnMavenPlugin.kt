@@ -72,9 +72,17 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 val signingKey: String? = getOptionalProperty("signingKey")
                 val signingPassword: String? = getOptionalProperty("signingPassword")
                 if (arrayOf(signingKey, signingPassword).none { it.isNullOrBlank() }) {
-                    useInMemoryPgpKeys(signingKey, signingPassword)
-                    sign(publications)
-                    log("configure signing for publications: ${publications.names.joinToString()}")
+                    val actualKey = signingKey!!.getAsEitherFileOrValue(project)
+                    val actualPassphrase = signingPassword!!.getAsEitherFileOrValue(project)
+                    log(
+                        "configure signatory for publication for project $name: " +
+                            "key=${actualKey.asPassword()}, passphrase=${actualPassphrase.asPassword()}"
+                    )
+                    useInMemoryPgpKeys(actualKey, actualPassphrase)
+                    publications.withType(MavenPublication::class.java) {
+                        sign(it)
+                        log("configure signing for publication: $it")
+                    }
                 } else {
                     /* ktlint-disable */
                     log(
@@ -118,11 +126,13 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 publications.withType(MavenPublication::class.java) { pub ->
                     pub.copyMavenGroupAndVersionFromProject()
                     project.tasks.withType(Jar::class.java) {
-                        val suffix = getOptionalProperty("dokkaArtifactInMavenPublication") ?: "Html"
                         val classifier = it.archiveClassifier.getOrElse("")
-                        if (it.name.contains(suffix, true) && classifier in publishableClassifiers) {
-                            pub.artifact(it)
-                            log("add artifact to publication ${pub.name}: ${it.archiveFileName.get()}")
+                        if (classifier in publishableClassifiers) {
+                            val suffix = getOptionalProperty("dokkaArtifactInMavenPublication") ?: "Html"
+                            if (it.name.contains(suffix, ignoreCase = true)) {
+                                pub.artifact(it)
+                                log("add artifact to publication ${pub.name}: ${it.archiveFileName.get()}")
+                            }
                         }
                     }
                     pub.pom { pom ->
