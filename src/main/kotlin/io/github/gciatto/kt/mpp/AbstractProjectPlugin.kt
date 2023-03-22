@@ -7,6 +7,7 @@ import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.publish.maven.MavenPublication
 import java.io.File
+import java.util.Locale
 import kotlin.reflect.KClass
 
 @Suppress("TooManyFunctions")
@@ -134,4 +135,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         this == null -> "null"
         else -> (1..kotlin.math.min(length, 8)).map { '*' }.joinToString("")
     }
+
+    protected fun String.capital(): String =
+        replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 }

@@ -26,4 +26,4 @@ tests:
         - ":subproject-jvm:publishToMavenLocal"
         - ":subproject-js:publishToMavenLocal"
         - ":subproject-mp:publishToMavenLocal"
-        - ":subproject-other:publishToMavenLocal"
+        - ":full:publishToMavenLocal"

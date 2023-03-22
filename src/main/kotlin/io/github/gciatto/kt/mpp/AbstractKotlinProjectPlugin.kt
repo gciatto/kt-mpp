@@ -5,7 +5,6 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.VersionConstraint
 import org.gradle.api.logging.LogLevel
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
@@ -175,7 +174,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun KotlinTarget.targetCompilationId(compilation: KotlinCompilation<*>): String =
-        "${name}${compilation.compilationName.capitalized()}"
+        "${name}${compilation.compilationName.capital()}"
 
     protected fun targetCompilationId(task: KotlinCompile<*>): String =
         task.name.replace("compile", "")

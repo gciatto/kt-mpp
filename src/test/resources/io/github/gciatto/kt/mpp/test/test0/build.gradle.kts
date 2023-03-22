@@ -15,17 +15,21 @@ multiProjectHelper {
     applyProjectTemplates()
 }
 
+val localMavenRepoDir = rootProject.projectDir.absoluteFile.resolve("build/.m2/repository")
+println("Local Maven Repository: $localMavenRepoDir")
+
 allprojects {
     repositories {
         mavenCentral()
     }
-    extensions.findByType(PublishingExtension::class.java)?.run {
-        publications {
-            configureEach {
-                repositories {
-                    mavenLocal {
-                        url = rootProject.uri("build/.m2/repository")
-                        println(url)
+    plugins.withId("maven-publish") {
+        extensions.getByType(PublishingExtension::class.java).run {
+            publications {
+                configureEach {
+                    repositories {
+                        mavenLocal {
+                            url = localMavenRepoDir.toURI()
+                        }
                     }
                 }
             }
