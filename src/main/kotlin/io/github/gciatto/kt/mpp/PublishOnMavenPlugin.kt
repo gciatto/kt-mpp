@@ -101,18 +101,16 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     private fun Project.addMissingPublications() {
         configure(PublishingExtension::class) {
-            configure(SigningExtension::class) {
-                plugins.withId("org.jetbrains.kotlin.jvm") {
-                    publications.maybeCreate("jvm", MavenPublication::class.java).run {
-                        from(components.getAt("java"))
-                        log("add jvm publication from java component")
-                    }
+            plugins.withId("org.jetbrains.kotlin.jvm") {
+                publications.maybeCreate("jvm", MavenPublication::class.java).run {
+                    from(components.getAt("java"))
+                    log("add jvm publication from java component")
                 }
-                plugins.withId("org.jetbrains.kotlin.js") {
-                    publications.maybeCreate("js", MavenPublication::class.java).run {
-                        from(components.getAt("kotlin"))
-                        log("add js publication from kotlin component")
-                    }
+            }
+            plugins.withId("org.jetbrains.kotlin.js") {
+                publications.maybeCreate("js", MavenPublication::class.java).run {
+                    from(components.getAt("kotlin"))
+                    log("add js publication from kotlin component")
                 }
             }
         }

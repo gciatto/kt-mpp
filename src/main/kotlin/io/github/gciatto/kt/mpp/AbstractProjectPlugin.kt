@@ -4,8 +4,10 @@ import dev.petuska.npm.publish.extension.NpmPublishExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.bundling.Jar
 import java.io.File
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -123,6 +125,28 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         version.set(provider { project.npmCompliantVersion })
         log("let version of NPM publication be equal to the project's one")
     }
+
+    private fun Project.makeAssembleTaskDependOnJarTask(task: Jar) {
+        tasks.matching { it.name == "assemble" }.configureEach { assemble ->
+            assemble.dependsOn(task)
+            log("make ${assemble.path} task dependant on ${task.path}")
+        }
+    }
+
+    context(Project)
+    protected fun MavenPublication.addJarTask(task: Jar) {
+        artifact(task)
+        log("add task ${task.path} to publication $name, as javadoc artifact")
+    }
+
+    protected fun Project.createJarTask(name: String, classifier: String, group: String, action: Jar.() -> Unit): Jar =
+        tasks.maybeCreate(name, Jar::class.java).also {
+            it.group = group
+            it.archiveClassifier.set(classifier)
+            makeAssembleTaskDependOnJarTask(it)
+            it.duplicatesStrategy = DuplicatesStrategy.WARN
+            it.action()
+        }
 
     @Suppress("MagicNumber")
     protected fun String?.asField() = when {
