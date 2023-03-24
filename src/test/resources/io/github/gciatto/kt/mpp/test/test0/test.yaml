@@ -1,14 +1,90 @@
 tests:
-  - description: "Root project should be multiplatform"
+  - description: "Root project is multiplatform, hence it has tasks concerning all platforms"
     configuration:
       tasks: ":tasks"
       options:
         - "--stacktrace"
-        - "--info"
     expectation:
       success: ':tasks'
       output_contains:
-        - Tasks runnable from root project 'test0'
+        - "Tasks runnable from root project 'test0'"
+        # build
+        - "allMetadataJar - Assembles a jar archive containing the metadata for all Kotlin source sets."
+        - "assemble - Assembles the outputs of this project."
+        - "assembleJsPackage - Assembles js package."
+        - "jsJar - Assembles an archive containing the main classes."
+        - "jsMainClasses - Assembles outputs for compilation 'main' of target 'js'"
+        - "jsSourcesJar - Assembles a jar archive containing the sources of target 'js'."
+        - "jsTestClasses - Assembles outputs for compilation 'test' of target 'js'"
+        - "jvmJar - Assembles an archive containing the main classes."
+        - "jvmMainClasses - Assembles outputs for compilation 'main' of target 'jvm'"
+        - "jvmSourcesJar - Assembles a jar archive containing the sources of target 'jvm'."
+        - "jvmTestClasses - Assembles outputs for compilation 'test' of target 'jvm'"
+        - "kotlinSourcesJar - Assembles a jar archive containing the sources of target 'kotlin'."
+        - "mainClasses - Assembles outputs for compilation 'main' of target 'js'"
+        - "metadataCommonMainClasses - Assembles outputs for compilation 'commonMain' of target 'metadata'"
+        - "metadataMainClasses - Assembles outputs for compilation 'main' of target 'metadata'"
+        - "metadataSourcesJar - Assembles a jar archive containing the sources of target 'metadata'."
+        # documentation
+        - "dokkaHtml - Generates documentation in 'html' format"
+        - "dokkaHtmlJsJar"
+        - "dokkaHtmlJvmJar"
+        - "dokkaHtmlKotlinMultiplatformJar"
+        - "dokkaHtmlMultiModule - Runs all subprojects 'dokkaHtml' tasks and generates module navigation page"
+        - "dokkaHtmlMultiModuleZip"
+        # dukat
+        - "generateExternals - Generate Kotlin/JS external declarations for .d.ts files of all NPM dependencies in compilation 'main' (target js (js))"
+        - "generateExternalsIntegrated - Integrated generation Kotlin/JS external declarations for .d.ts files in compilation 'main' (target js (js))"
+        - "jsGenerateExternals - Generate Kotlin/JS external declarations for .d.ts files of all NPM dependencies in compilation 'main' (target js (js))"
+        - "jsGenerateExternalsIntegrated - Integrated generation Kotlin/JS external declarations for .d.ts files in compilation 'main' (target js (js))"
+        # ktlint
+        - "ktlintFormat - Runs the ktlint formatter on all kotlin sources in this project."
+        - "ktlintApplyToIdea - Generates IDEA built-in formatter rules and apply them to the project.It will overwrite existing ones."
+        - "ktlintApplyToIdeaGlobally - Generates IDEA built-in formatter rules and apply them globally (in IDEA user settings folder). It will overwrite existing ones."
+        - "ktlintGenerateBaseline - Generates KtLint baseline file"
+        - "ktlintCheck - Runs ktlint on all kotlin sources in this project."
+        # nodejs
+        - "jsPackageJson - Create package.json file for compilation 'main' (target js (js))"
+        - "jsTestPackageJson - Create package.json file for compilation 'test' (target js (js))"
+        - "kotlinNodeJsSetup - Download and install a local node/npm version"
+        - "kotlinNpmInstall - Find, download and link NPM dependencies and projects"
+        - "kotlinYarnSetup - Download and install a local yarn version"
+        - "nodeKotlinClean - Clean unused local node version"
+        - "packageJson - Create package.json file for compilation 'main' (target js (js))"
+        - "rootPackageJson - Create root package.json"
+        - "testPackageJson - Create package.json file for compilation 'test' (target js (js))"
+        # maven
+        - "generateMetadataFileForJsPublication - Generates the Gradle metadata file for publication 'js'."
+        - "generateMetadataFileForJvmPublication - Generates the Gradle metadata file for publication 'jvm'."
+        - "generateMetadataFileForKotlinMultiplatformPublication - Generates the Gradle metadata file for publication 'kotlinMultiplatform'."
+        - "generatePomFileForJsPublication - Generates the Maven POM file for publication 'js'."
+        - "generatePomFileForJvmPublication - Generates the Maven POM file for publication 'jvm'."
+        - "generatePomFileForKotlinMultiplatformPublication - Generates the Maven POM file for publication 'kotlinMultiplatform'."
+        - "publishAllPublicationsToMavenRepository - Publishes all Maven publications produced by this project to the maven repository."
+        - "publishJsPublicationToMavenLocal - Publishes Maven publication 'js' to the local Maven repository."
+        - "publishJvmPublicationToMavenLocal - Publishes Maven publication 'jvm' to the local Maven repository."
+        - "publishKotlinMultiplatformPublicationToMavenLocal - Publishes Maven publication 'kotlinMultiplatform' to the local Maven repository."
+        # npm
+        - "publishJsPackageToCustomRegistry - Publishes NPM package to NPM registry"
+        # detekt
+        - "detekt"
+        - "detektJsMain - Run detekt analysis for target js and source set main"
+        - "detektJsTest - Run detekt analysis for target js and source set test"
+        - "detektJvmMain - EXPERIMENTAL: Run detekt analysis for target jvm and source set main with type resolution."
+        - "detektJvmTest - EXPERIMENTAL: Run detekt analysis for target jvm and source set test with type resolution."
+        - "detektMain - EXPERIMENTAL: Run detekt analysis for main classes with type resolution"
+        - "detektMetadataCommonMain - Run detekt analysis for target metadata and source set commonMain"
+        - "detektMetadataMain - Run detekt analysis for target metadata and source set main"
+        - "detektTest - EXPERIMENTAL: Run detekt analysis for test classes with type resolution"
+        # verification
+        - "jsNodeTest - Run all js tests inside nodejs using the builtin test framework"
+        - "jsTest - Run JS tests for all platforms"
+        - "jvmTest - Runs the tests of the test test run."
+        - "nodeTest - Run all js tests inside nodejs using the builtin test framework"
+        - "test - Runs the test suite."
+        # versions
+        - "printNpmVersion"
+        - "printVersion"
   - description: "Print properties explanation"
     configuration:
       tasks: ":full:explainProperties"
@@ -16,7 +92,7 @@ tests:
         - "--stacktrace"
     expectation:
       success: ':full:explainProperties'
-  - description: "Full test"
+  - description: "Running :full:test should test all platforms and compile all dependencies"
     configuration:
       tasks: ":full:test"
       options:
@@ -24,6 +100,17 @@ tests:
     expectation:
       success:
         - ":full:test"
+        - ":subproject-jvm:compileKotlin"
+        - ":subproject-jvm:compileJava"
+        - ":subproject-js:mainClasses"
+        - ":subproject-mp:jvmMainClasses"
+        - ":subproject-mp:jsMainClasses"
+        - ":full:jvmMainClasses"
+        - ":full:jsMainClasses"
+        - ":full:jvmTestClasses"
+        - ":full:jsTestClasses"
+        - ":full:jvmTest"
+        - ":full:jsTest"
   - description: "Upload to Maven implies sources and javadoc being generated"
     configuration:
       tasks: "publishToMavenLocal"
@@ -37,7 +124,6 @@ tests:
         - ":full:publishToMavenLocal"
       # find build/.m2 -type f -wholename '*'
       file_exists:
-
         - name: build/.m2/repository/io/github/gciatto/example/full/1.0.0/full-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/example/full/1.0.0/full-1.0.0-sources.jar.asc
         - name: build/.m2/repository/io/github/gciatto/example/full/1.0.0/full-1.0.0.jar
