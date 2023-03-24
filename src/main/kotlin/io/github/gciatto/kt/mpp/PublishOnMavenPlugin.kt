@@ -93,7 +93,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 val signAll = project.tasks.create("signAllPublications")
                 project.tasks.withType(Sign::class.java) {
                     signAll.dependsOn(it)
-                    log("create signAllPublications tasks depending on ${it.path}")
+                    log("make ${signAll.path} tasks dependant on ${it.path}")
                 }
             }
         }

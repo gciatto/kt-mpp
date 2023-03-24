@@ -20,15 +20,16 @@ class DocumentationPlugin : AbstractProjectPlugin() {
             configure(PublishingExtension::class) {
                 publications.withType(MavenPublication::class.java) { pub ->
                     val suffix = getOptionalProperty("dokkaArtifactInMavenPublication") ?: "Html"
-                    tasks.withType(DokkaTask::class.java).matching { suffix in it.name }.configureEach { dokkaTask ->
-                        val javadocJarTaskName = "${dokkaTask.name}${pub.name.capital()}Jar"
-                        val javadocJarTask = tasks.create<JarDokkaTask>(javadocJarTaskName, dokkaTask)
-                        log("create ${javadocJarTask.path} task depending on ${dokkaTask.path}")
-                        tasks.matching { it.name == "assemble" }.configureEach { assemble ->
-                            assemble.dependsOn(javadocJarTask)
-                            log("make ${assemble.path} task dependant on ${javadocJarTask.path}")
+                    tasks.withType(DokkaTask::class.java).matching { it.name.contains(suffix, true) }
+                        .all { dokkaTask ->
+                            val javadocJarTaskName = "${dokkaTask.name}${pub.name.capital()}Jar"
+                            val javadocJarTask = tasks.create<JarDokkaTask>(javadocJarTaskName, dokkaTask)
+                            log("create ${javadocJarTask.path} task depending on ${dokkaTask.path}")
+                            tasks.matching { it.name == "assemble" }.configureEach { assemble ->
+                                assemble.dependsOn(javadocJarTask)
+                                log("make ${assemble.path} task dependant on ${javadocJarTask.path}")
+                            }
                         }
-                    }
                 }
             }
         }
