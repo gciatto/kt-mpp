@@ -105,6 +105,70 @@ interface DefaultProperties {
             defaultValue = false
         )
 
+    val linuxX64Disable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "linuxX64Disable",
+            description = "If true, disables the Linux x64 target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val linuxArm64Disable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "linuxArm64Disable",
+            description = "If true, disables the Linux ARM64 target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val mingwX64Disable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "mingwX64Disable",
+            description = "If true, disables the MinGW x64 target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val macosX64Disable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "macosX64Disable",
+            description = "If true, disables the macOS x64 target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val macosArm64Disable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "macosArm64Disable",
+            description = "If true, disables the macOS ARM64 target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val iosDisable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "iosDisable",
+            description = "If true, disables the iOS target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val watchOsDisable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "watchOsDisable",
+            description = "If true, disables the watchOS target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
+    val tvOsDisable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "tvOsDisable",
+            description = "If true, disables the tvOS target on a multi-platform project",
+            mandatory = false,
+            defaultValue = false
+        )
+
     val mavenPassword: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "mavenPassword",
