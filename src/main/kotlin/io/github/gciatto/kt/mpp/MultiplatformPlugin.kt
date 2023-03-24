@@ -2,6 +2,7 @@ package io.github.gciatto.kt.mpp
 
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
+import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.get
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -90,8 +91,20 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         }
     }
 
+    context(Project)
     private fun KotlinMultiplatformExtension.configureNative() {
-        // TODO: Setup nativeMain and nativeTest source sets
+        val disableLinuxX64 = getBooleanProperty("linuxX64Disable")
+        val disableLinuxArm64 = getBooleanProperty("linuxArm64Disable")
+        val disableMingwX64 = getBooleanProperty("mingwX64Disable")
+        val disableMacosX64 = getBooleanProperty("macosX64Disable")
+        val disableMacosArm64 = getBooleanProperty("macosArm64Disable")
+        val disableIos = getBooleanProperty("iosDisable")
+        val disableWatchos = getBooleanProperty("watchosDisable")
+        val disableTvos = getBooleanProperty("tvosDisable")
+
+        sourceSets.create("nativeMain").dependsOn(sourceSets["commonMain"])
+        sourceSets.create("nativeTest").dependsOn(sourceSets["commonTest"])
+
         val nativeSetup: KotlinNativeTarget.() -> Unit = {
             compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
             compilations["test"].defaultSourceSet.dependsOn(sourceSets["nativeTest"])
@@ -100,17 +113,43 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 staticLib()
             }
         }
-        // TODO: enable selectively the targets based on properties
-        linuxX64(nativeSetup)
-        linuxArm64(nativeSetup)
 
-        mingwX64(nativeSetup)
+        if (!disableLinuxX64) linuxX64(nativeSetup)
+        if (!disableLinuxArm64) linuxArm64(nativeSetup)
 
-        macosX64(nativeSetup)
-        macosArm64(nativeSetup)
-        ios(nativeSetup)
-        watchos(nativeSetup)
-        tvos(nativeSetup)
+        if (!disableMingwX64) mingwX64(nativeSetup)
+
+        if (!disableMacosX64) macosX64(nativeSetup)
+        if (!disableMacosArm64) macosArm64(nativeSetup)
+        if (!disableIos) ios(nativeSetup)
+        if (!disableWatchos) watchos(nativeSetup)
+        if (!disableTvos) tvos(nativeSetup)
+
+        val os = OperatingSystem.current()
+
+        // Disable cross compilation
+        val excludeTargets = when {
+            os.isLinux -> targets.filterNot { "linux" in it.name }
+            os.isWindows -> targets.filterNot { "mingw" in it.name }
+            os.isMacOsX -> targets.filter { "linux" in it.name || "mingw" in it.name }
+            else -> emptyList()
+        }.mapNotNull { it as? KotlinNativeTarget }
+
+        configure(excludeTargets) { target ->
+            target.compilations.configureEach { knc ->
+                knc.cinterops.configureEach { tasks[it.interopProcessingTaskName].enabled = false }
+                knc.compileTaskProvider.get().enabled = false
+                tasks[knc.processResourcesTaskName].enabled = false
+            }
+            target.binaries.configureEach { it.linkTask.enabled = false }
+
+//            mavenPublication {
+//                tasks.withType<AbstractPublishToMaven>()
+//                    .configureEach { onlyIf { publication != this@mavenPublication } }
+//                tasks.withType<GenerateModuleMetadata>()
+//                    .configureEach { onlyIf { publication.get() != this@mavenPublication } }
+//            }
+        }
     }
 
     override fun PropertiesHelperExtension.declareProperties() {
@@ -122,6 +161,14 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         addProperty(ktTargetJvmDisable)
         addProperty(ktTargetJsDisable)
         addProperty(ktTargetNativeDisable)
+        addProperty(linuxX64Disable)
+        addProperty(linuxArm64Disable)
+        addProperty(mingwX64Disable)
+        addProperty(macosX64Disable)
+        addProperty(macosArm64Disable)
+        addProperty(iosDisable)
+        addProperty(watchOsDisable)
+        addProperty(tvOsDisable)
         addProperty(versionsFromCatalog)
         addProperty(nodeVersion)
     }
