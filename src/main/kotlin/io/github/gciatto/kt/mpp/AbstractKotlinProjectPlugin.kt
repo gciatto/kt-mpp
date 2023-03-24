@@ -155,21 +155,28 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         skipAnnotations: Boolean = false
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
-    protected fun Project.addTaskAliases() {
-        tasks.register("${targetName}Test") {
+    protected fun Project.addPlatformSpecificTaskAliases() {
+        tasks.create("${targetName}Test") {
             it.group = "verification"
             it.dependsOn("test")
             log("add ${it.path} task as an alias for ${it.sibling("test")}")
         }
-        tasks.register("${targetName}MainClasses") {
+        tasks.create("${targetName}MainClasses") {
             it.group = "build"
             it.dependsOn("mainClasses")
             log("add ${it.path} task as an alias for ${it.sibling("mainClasses")}")
         }
-        tasks.register("${targetName}TestClasses") {
+        tasks.create("${targetName}TestClasses") {
             it.group = "build"
             it.dependsOn("testClasses")
             log("add ${it.path} task as an alias for ${it.sibling("testClasses")}")
+        }
+    }
+
+    protected fun Project.addMultiplatformTaskAliases(target: String) {
+        tasks.named("test").configure {
+            it.dependsOn("${target}Test")
+            log("let task ${it.path} be triggered by ${it.sibling("test")}")
         }
     }
 

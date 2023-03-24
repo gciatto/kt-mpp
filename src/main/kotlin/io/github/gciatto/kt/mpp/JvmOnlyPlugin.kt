@@ -28,7 +28,7 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             withSourcesJar()
             log("configure JVM library to include sources JAR")
         }
-        addTaskAliases()
+        addPlatformSpecificTaskAliases()
     }
 
     override fun PropertiesHelperExtension.declareProperties() {

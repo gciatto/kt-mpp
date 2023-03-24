@@ -64,6 +64,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         dependenciesFor("jvmTest") {
             addTestDependencies(project, "junit", skipAnnotations = true)
         }
+        addMultiplatformTaskAliases("jvm")
     }
 
     context(Project, KotlinMultiplatformExtension)
@@ -80,6 +81,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         dependenciesFor("jsTest") {
             addTestDependencies(project, "js", skipAnnotations = true)
         }
+        addMultiplatformTaskAliases("js")
     }
 
     override fun PropertiesHelperExtension.declareProperties() {

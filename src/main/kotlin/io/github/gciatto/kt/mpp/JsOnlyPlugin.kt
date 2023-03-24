@@ -28,7 +28,7 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
             addMainDependencies(project, target = "js")
             addTestDependencies(project, target = "js", skipAnnotations = true)
         }
-        addTaskAliases()
+        addPlatformSpecificTaskAliases()
     }
 
     override fun PropertiesHelperExtension.declareProperties() {
