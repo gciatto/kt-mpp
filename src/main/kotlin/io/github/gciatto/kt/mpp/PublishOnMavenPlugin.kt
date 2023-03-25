@@ -7,7 +7,9 @@ import org.danilopianini.gradle.mavencentral.Repository
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 
@@ -173,8 +175,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         addMissingInformationToPublications()
         configureSigning()
         enforceOrderingAmongTasks(
-            potentiallyBefore = { it.name.startsWith("sign") },
-            potentiallyAfter = { it.name.startsWith("publish") }
+            potentiallyBefore = { withType<Sign>() },
+            potentiallyAfter = { withType<AbstractPublishToMaven>() }
         )
     }
 }

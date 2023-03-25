@@ -2,83 +2,50 @@ package io.github.gciatto.kt.mpp
 
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskCollection
-import java.io.File
+import org.gradle.api.tasks.TaskContainer
 
+@Suppress("LeakingThis")
 internal abstract class TaskSorter(private val project: Project) {
-    private val before: TaskCollection<Task> = project.tasks.matching { isBefore(it) }
+    private val before = project.tasks.selectBefore()
 
-    private val after: TaskCollection<Task> = project.tasks.matching { isAfter(it) }
+    private val after = project.tasks.selectAfter()
 
-    private val beforeByOutput: MutableMap<File, MutableSet<Task>> = mutableMapOf()
+    private val logged: MutableSet<Pair<Task, Task>> = mutableSetOf()
 
-    private val afterByInput: MutableMap<File, MutableSet<Task>> = mutableMapOf()
-
-    private val logged: MutableSet<Triple<Task, Task, File>> = mutableSetOf()
-
-    private fun forceOrdering(before: Task, after: Task, file: File) {
+    private fun forceOrdering(before: Task, after: Task) {
         after.mustRunAfter(before)
-        val logNotice = Triple(before, after, file)
+        val logNotice = Pair(before, after)
         if (logNotice !in logged) {
             logged += logNotice
             project.log(
-                "make task ${after.path} run after ${before.path}, " +
-                    "as file $file is produced by the latter task and consumed by the former one"
+                message = "make task ${after.path} run after ${before.path}",
+                logLevel = LogLevel.LIFECYCLE
             )
         }
     }
 
-    protected abstract fun isBefore(task: Task): Boolean
+    protected abstract fun TaskContainer.selectBefore(): TaskCollection<out Task>
 
-    protected abstract fun isAfter(task: Task): Boolean
-
-    private fun onBeforeAdd(task: Task, output: File) {
-        if (output !in beforeByOutput) {
-            beforeByOutput[output] = mutableSetOf()
-        }
-        beforeByOutput[output]?.add(task)
-//        project.log("inspect task ${task.path} producing $output")
-        if (output in afterByInput) {
-            afterByInput[output]?.forEach {
-                forceOrdering(task, it, output)
-            }
-        }
-    }
-
-    private fun onAfterAdd(task: Task, input: File) {
-        if (input !in afterByInput) {
-            afterByInput[input] = mutableSetOf()
-        }
-        afterByInput[input]?.add(task)
-//        project.log("inspect task ${task.path} consuming $input")
-        if (input in beforeByOutput) {
-            beforeByOutput[input]?.forEach {
-                forceOrdering(it, task, input)
-            }
-        }
-    }
+    protected abstract fun TaskContainer.selectAfter(): TaskCollection<out Task>
 
     fun enforceOrdering() {
-        before.all { beforeTask ->
-            beforeTask.outputs.files.files.forEach { outputFile ->
-                onBeforeAdd(beforeTask, outputFile)
-            }
-        }
         after.all { afterTask ->
-            afterTask.inputs.files.files.forEach { inputFile ->
-                onAfterAdd(afterTask, inputFile)
+            before.all { beforeTask ->
+                forceOrdering(beforeTask, afterTask)
             }
         }
     }
 
     companion object {
         fun Project.enforceOrderingAmongTasks(
-            potentiallyBefore: (Task) -> Boolean,
-            potentiallyAfter: (Task) -> Boolean
+            potentiallyBefore: TaskContainer.() -> TaskCollection<out Task>,
+            potentiallyAfter: TaskContainer.() -> TaskCollection<out Task>
         ) {
             val enforcer = object : TaskSorter(this@enforceOrderingAmongTasks) {
-                override fun isBefore(task: Task): Boolean = potentiallyBefore(task)
-                override fun isAfter(task: Task): Boolean = potentiallyAfter(task)
+                override fun TaskContainer.selectBefore() = potentiallyBefore()
+                override fun TaskContainer.selectAfter() = potentiallyAfter()
             }
             enforcer.enforceOrdering()
         }
