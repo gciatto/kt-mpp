@@ -165,12 +165,28 @@ tests:
         - "^> Task :subproject-jvm:printVersion[\\s\\n\\r]+1\\.0\\.0$"
         - "^> Task :subproject-mp:printVersion[\\s\\n\\r]+1\\.0\\.0$"
         - "^> Task :subproject-other:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+  - description: "Metadata generation works"
+    configuration:
+      tasks:
+        - "generateMetadataFileForJavaOSSRHPublication"
+        - "generateMetadataFileForJsPublication"
+        - "generateMetadataFileForJvmPublication"
+        - "generateMetadataFileForKotlinMultiplatformPublication"
+        - "generateMetadataFileForKotlinOSSRHPublication"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":full:generateMetadataFileForJavaOSSRHPublication"
+        - ":full:generateMetadataFileForJsPublication"
+        - ":full:generateMetadataFileForJvmPublication"
+        - ":full:generateMetadataFileForKotlinMultiplatformPublication"
+        - ":full:generateMetadataFileForKotlinOSSRHPublication"
   - description: "Upload to Maven implies sources and javadoc being generated"
     configuration:
       tasks: "publishToMavenLocal"
       options:
         - "--stacktrace"
-        - "--info"
     expectation:
       success:
         - ":subproject-jvm:publishToMavenLocal"

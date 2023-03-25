@@ -1,6 +1,7 @@
 package io.github.gciatto.kt.mpp
 
 import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
+import io.github.gciatto.kt.mpp.TaskSorter.Companion.enforceOrderingAmongTasks
 import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.danilopianini.gradle.mavencentral.Repository
 import org.gradle.api.Project
@@ -171,5 +172,9 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         configurePublications()
         addMissingInformationToPublications()
         configureSigning()
+        enforceOrderingAmongTasks(
+            potentiallyBefore = { it.name.startsWith("sign") },
+            potentiallyAfter = { it.name.startsWith("publish") }
+        )
     }
 }
