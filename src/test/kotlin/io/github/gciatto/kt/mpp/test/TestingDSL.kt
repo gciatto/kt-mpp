@@ -22,6 +22,7 @@ data class Expectation(
     val success: List<String> = emptyList(),
     val failure: List<String> = emptyList(),
     val output_contains: List<String> = emptyList(),
+    val output_matches: List<String> = emptyList(),
     val output_doesnt_contain: List<String> = emptyList(),
 )
 

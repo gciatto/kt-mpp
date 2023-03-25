@@ -6,6 +6,7 @@ import io.github.classgraph.ClassGraph
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.file.shouldBeAFile
 import io.kotest.matchers.file.shouldExist
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
@@ -51,6 +52,9 @@ class Tests : StringSpec(
                     }
                     test.expectation.output_doesnt_contain.forEach {
                         result.output shouldNotContain it
+                    }
+                    test.expectation.output_matches.forEach {
+                        result.output should MatchMultilinePattern(it)
                     }
                     test.expectation.success.forEach {
                         result.outcomeOf(it) shouldBe TaskOutcome.SUCCESS

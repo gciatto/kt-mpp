@@ -145,6 +145,26 @@ tests:
         - ":full:jsTestClasses"
         - ":full:jvmTest"
         - ":full:jsTest"
+  - description: "All sub-projects should have the same version of the rootProject"
+    configuration:
+      tasks: "printVersion"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:printVersion"
+        - ":subproject-js:printVersion"
+        - ":subproject-mp:printVersion"
+        - ":subproject-other:printVersion"
+        - ":printVersion"
+        - ":full:printVersion"
+      output_matches:
+        - "^> Task :printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :full:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-js:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-jvm:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-mp:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-other:printVersion[\\s\\n\\r]+1\\.0\\.0$"
   - description: "Upload to Maven implies sources and javadoc being generated"
     configuration:
       tasks: "publishToMavenLocal"
