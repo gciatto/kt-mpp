@@ -5,6 +5,7 @@ import dev.petuska.npm.publish.NpmPublishPlugin
 import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.NpmRegistry
 import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
+import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.gradle.api.logging.LogLevel
 
 class PublishOnNpmPlugin : AbstractProjectPlugin() {
@@ -40,6 +41,14 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val npmPublish = apply(NpmPublishPlugin::class)
         log("apply ${npmPublish::class.java.name} plugin")
+        plugins.withId("org.danilopianini.publish-on-central") {
+            configure(PublishOnCentralExtension::class) {
+                configureNpmPublishing(this)
+            }
+        }
+    }
+
+    private fun Project.configureNpmPublishing(centralExtension: PublishOnCentralExtension) =
         configure(NpmPublishExtension::class) {
             getOptionalProperty("npmOrganization")?.let {
                 if (it.isNotBlank()) {
@@ -78,14 +87,12 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                     pkg.packageName.set("${rootProject.name}-${project.name}")
                     log("set JS package name to ${pkg.packageName}")
                     packageJson {
-                        getOptionalProperty("projectHomepage")?.let {
-                            homepage.set(it)
-                            log("set package.json homepage to $it")
-                        }
-                        getOptionalProperty("projectDescription")?.let {
-                            description.set(it)
-                            log("set package.json description to '$it'")
-                        }
+                        homepage.set(centralExtension.projectUrl)
+                        log("set package.json homepage to match the POM project URL")
+                        description.set(centralExtension.projectDescription)
+                        log("set package.json description to match the POM project description")
+                        license.set(centralExtension.licenseName)
+                        log("set package.json license to match the POM license name")
                         val developers = project.getAllDevs()
                         if (developers.isNotEmpty()) {
                             val mainDeveloper = developers.first()
@@ -99,10 +106,6 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                                 .toCollection(mutableListOf())
                                 .also { log("add package.json contributors: ${it.joinToString()}") }
                         )
-                        getOptionalProperty("projectLicense")?.let {
-                            license.set(it)
-                            log("set package.json license to $it")
-                        }
                         private.set(false)
                         bugs { bugs ->
                             getOptionalProperty("issuesUrl")?.let {
@@ -116,14 +119,11 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                         }
                         repository { repos ->
                             repos.type.set("git")
-                            getOptionalProperty("scmUrl")?.let {
-                                repos.url.set(it)
-                                log("set package.json repo URL to $it")
-                            }
+                            repos.url.set(centralExtension.scmConnection)
+                            log("set package.json repo URL to match the POM SCM connection")
                         }
                     }
                 }
             }
         }
-    }
 }

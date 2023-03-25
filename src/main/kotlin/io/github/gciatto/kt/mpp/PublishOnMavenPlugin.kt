@@ -1,9 +1,9 @@
 package io.github.gciatto.kt.mpp
 
 import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
-import org.gradle.api.DomainObjectSet
+import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
+import org.danilopianini.gradle.mavencentral.Repository
 import org.gradle.api.Project
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.apply
@@ -12,13 +12,13 @@ import org.gradle.plugins.signing.SigningExtension
 
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    lateinit var publishableClassifiers: DomainObjectSet<String>
-
     override fun PropertiesHelperExtension.declareProperties() {
-        addProperty(mavenRepo)
-        addProperty(mavenUsername)
-        addProperty(mavenPassword)
+        addProperty(repoOwner)
+        addProperty(mavenCentralPassword)
+        addProperty(mavenCentralUsername)
+        addProperty(otherMavenRepo)
+        addProperty(otherMavenUsername)
+        addProperty(otherMavenPassword)
         addProperty(signingKey)
         addProperty(signingPassword)
         addProperty(projectLongName)
@@ -36,149 +36,140 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         addProperty(orgUrl)
     }
 
-    private fun Project.configureMavenRepository() {
-        configure(PublishingExtension::class) {
-            repositories { repos ->
-                repos.maven { maven ->
-                    getOptionalProperty("mavenRepo")?.let {
-                        maven.url = uri(it)
+    context(Project)
+    private fun Repository.configure(username: String?, pwd: String?) {
+        if (username != null && pwd != null) {
+            user.set(username)
+            password.set(pwd)
+        }
+        /* ktlint-disable */
+        log(
+            "configure Maven repository $name " +
+                "(URL: $url, username: ${user.get().asField()}, " +
+                "password: ${password.get().asPassword()})"
+        )
+        /* ktlint-enable */
+    }
+
+    private fun Project.configureMavenRepositories() = configure(PublishOnCentralExtension::class) {
+        configureMavenCentral.set(true)
+        mavenCentral.run {
+            val mavenCentralUsername: String? = getOptionalProperty("mavenCentralUsername")
+            val mavenCentralPassword: String? = getOptionalProperty("mavenCentralPassword")
+            configure(mavenCentralUsername, mavenCentralPassword)
+        }
+        getOptionalProperty("otherMavenRepo")?.takeIf { it.isNotBlank() && "oss.sonatype.org" !in it }?.let {
+            val mavenUsername: String? = getOptionalProperty("otherMavenUsername")
+            val mavenPassword: String? = getOptionalProperty("otherMavenPassword")
+            repository(it) {
+                user.set(mavenUsername)
+                password.set(mavenPassword)
+                /* ktlint-disable */
+                log(
+                    "configure Maven repository $name " +
+                        "(URL: $it, username: ${user.get().asField()}, " +
+                        "password: ${password.get().asPassword()})"
+                )
+                /* ktlint-enable */
+            }
+        }
+    }
+
+    private fun Project.configureSigning() = configure(SigningExtension::class) {
+        val signingKey: String? = getOptionalProperty("signingKey")
+        val signingPassword: String? = getOptionalProperty("signingPassword")
+        if (arrayOf(signingKey, signingPassword).none { it.isNullOrBlank() }) {
+            val actualKey = signingKey!!.getAsEitherFileOrValue(project)
+            val actualPassphrase = signingPassword!!.getAsEitherFileOrValue(project)
+            log(
+                "configure signatory for publication for project $name: " +
+                    "key=${actualKey.asPassword()}, passphrase=${actualPassphrase.asPassword()}"
+            )
+            useInMemoryPgpKeys(actualKey, actualPassphrase)
+        } else {
+            /* ktlint-disable */
+            log(
+                "one property in {signingKey, signingPassword} is unset or blank, " +
+                    "hence Maven publications won't be signed"
+            )
+            /* ktlint-enable */
+        }
+        val signAll = tasks.create("signAllPublications") { it.group = "signing" }
+        tasks.withType(Sign::class.java) {
+            it.group = "signing"
+            signAll.dependsOn(it)
+            log("make ${signAll.path} tasks dependant on ${it.path}")
+        }
+    }
+
+    private fun Project.configurePublications() = configure(PublishOnCentralExtension::class) {
+        getOptionalProperty("projectLongName")?.let {
+            projectLongName.set(it)
+            log("set POM name: $it")
+        }
+        (description ?: getOptionalProperty("projectDescription"))?.let {
+            projectDescription.set(it)
+            log("set POM description: $it")
+        }
+        getOptionalProperty("repoOwner")?.takeIf { it.isNotBlank() }?.let {
+            repoOwner.set(it)
+            log("set POM URL: $it")
+        }
+        getOptionalProperty("projectHomepage")?.takeIf { it.isNotBlank() }?.let {
+            projectUrl.set(it)
+            log("set POM URL: $it")
+        }
+        getOptionalProperty("projectLicense")?.takeIf { it.isNotBlank() }?.let {
+            licenseName.set(it)
+            log("set POM license name: $it")
+        }
+        getOptionalProperty("projectLicenseUrl")?.takeIf { it.isNotBlank() }?.let {
+            licenseUrl.set(it)
+            log("set POM license URL: $it")
+        }
+        getOptionalProperty("scmConnection")?.takeIf { it.isNotBlank() }?.let {
+            scmConnection.set(it)
+            log("add POM SCM connection: $it")
+        }
+        addMissingInformationToPublications()
+    }
+
+    private fun Project.addMissingInformationToPublications() = configure(PublishingExtension::class) {
+        publications.withType(MavenPublication::class.java) { pub ->
+            pub.pom { pom ->
+                pom.developers { devs ->
+                    for (dev in project.getAllDevs()) {
+                        dev.applyTo(devs)
+                        log("add POM developer publication ${pub.name}: $dev")
                     }
-                    val mavenUsername: String? = getOptionalProperty("mavenUsername")
-                    val mavenPassword: String? = getOptionalProperty("mavenPassword")
-                    if (mavenUsername != null && mavenPassword != null) {
-                        maven.credentials {
-                            it.username = mavenUsername
-                            it.password = mavenPassword
-                        }
-                        /* ktlint-disable */
-                        log(
-                            "configure Maven repository ${maven.name} " +
-                                "(URL: ${maven.url}, username: ${maven.credentials.username.asField()}, " +
-                                "password: ${maven.credentials.password.asPassword()})"
-                        )
-                        /* ktlint-enable */
-                    } else {
-                        log("configure Maven repository ${maven.name} with no credentials", LogLevel.WARN)
+                }
+                pom.scm { scm ->
+                    getOptionalProperty("scmUrl")?.takeIf { it.isNotBlank() }?.let {
+                        scm.url.set(it)
+                        log("add POM SCM URL in publication ${pub.name}: $it")
+                    }
+                }
+                pom.issueManagement { issues ->
+                    getOptionalProperty("issuesUrl")?.takeIf { it.isNotBlank() }?.let {
+                        issues.url.set(it)
+                        log("set POM issue URL to $it")
                     }
                 }
             }
         }
     }
 
-    private fun Project.configureSigning() {
-        configure(PublishingExtension::class) {
-            configure(SigningExtension::class) {
-                val signingKey: String? = getOptionalProperty("signingKey")
-                val signingPassword: String? = getOptionalProperty("signingPassword")
-                if (arrayOf(signingKey, signingPassword).none { it.isNullOrBlank() }) {
-                    val actualKey = signingKey!!.getAsEitherFileOrValue(project)
-                    val actualPassphrase = signingPassword!!.getAsEitherFileOrValue(project)
-                    log(
-                        "configure signatory for publication for project $name: " +
-                            "key=${actualKey.asPassword()}, passphrase=${actualPassphrase.asPassword()}"
-                    )
-                    useInMemoryPgpKeys(actualKey, actualPassphrase)
-                    publications.withType(MavenPublication::class.java) {
-                        sign(it)
-                        log("configure signing for publication: $it")
-                    }
-                } else {
-                    /* ktlint-disable */
-                    log(
-                        "one property in {signingKey, signingPassword} is unset or blank, " +
-                            "hence Maven publications won't be signed"
-                    )
-                    /* ktlint-enable */
-                }
-                val signAll = project.tasks.create("signAllPublications")
-                project.tasks.withType(Sign::class.java) {
-                    signAll.dependsOn(it)
-                    log("make ${signAll.path} tasks dependant on ${it.path}")
-                }
-            }
-        }
-    }
-
-    private fun Project.addMissingPublications() {
-        configure(PublishingExtension::class) {
-            plugins.withId("org.jetbrains.kotlin.jvm") {
-                publications.maybeCreate("jvm", MavenPublication::class.java).run {
-                    from(components.getAt("java"))
-                    log("add jvm publication from java component")
-                }
-            }
-            plugins.withId("org.jetbrains.kotlin.js") {
-                publications.maybeCreate("js", MavenPublication::class.java).run {
-                    from(components.getAt("kotlin"))
-                    log("add js publication from kotlin component")
-                }
-            }
-        }
-    }
-
-    @Suppress("CyclomaticComplexMethod")
-    private fun Project.lazilyConfigurePOM() {
-        configure(PublishingExtension::class) {
-            afterEvaluate { project ->
-                publications.withType(MavenPublication::class.java) { pub ->
-                    pub.copyMavenGroupAndVersionFromProject()
-                    pub.pom { pom ->
-                        getOptionalProperty("projectLongName")?.let {
-                            pom.name.set(it)
-                            log("set POM name in publication ${pub.name}: $it")
-                        }
-                        getOptionalProperty("projectDescription")?.let {
-                            pom.description.set(it)
-                            log("set POM description in publication ${pub.name}: $it")
-                        }
-                        getOptionalProperty("projectHomepage")?.let {
-                            pom.url.set(it)
-                            log("set POM URL in publication ${pub.name}: $it")
-                        }
-                        pom.licenses { licenses ->
-                            licenses.license { license ->
-                                getOptionalProperty("projectLicense")?.let {
-                                    license.name.set(it)
-                                    log("add POM license in publication ${pub.name}: $it")
-                                }
-                                getOptionalProperty("projectLicenseUrl")?.let {
-                                    license.url.set(it)
-                                    log("add POM license URL in publication ${pub.name}: $it")
-                                }
-                            }
-                        }
-                        pom.developers { devs ->
-                            for (dev in project.getAllDevs()) {
-                                dev.applyTo(devs)
-                                log("add POM developer publication ${pub.name}: $dev")
-                            }
-                        }
-                        pom.scm { scm ->
-                            getOptionalProperty("scmConnection")?.let {
-                                scm.connection.set(it)
-                                log("add POM SCM connection in publication ${pub.name}: $it")
-                            }
-                            getOptionalProperty("scmUrl")?.let {
-                                scm.url.set(it)
-                                log("add POM SCM URL in publication ${pub.name}: $it")
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    private fun Project.configurePublishOnCentralExtension() = configure(PublishOnCentralExtension::class) {
+        autoConfigureAllPublications.set(true)
     }
 
     override fun Project.applyThisPlugin() {
-        publishableClassifiers = project.objects.domainObjectSet(String::class.java)
-        publishableClassifiers.add("javadoc")
-        apply(plugin = "maven-publish")
-        log("apply maven-publish plugin")
-        apply(plugin = "signing")
-        log("apply signing plugin")
-        configureMavenRepository()
-        addMissingPublications()
-        lazilyConfigurePOM()
+        apply(plugin = "org.danilopianini.publish-on-central")
+        log("apply org.danilopianini.publish-on-central plugin")
+        configurePublishOnCentralExtension()
+        configureMavenRepositories()
+        configurePublications()
+        addMissingInformationToPublications()
         configureSigning()
     }
 }

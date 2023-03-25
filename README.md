@@ -171,15 +171,21 @@ Overall, you may need to define, provide the following properties:
 
 - `nodeVersion` (optional, default value: `""`): the version of NodeJS to use for running Kotlin JS scripts.
 
-- `mavenRepo` (optional, default value: `"https://oss.sonatype.org/service/local/staging/deploy/maven2/"`): the URL of Maven repository upon which Maven publications will be released.
+- `mavenCentralPassword` (optional): the password of the user willing to release Maven publications on Maven Central.
 
-- `mavenUsername` (optional): the username of the user willing to release Maven publications on <mavenRepo>.
+- `mavenCentralUsername` (optional): the username of the user willing to release Maven publications on Maven Central.
 
-- `mavenPassword` (optional): the password of the user willing to release Maven publications on <mavenRepo>.
+- `otherMavenRepo` (optional, default value: `"""`): the URL of Maven repository upon which Maven publications will be released.
 
-- `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications.It should be provided along with <signingPassword>.If missing or blank, publication artifact signing will be disabled.
+- `otherMavenUsername` (optional): the username of the user willing to release Maven publications on `<mavenRepo>`.
 
-- `signingPassword` (optional, default value: `""`): the passphrase of the private key to be used for signing Maven publications.It should be provided along with <signingPassword>.If missing or blank, publication artifact signing will be disabled.
+- `otherMavenPassword` (optional): the password of the user willing to release Maven publications on `<mavenRepo>`.
+
+- `repoOwner` (optional): name of the GitHub user/organization owning the repository of this project. Setting this property will assign default values to the following properties in case they are unset/blank: `<projectHomepage>`, `<scmUrl>`, and `<scmConnection>`.
+
+- `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
+
+- `signingPassword` (optional, default value: `""`): the passphrase of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
 
 - `projectLongName` (optional): non-necessarily path-compliant project name (to be used in place of project.name for Maven/NPM publications).
 

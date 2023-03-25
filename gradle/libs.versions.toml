@@ -5,6 +5,7 @@ kotest = "5.5.5"
 kotlin = "1.8.10"
 ktlint = "11.3.1"
 detekt = "1.22.0"
+publishOnCentral = "3.4.0"
 
 [libraries]
 classgraph = "io.github.classgraph:classgraph:4.8.157"
@@ -16,6 +17,7 @@ ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlin
 konf-yaml = { module = "com.uchuhimo:konf-yaml", version.ref = "konf" }
 kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
+publishOnCentral = { module = "org.danilopianini:publish-on-central", version.ref = "publishOnCentral" }
 npmPublish = "dev.petuska:npm-publish-gradle-plugin:3.2.1"
 
 [bundles]
@@ -32,5 +34,5 @@ kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.29.2"
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ktlint-idea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
 multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.4.19"
-publishOnCentral = "org.danilopianini.publish-on-central:3.4.0"
+publishOnCentral = { id = "org.danilopianini.publish-on-central", version.ref = "publishOnCentral" }
 taskTree = "com.dorongold.task-tree:2.1.1"

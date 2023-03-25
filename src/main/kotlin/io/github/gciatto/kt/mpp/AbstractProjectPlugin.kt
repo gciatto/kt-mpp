@@ -113,14 +113,6 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun <T : Any> ExtensionContainer.getByType(klass: KClass<T>): T = getByType(klass.java)
 
     context(Project)
-    protected fun MavenPublication.copyMavenGroupAndVersionFromProject() {
-        groupId = project.group.toString()
-        log("set groupId of publication $name: $groupId")
-        version = project.version.toString()
-        log("set version of publication $name: $version")
-    }
-
-    context(Project)
     protected fun NpmPublishExtension.syncNpmVersionWithProject() {
         version.set(provider { project.npmCompliantVersion })
         log("let version of NPM publication be equal to the project's one")

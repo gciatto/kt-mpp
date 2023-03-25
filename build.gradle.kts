@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.dokka)
     implementation(libs.ktlint)
     implementation(libs.detekt)
+    implementation(libs.publishOnCentral)
     testImplementation(gradleTestKit())
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)

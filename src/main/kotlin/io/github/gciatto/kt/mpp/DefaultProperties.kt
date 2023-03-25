@@ -97,25 +97,51 @@ interface DefaultProperties {
             defaultValue = false
         )
 
-    val mavenPassword: PropertyDescriptor
+    val repoOwner: PropertyDescriptor
         get() = PropertyDescriptor(
-            name = "mavenPassword",
-            description = "The password of the user willing to release Maven publications on <mavenRepo>",
+            name = "repoOwner",
+            description = "Name of the GitHub user/organization owning the repository of this project. " +
+                "Setting this property will assign default values to the following properties in case they " +
+                "are unset/blank: <projectHomepage>, <scmUrl>, and <scmConnection>",
             mandatory = false,
             defaultValue = null
         )
 
-    val mavenRepo: PropertyDescriptor
+    val mavenCentralPassword: PropertyDescriptor
         get() = PropertyDescriptor(
-            name = "mavenRepo",
+            name = "mavenCentralPassword",
+            description = "The password of the user willing to release Maven publications on Maven Central",
+            mandatory = false,
+            defaultValue = null
+        )
+
+    val mavenCentralUsername: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "mavenCentralUsername",
+            description = "The username of the user willing to release Maven publications on Maven Central",
+            mandatory = false,
+            defaultValue = null
+        )
+
+    val otherMavenRepo: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "otherMavenRepo",
             description = "The URL of Maven repository upon which Maven publications will be released",
             mandatory = false,
             defaultValue = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
         )
 
-    val mavenUsername: PropertyDescriptor
+    val otherMavenPassword: PropertyDescriptor
         get() = PropertyDescriptor(
-            name = "mavenUsername",
+            name = "otherMavenPassword",
+            description = "The password of the user willing to release Maven publications on <mavenRepo>",
+            mandatory = false,
+            defaultValue = null
+        )
+
+    val otherMavenUsername: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "otherMavenUsername",
             description = "The username of the user willing to release Maven publications on <mavenRepo>",
             mandatory = false,
             defaultValue = null
