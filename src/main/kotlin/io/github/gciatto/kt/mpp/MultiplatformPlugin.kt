@@ -2,9 +2,12 @@ package io.github.gciatto.kt.mpp
 
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import org.gradle.api.publish.tasks.GenerateModuleMetadata
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
@@ -101,6 +104,10 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         val disableIos = getBooleanProperty("iosDisable")
         val disableWatchos = getBooleanProperty("watchosDisable")
         val disableTvos = getBooleanProperty("tvosDisable")
+        val nativeCrossCompilationEnable = getBooleanProperty("nativeCrossCompilationEnable")
+        val nativeStaticLib = getBooleanProperty("nativeStaticLib")
+        val nativeSharedLib = getBooleanProperty("nativeSharedLib")
+        val nativeExecutable = getBooleanProperty("nativeExecutable")
 
         sourceSets.create("nativeMain").dependsOn(sourceSets["commonMain"])
         sourceSets.create("nativeTest").dependsOn(sourceSets["commonTest"])
@@ -109,8 +116,9 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
             compilations["test"].defaultSourceSet.dependsOn(sourceSets["nativeTest"])
             binaries {
-                sharedLib()
-                staticLib()
+                if (nativeStaticLib) { staticLib() }
+                if (nativeSharedLib) { sharedLib() }
+                if (nativeExecutable) { executable() }
             }
         }
 
@@ -125,9 +133,17 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         if (!disableWatchos) watchos(nativeSetup)
         if (!disableTvos) tvos(nativeSetup)
 
-        val os = OperatingSystem.current()
+        if (!nativeCrossCompilationEnable) {
+            disableCrossCompilation()
+        } else {
+            log("Cross compilation for native target enabled", LogLevel.WARN)
+        }
+    }
 
+    context(Project)
+    private fun KotlinMultiplatformExtension.disableCrossCompilation() {
         // Disable cross compilation
+        val os = OperatingSystem.current()
         val excludeTargets = when {
             os.isLinux -> targets.filterNot { "linux" in it.name }
             os.isWindows -> targets.filterNot { "mingw" in it.name }
@@ -136,19 +152,20 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         }.mapNotNull { it as? KotlinNativeTarget }
 
         configure(excludeTargets) { target ->
-            target.compilations.configureEach { knc ->
-                knc.cinterops.configureEach { tasks[it.interopProcessingTaskName].enabled = false }
-                knc.compileTaskProvider.get().enabled = false
-                tasks[knc.processResourcesTaskName].enabled = false
+            target.compilations.configureEach { nativeCompilation ->
+                nativeCompilation.cinterops.configureEach { tasks[it.interopProcessingTaskName].enabled = false }
+                nativeCompilation.compileTaskProvider.get().enabled = false
+                tasks[nativeCompilation.processResourcesTaskName].enabled = false
             }
             target.binaries.configureEach { it.linkTask.enabled = false }
 
-//            mavenPublication {
-//                tasks.withType<AbstractPublishToMaven>()
-//                    .configureEach { onlyIf { publication != this@mavenPublication } }
-//                tasks.withType<GenerateModuleMetadata>()
-//                    .configureEach { onlyIf { publication.get() != this@mavenPublication } }
-//            }
+            target.mavenPublication {
+                tasks.withType<AbstractPublishToMaven>()
+                    .configureEach { maven -> maven.onlyIf { maven.publication != this@mavenPublication } }
+                tasks.withType<GenerateModuleMetadata>().configureEach { metadata ->
+                    metadata.onlyIf { metadata.publication.get() != this@mavenPublication }
+                }
+            }
         }
     }
 
@@ -169,6 +186,10 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         addProperty(iosDisable)
         addProperty(watchOsDisable)
         addProperty(tvOsDisable)
+        addProperty(nativeCrossCompilationEnable)
+        addProperty(nativeStaticLib)
+        addProperty(nativeSharedLib)
+        addProperty(nativeExecutable)
         addProperty(versionsFromCatalog)
         addProperty(nodeVersion)
     }

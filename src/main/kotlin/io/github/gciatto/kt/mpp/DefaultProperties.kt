@@ -169,6 +169,38 @@ interface DefaultProperties {
             defaultValue = false
         )
 
+    val nativeStaticLib: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "nativeStaticLib",
+            description = "If true, the native target will be compiled as a static library",
+            mandatory = false,
+            defaultValue = true
+        )
+
+    val nativeSharedLib: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "nativeSharedLib",
+            description = "If true, the native target will be compiled as a shared library",
+            mandatory = false,
+            defaultValue = true
+        )
+
+    val nativeExecutable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "nativeExecutable",
+            description = "If true, the native target will be compiled as an executable",
+            mandatory = false,
+            defaultValue = true
+        )
+
+    val nativeCrossCompilationEnable: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "nativeCrossCompilationEnable",
+            description = "If true, enables cross-compilation for all compatible native targets",
+            mandatory = false,
+            defaultValue = false
+        )
+
     val mavenPassword: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "mavenPassword",
