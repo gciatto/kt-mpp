@@ -1,7 +1,7 @@
 package io.github.gciatto.kt.mpp
 
 import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
-import io.github.gciatto.kt.mpp.TaskSorter.Companion.enforceOrderingAmongTasks
+import org.danilopianini.gradle.mavencentral.JavadocJar
 import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.danilopianini.gradle.mavencentral.Repository
 import org.gradle.api.Project
@@ -12,6 +12,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
+import org.jetbrains.dokka.gradle.DokkaPlugin
 
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
@@ -166,6 +167,37 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         autoConfigureAllPublications.set(true)
     }
 
+    private fun Project.fixSignPublishTaskDependencies() {
+        tasks.withType(Sign::class.java) { before ->
+            tasks.withType(AbstractPublishToMaven::class.java) { after ->
+                after.mustRunAfter(before)
+                log("make task ${after.path} run after ${before.path}")
+            }
+        }
+    }
+
+    private fun Project.fixMavenPublicationsJavadocArtifact() {
+        fun applyFix() {
+            tasks.withType<JavadocJar>().configureEach { javadocJar ->
+                val dokkaJavadoc = tasks.findByName("dokkaJavadoc")
+                val dokkaHtml = tasks.findByName("dokkaHtml")
+                dokkaJavadoc?.onlyIf { false }
+                dokkaHtml?.let {
+                    javadocJar.dependsOn(it)
+                    javadocJar.from(it)
+                }
+            }
+        }
+        plugins.withType<DokkaPlugin> {
+            plugins.withId(kotlinPlugin("js")) {
+                applyFix()
+            }
+            plugins.withId(kotlinPlugin("multiplatform")) {
+                applyFix()
+            }
+        }
+    }
+
     override fun Project.applyThisPlugin() {
         apply(plugin = "org.danilopianini.publish-on-central")
         log("apply org.danilopianini.publish-on-central plugin")
@@ -174,9 +206,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         configurePublications()
         addMissingInformationToPublications()
         configureSigning()
-        enforceOrderingAmongTasks(
-            potentiallyBefore = { withType<Sign>() },
-            potentiallyAfter = { withType<AbstractPublishToMaven>() }
-        )
+        fixSignPublishTaskDependencies()
+        fixMavenPublicationsJavadocArtifact()
     }
 }

@@ -69,7 +69,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun kotlinPlugin(name: String = targetName) =
-        "org.jetbrains.kotlin.$name"
+        io.github.gciatto.kt.mpp.kotlinPlugin(name)
 
     context(Project)
     protected fun KotlinJvmOptions.configureJvmKotlinOptions(target: String) {

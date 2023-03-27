@@ -20,6 +20,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.nio.charset.Charset
 
+internal fun kotlinPlugin(name: String) = "org.jetbrains.kotlin.$name"
+
 internal val Project.gradlePropertiesFile: File
     get() = projectDir.resolve("gradle.properties")
 
