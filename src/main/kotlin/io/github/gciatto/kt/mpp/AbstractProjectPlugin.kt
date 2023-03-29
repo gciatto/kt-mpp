@@ -15,6 +15,11 @@ import kotlin.reflect.KClass
 @Suppress("TooManyFunctions")
 abstract class AbstractProjectPlugin : Plugin<Project> {
 
+    companion object {
+        @JvmStatic
+        protected val SUPPORTED_KOTLIN_TARGETS = setOf("jvm", "js", "multiplatform")
+    }
+
     protected abstract fun Project.applyThisPlugin()
 
     final override fun apply(target: Project) {
@@ -154,4 +159,16 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected fun String.capital(): String =
         replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+
+    protected fun Project.forAllKotlinPlugins(action: (Plugin<*>) -> Unit) {
+        forEachKotlinPlugin(SUPPORTED_KOTLIN_TARGETS, action)
+    }
+
+    protected fun Project.forEachKotlinPlugin(names: Iterable<String>, action: (Plugin<*>) -> Unit) {
+        forEachPlugin(names.map { kotlinPlugin(it) }, action)
+    }
+
+    protected fun Project.forEachKotlinPlugin(name: String, vararg names: String, action: (Plugin<*>) -> Unit) {
+        forEachKotlinPlugin(listOf(name, *names), action)
+    }
 }

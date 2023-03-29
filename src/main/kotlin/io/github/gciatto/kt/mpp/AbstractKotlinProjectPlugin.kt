@@ -20,13 +20,9 @@ import kotlin.jvm.optionals.asSequence
 @Suppress("TooManyFunctions")
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
 
-    companion object {
-        private val SUPPORTED_TARGETS = setOf("jvm", "js", "multiplatform")
-    }
-
     private val targetName: String = targetName.lowercase(Locale.getDefault()).also {
-        require(it in SUPPORTED_TARGETS) {
-            "Unsupported target: $it. Supported targets are: ${SUPPORTED_TARGETS.joinToString()}"
+        require(it in SUPPORTED_KOTLIN_TARGETS) {
+            "Unsupported target: $it. Supported targets are: ${SUPPORTED_KOTLIN_TARGETS.joinToString()}"
         }
     }
 

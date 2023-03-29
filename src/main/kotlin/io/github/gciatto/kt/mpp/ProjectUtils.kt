@@ -6,6 +6,7 @@ import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.json.PackageJson
 import dev.petuska.npm.publish.extension.domain.json.Person
 import org.gradle.api.JavaVersion
+import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.logging.LogLevel
@@ -19,6 +20,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.nio.charset.Charset
+import kotlin.reflect.KClass
 
 internal fun kotlinPlugin(name: String) = "org.jetbrains.kotlin.$name"
 
@@ -119,3 +121,38 @@ fun PackageJson.person(developer: Developer): Person =
 
 val Provider<MinimalExternalModuleDependency>.version: String
     get() = this.get().versionConstraint.requiredVersion
+
+@Suppress("UNCHECKED_CAST")
+fun Project.withPlugin(plugin: Any, action: (Plugin<*>) -> Unit) {
+    with(project.plugins) {
+        when (plugin) {
+            is String -> withId(plugin, action)
+            is Class<*> -> withType(plugin as Class<Plugin<Project>>, action)
+            is KClass<*> -> withType(plugin as KClass<Plugin<Project>>, action)
+            is Provider<*> -> forEachPlugin(listOf(plugin.get()), action)
+            else -> error("Invalid plugin: $plugin")
+        }
+    }
+}
+
+fun Project.forEachPlugin(plugins: Iterable<Any>, action: (Plugin<*>) -> Unit) {
+    for (plugin in plugins) {
+        withPlugin(plugin, action)
+    }
+}
+
+fun Project.forEachPlugin(name: Any, vararg names: Any, action: (Plugin<*>) -> Unit) {
+    forEachPlugin(listOf(name, *names), action)
+}
+
+fun Project.ifAllPluginsAltogether(plugins: List<Any>, action: () -> Unit) {
+    var outerAction: (Plugin<*>) -> Unit = { action() }
+    for (plugin in plugins.subList(1, plugins.size).asReversed()) {
+        outerAction = { withPlugin(plugin, outerAction) }
+    }
+    withPlugin(plugins.first(), outerAction)
+}
+
+fun Project.ifAllPluginsAltogether(name: Any, vararg names: Any, action: () -> Unit) {
+    ifAllPluginsAltogether(listOf(name, *names), action)
+}
