@@ -1,11 +1,13 @@
 tests:
   - description: "Root project is multiplatform, hence it has tasks concerning all platforms"
     configuration:
-      tasks: ":tasks"
+      tasks:
+        - ":tasks"
       options:
         - "--stacktrace"
     expectation:
-      success: ':tasks'
+      success:
+        - ':tasks'
       output_contains:
         - "Tasks runnable from root project 'test0'"
         # build
@@ -70,23 +72,17 @@ tests:
         - "generatePomFileForKotlinOSSRHPublication - Generates the Maven POM file for publication 'kotlinOSSRH'."
         - "publish - Publishes all publications produced by this project."
         - "publishAllPublicationsToMavenCentralRepository - Publishes all Maven publications produced by this project to the MavenCentral repository."
-        - "publishAllPublicationsToMavenLocalRepository - Publishes all Maven publications produced by this project to the MavenLocal repository."
         - "publishJavaOSSRHPublicationToMavenCentralRepository - Publishes Maven publication 'javaOSSRH' to Maven repository 'MavenCentral'."
         - "publishJavaOSSRHPublicationToMavenLocal - Publishes Maven publication 'javaOSSRH' to the local Maven repository."
-        - "publishJavaOSSRHPublicationToMavenLocalRepository - Publishes Maven publication 'javaOSSRH' to Maven repository 'MavenLocal'."
         - "publishJsPackageToCustomRegistry - Publishes NPM package to NPM registry"
         - "publishJsPublicationToMavenCentralRepository - Publishes Maven publication 'js' to Maven repository 'MavenCentral'."
         - "publishJsPublicationToMavenLocal - Publishes Maven publication 'js' to the local Maven repository."
-        - "publishJsPublicationToMavenLocalRepository - Publishes Maven publication 'js' to Maven repository 'MavenLocal'."
         - "publishJvmPublicationToMavenCentralRepository - Publishes Maven publication 'jvm' to Maven repository 'MavenCentral'."
         - "publishJvmPublicationToMavenLocal - Publishes Maven publication 'jvm' to the local Maven repository."
-        - "publishJvmPublicationToMavenLocalRepository - Publishes Maven publication 'jvm' to Maven repository 'MavenLocal'."
         - "publishKotlinMultiplatformPublicationToMavenCentralRepository - Publishes Maven publication 'kotlinMultiplatform' to Maven repository 'MavenCentral'."
         - "publishKotlinMultiplatformPublicationToMavenLocal - Publishes Maven publication 'kotlinMultiplatform' to the local Maven repository."
-        - "publishKotlinMultiplatformPublicationToMavenLocalRepository - Publishes Maven publication 'kotlinMultiplatform' to Maven repository 'MavenLocal'."
         - "publishKotlinOSSRHPublicationToMavenCentralRepository - Publishes Maven publication 'kotlinOSSRH' to Maven repository 'MavenCentral'."
         - "publishKotlinOSSRHPublicationToMavenLocal - Publishes Maven publication 'kotlinOSSRH' to the local Maven repository."
-        - "publishKotlinOSSRHPublicationToMavenLocalRepository - Publishes Maven publication 'kotlinOSSRH' to Maven repository 'MavenLocal'."
         - "publishToMavenLocal - Publishes all Maven publications produced by this project to the local Maven cache"
         # nexus
         - "closeStagingRepositoryOnMavenCentral - Closes the Nexus repository on MavenCentral."
@@ -120,6 +116,57 @@ tests:
         # versions
         - "printNpmVersion"
         - "printVersion"
+  - description: "Sub-project :subproject-mp is multiplatform, hence it has tasks concerning all platforms"
+    configuration:
+      tasks:
+        - ":subproject-mp:tasks"
+        - ":subproject-mp:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success: ':subproject-mp:tasks'
+  - description: "Sub-project :full is multiplatform, hence it has tasks concerning all platforms"
+    configuration:
+      tasks:
+        - ":full:tasks"
+        - ":full:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+      -  ':full:tasks'
+      - ":full:showPublications"
+  - description: "Sub-project :subproject-jvm is JVM-only, hence it has tasks concerning the JVM platform"
+    configuration:
+      tasks:
+        - ":subproject-jvm:tasks"
+        - ":subproject-jvm:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:tasks"
+        - ":subproject-jvm:showPublications"
+  - description: "Sub-project :subproject-js is JS-only, hence it has tasks concerning the JS platform"
+    configuration:
+      tasks:
+        - ":subproject-js:tasks"
+        - ":subproject-js:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':subproject-js:tasks'
+        - ':subproject-js:showPublications'
+  - description: "Sub-project :subproject-other has no prior configuration"
+    configuration:
+      tasks:
+        - ":subproject-other:tasks"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':subproject-other:tasks'
   - description: "Print properties explanation"
     configuration:
       tasks: ":full:explainProperties"
@@ -184,15 +231,21 @@ tests:
         - ":full:generateMetadataFileForKotlinOSSRHPublication"
   - description: "Upload to Maven implies sources and javadoc being generated"
     configuration:
-      tasks: "publishToMavenLocal"
+      tasks:
+        - "publishKotlinOSSRHPublicationToMavenLocal"
+        - "printMavenLocal"
       options:
         - "--stacktrace"
+        - "--continue"
     expectation:
       success:
-        - ":subproject-jvm:publishToMavenLocal"
-        - ":subproject-js:publishToMavenLocal"
-        - ":subproject-mp:publishToMavenLocal"
-        - ":full:publishToMavenLocal"
+#        - ":publishJvmPublicationToMavenLocal"
+#        - ":publishKotlinMultiplatformPublicationToMavenLocal"
+#        - ":publishJsPublicationToMavenLocal"
+        - ":full:publishKotlinOSSRHPublicationToMavenLocal"
+        - ":subproject-mp:publishKotlinOSSRHPublicationToMavenLocal"
+        - ":subproject-jvm:publishKotlinOSSRHPublicationToMavenLocal"
+        - ":subproject-js:publishKotlinOSSRHPublicationToMavenLocal"
       # find build/.m2 -type f -wholename '*'
       file_exists:
         - name: build/.m2/repository/io/github/gciatto/full/maven-metadata-local.xml

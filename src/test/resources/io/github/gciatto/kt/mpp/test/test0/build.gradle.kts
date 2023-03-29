@@ -1,4 +1,9 @@
 import io.github.gciatto.kt.mpp.ProjectType
+import io.github.gciatto.kt.mpp.log
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import org.gradle.api.publish.maven.tasks.PublishToMavenLocal
+import org.gradle.kotlin.dsl.withType
+import org.gradle.api.logging.LogLevel
 
 plugins {
     id("io.github.gciatto.kt-mpp.multi-project-helper")
@@ -16,27 +21,32 @@ multiProjectHelper {
 }
 
 val localMavenRepoDir = rootProject.projectDir.absoluteFile.resolve("build/.m2/repository")
-println("Local Maven Repository: $localMavenRepoDir")
+println("Set local Maven repository path: $localMavenRepoDir")
 System.setProperty("maven.repo.local", localMavenRepoDir.absolutePath)
 
 allprojects {
     repositories {
         mavenCentral()
-        mavenLocal {
-            url = localMavenRepoDir.toURI()
-        }
     }
     plugins.withId("maven-publish") {
         extensions.getByType(PublishingExtension::class.java).run {
-            publications {
-                configureEach {
-                    repositories {
-                        mavenLocal {
-                            url = localMavenRepoDir.toURI()
-                        }
-                    }
+            tasks.create("showPublications") {
+                doLast {
+                    log("publications: ${publications.joinToString { it.name }}", LogLevel.LIFECYCLE)
                 }
             }
         }
+    }
+}
+
+tasks.create("printMavenLocal") {
+    doLast {
+        fileTree(localMavenRepoDir).forEach {
+            println(it)
+        }
+    }
+    val printMavenLocal = this
+    tasks.withType<PublishToMavenLocal> {
+        printMavenLocal.mustRunAfter(this)
     }
 }
