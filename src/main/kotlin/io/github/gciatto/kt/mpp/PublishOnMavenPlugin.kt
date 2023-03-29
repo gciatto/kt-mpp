@@ -9,6 +9,8 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.maybeCreate
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
@@ -163,6 +165,33 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         }
     }
 
+    private val defaultMppPublications = setOf("kotlinMultiplatform", "js", "jvm")
+
+    private val publishTasks by lazy {
+        defaultMppPublications.map { "publish${it.capital()}Publication" }
+    }
+
+    private fun Project.configureDefaultPublications() = configure(PublishingExtension::class) {
+        forEachKotlinPlugin("jvm") {
+            publications.maybeCreate<MavenPublication>("jvm").run {
+                from(components["java"])
+            }
+        }
+        forEachKotlinPlugin("js") {
+            publications.maybeCreate<MavenPublication>("js").run {
+                from(components["kotlin"])
+            }
+        }
+        publications.withType<MavenPublication>().configureEach { pub ->
+            if ("OSSRH" !in pub.name) {
+                pub.artifact(tasks.findByName("javadocJar"))
+            }
+        }
+        tasks.withType<AbstractPublishToMaven>()
+            .matching { task -> publishTasks.any { task.name.startsWith(it) } }
+            .configureEach { it.enabled = false }
+    }
+
     private fun Project.configurePublishOnCentralExtension() = configure(PublishOnCentralExtension::class) {
         autoConfigureAllPublications.set(true)
     }
@@ -177,23 +206,17 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.fixMavenPublicationsJavadocArtifact() {
-        fun applyFix() {
-            tasks.withType<JavadocJar>().configureEach { javadocJar ->
-                val dokkaJavadoc = tasks.findByName("dokkaJavadoc")
-                val dokkaHtml = tasks.findByName("dokkaHtml")
-                dokkaJavadoc?.onlyIf { false }
-                dokkaHtml?.let {
-                    javadocJar.dependsOn(it)
-                    javadocJar.from(it)
+        forEachKotlinPlugin("js", "multiplatform") {
+            plugins.withType<DokkaPlugin> {
+                tasks.withType<JavadocJar>().configureEach { javadocJar ->
+                    val dokkaJavadoc = tasks.findByName("dokkaJavadoc")
+                    val dokkaHtml = tasks.findByName("dokkaHtml")
+                    dokkaJavadoc?.enabled = false
+                    dokkaHtml?.let {
+                        javadocJar.dependsOn(it)
+                        javadocJar.from(it)
+                    }
                 }
-            }
-        }
-        plugins.withType<DokkaPlugin> {
-            plugins.withId(kotlinPlugin("js")) {
-                applyFix()
-            }
-            plugins.withId(kotlinPlugin("multiplatform")) {
-                applyFix()
             }
         }
     }
@@ -202,6 +225,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         apply(plugin = "org.danilopianini.publish-on-central")
         log("apply org.danilopianini.publish-on-central plugin")
         configurePublishOnCentralExtension()
+        configureDefaultPublications()
         configureMavenRepositories()
         configurePublications()
         addMissingInformationToPublications()
