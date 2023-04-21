@@ -1,9 +1,10 @@
 package io.github.gciatto.kt.mpp
 
 import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
-import org.danilopianini.gradle.mavencentral.JavadocJar
+import org.danilopianini.gradle.mavencentral.DocStyle
 import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.danilopianini.gradle.mavencentral.Repository
+import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
@@ -14,7 +15,6 @@ import org.gradle.kotlin.dsl.maybeCreate
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
-import org.jetbrains.dokka.gradle.DokkaPlugin
 
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
@@ -47,14 +47,14 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         if (username != null && pwd != null) {
             user.set(username)
             password.set(pwd)
+            /* ktlint-disable */
+            log(
+                "configure Maven repository $name " +
+                    "(URL: $url, username: ${user.get().asField()}, " +
+                    "password: ${password.get().asPassword()})"
+            )
+            /* ktlint-enable */
         }
-        /* ktlint-disable */
-        log(
-            "configure Maven repository $name " +
-                "(URL: $url, username: ${user.get().asField()}, " +
-                "password: ${password.get().asPassword()})"
-        )
-        /* ktlint-enable */
     }
 
     private fun Project.configureMavenRepositories() = configure(PublishOnCentralExtension::class) {
@@ -206,31 +206,29 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.fixMavenPublicationsJavadocArtifact() {
-        forEachKotlinPlugin("js", "multiplatform") {
-            plugins.withType<DokkaPlugin> {
-                tasks.withType<JavadocJar>().configureEach { javadocJar ->
-                    val dokkaJavadoc = tasks.findByName("dokkaJavadoc")
-                    val dokkaHtml = tasks.findByName("dokkaHtml")
-                    dokkaJavadoc?.enabled = false
-                    dokkaHtml?.let {
-                        javadocJar.dependsOn(it)
-                        javadocJar.from(it)
-                    }
+        forEachKotlinPlugin("multiplatform") {
+            plugins.withType(PublishOnMavenPlugin::class.java) { _ ->
+                configure(PublishOnCentralExtension::class) {
+                    docStyle.set(DocStyle.HTML)
                 }
             }
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     override fun Project.applyThisPlugin() {
-        apply(plugin = "org.danilopianini.publish-on-central")
-        log("apply org.danilopianini.publish-on-central plugin")
-        configurePublishOnCentralExtension()
-        configureDefaultPublications()
-        configureMavenRepositories()
-        configurePublications()
-        addMissingInformationToPublications()
-        configureSigning()
-        fixSignPublishTaskDependencies()
-        fixMavenPublicationsJavadocArtifact()
+        fun configurePlugin(plugin: Plugin<*>) {
+            apply(plugin = "org.danilopianini.publish-on-central")
+            log("apply org.danilopianini.publish-on-central plugin")
+            configurePublishOnCentralExtension()
+            configureDefaultPublications()
+            configureMavenRepositories()
+            configurePublications()
+            addMissingInformationToPublications()
+            configureSigning()
+            fixSignPublishTaskDependencies()
+            fixMavenPublicationsJavadocArtifact()
+        }
+        forAllKotlinPlugins { configurePlugin(it) }
     }
 }

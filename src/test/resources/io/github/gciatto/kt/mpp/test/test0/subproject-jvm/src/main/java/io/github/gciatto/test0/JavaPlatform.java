@@ -1,5 +1,8 @@
 package io.github.gciatto.test0;
 
+/**
+ * The java platform.
+ */
 class JavaPlatform {
     private JavaPlatform() {
 

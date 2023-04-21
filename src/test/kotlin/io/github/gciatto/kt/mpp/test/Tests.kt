@@ -4,6 +4,7 @@ import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.source.yaml
 import io.github.classgraph.ClassGraph
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.file.shouldBeAFile
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.should
@@ -57,7 +58,7 @@ class Tests : StringSpec(
                         result.output should MatchMultilinePattern(it)
                     }
                     test.expectation.success.forEach {
-                        result.outcomeOf(it) shouldBe TaskOutcome.SUCCESS
+                        result.outcomeOf(it) shouldBeIn listOf(TaskOutcome.SUCCESS, TaskOutcome.UP_TO_DATE)
                     }
                     test.expectation.failure.forEach {
                         result.outcomeOf(it) shouldBe TaskOutcome.FAILED

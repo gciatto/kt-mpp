@@ -1,11 +1,13 @@
 [versions]
-dokka = "1.8.10"
-konf = "1.1.2"
-kotest = "5.5.5"
-kotlin = "1.8.10"
-ktlint = "11.3.1"
 detekt = "1.22.0"
-publishOnCentral = "3.4.0"
+dokka = "1.8.10"
+jvm = "11"
+konf = "1.1.2"
+kotest = "5.6.1"
+kotlin = "1.8.20"
+ktlint = "11.3.1"
+node = "18-latest"
+publishOnCentral = "5.0.2"
 
 [libraries]
 classgraph = "io.github.classgraph:classgraph:4.8.157"
