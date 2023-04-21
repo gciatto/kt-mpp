@@ -8,15 +8,17 @@ import org.jetbrains.dokka.gradle.DokkaPlugin
 
 class DocumentationPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
-        val dokka = apply(DokkaPlugin::class)
-        log("apply ${dokka::class.java.name} as doc generator")
-        tasks.withType(DokkaMultiModuleTask::class.java) {
-            tasks.create<Zip>("${it.name}Zip") {
-                group = "documentation"
-                archiveClassifier.set("documentation")
-                from(it.outputDirectory)
-                dependsOn(it)
-                log("create $path task depending on ${it.path}")
+        forAllKotlinPlugins {
+            val dokka = apply(DokkaPlugin::class)
+            log("apply ${dokka::class.java.name} as doc generator")
+            tasks.withType(DokkaMultiModuleTask::class.java) {
+                tasks.create<Zip>("${it.name}Zip") {
+                    group = "documentation"
+                    archiveClassifier.set("documentation")
+                    from(it.outputDirectory)
+                    dependsOn(it)
+                    log("create $path task depending on ${it.path}")
+                }
             }
         }
     }
