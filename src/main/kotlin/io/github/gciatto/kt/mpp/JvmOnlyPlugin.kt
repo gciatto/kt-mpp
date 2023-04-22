@@ -20,6 +20,9 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
                 configureJvmKotlinOptions(targetCompilationId(task))
             }
         }
+        tasks.getByName("javadoc") {
+            it.enabled = !getBooleanProperty("disableJavadocTask", true)
+        }
         dependencies {
             addMainDependencies(project, target = "jdk8")
             addTestDependencies(project, target = "junit", skipAnnotations = true)
@@ -32,6 +35,7 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
     }
 
     override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(disableJavadocTask)
         addProperty(allWarningsAsErrors)
         addProperty(ktCompilerArgs)
         addProperty(ktCompilerArgsJvm)

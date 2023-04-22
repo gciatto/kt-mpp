@@ -63,6 +63,12 @@ class Tests : StringSpec(
                     test.expectation.failure.forEach {
                         result.outcomeOf(it) shouldBe TaskOutcome.FAILED
                     }
+                    test.expectation.skipped.forEach {
+                        result.outcomeOf(it) shouldBe TaskOutcome.SKIPPED
+                    }
+                    test.expectation.not_executed.forEach {
+                        result.task(it) shouldBe null
+                    }
                     test.expectation.file_exists.forEach {
                         val file = File("${testFolder.root.absolutePath}/${it.name}").apply {
                             shouldExist()

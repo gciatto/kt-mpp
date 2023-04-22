@@ -73,7 +73,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
             }
             registries { registries ->
                 val npmRepo = getOptionalProperty("npmRepo")
-                if (npmRepo.isNullOrBlank()) {
+                if (npmRepo.isNullOrBlank() || npmRepo == getPropertyDescriptor("npmRepo").defaultValue) {
                     registries.npmjs { configureRegistry(it) }
                 } else {
                     registries.create("custom") {
@@ -84,15 +84,29 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
             }
             packages { packages ->
                 packages.all { pkg ->
-                    pkg.packageName.set("${rootProject.name}-${project.name}")
-                    log("set JS package name to ${pkg.packageName}")
+                    project.afterEvaluate {
+                        pkg.packageName.set(
+                            "${rootProject.name}-${project.name}".also {
+                                log("set JS package name to $it")
+                            }
+                        )
+                    }
                     packageJson {
-                        homepage.set(centralExtension.projectUrl)
-                        log("set package.json homepage to match the POM project URL")
-                        description.set(centralExtension.projectDescription)
-                        log("set package.json description to match the POM project description")
-                        license.set(centralExtension.licenseName)
-                        log("set package.json license to match the POM license name")
+                        homepage.set(
+                            centralExtension.projectUrl.map {
+                                it.also { log("set package.json homepage to $it") }
+                            }
+                        )
+                        description.set(
+                            centralExtension.projectDescription.map {
+                                it.also { log("set package.json description to $it") }
+                            }
+                        )
+                        license.set(
+                            centralExtension.licenseName.map {
+                                it.also { log("set package.json license to $it") }
+                            }
+                        )
                         val developers = project.getAllDevs()
                         if (developers.isNotEmpty()) {
                             val mainDeveloper = developers.first()
@@ -104,7 +118,10 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                                 .drop(1)
                                 .map { person(it) }
                                 .toCollection(mutableListOf())
-                                .also { log("add package.json contributors: ${it.joinToString()}") }
+                                .also {
+                                    val contributorsList = it.joinToString(prefix = "[", postfix = "]")
+                                    log("add package.json contributors: $contributorsList")
+                                }
                         )
                         private.set(false)
                         bugs { bugs ->
@@ -119,8 +136,11 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                         }
                         repository { repos ->
                             repos.type.set("git")
-                            repos.url.set(centralExtension.scmConnection)
-                            log("set package.json repo URL to match the POM SCM connection")
+                            repos.url.set(
+                                centralExtension.scmConnection.map {
+                                    it.also { log("set package.json repo URL to $it") }
+                                }
+                            )
                         }
                     }
                 }

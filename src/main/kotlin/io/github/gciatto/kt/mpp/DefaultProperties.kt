@@ -1,6 +1,21 @@
 package io.github.gciatto.kt.mpp
 
 interface DefaultProperties {
+
+    val disableJavadocTask: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "disableJavadocTask",
+            description = "If true, default javadoc task will be disabled",
+            mandatory = false,
+            defaultValue = true
+        )
+    val disableDefaultPublications: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "disableDefaultPublications",
+            description = "If true, default publications' tasks will be disabled",
+            mandatory = false,
+            defaultValue = true
+        )
     val allWarningsAsErrors: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "allWarningsAsErrors",

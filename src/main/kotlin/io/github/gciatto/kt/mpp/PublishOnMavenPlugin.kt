@@ -10,8 +10,6 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.maybeCreate
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
@@ -19,6 +17,8 @@ import org.gradle.plugins.signing.SigningExtension
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(disableDefaultPublications)
+        addProperty(dokkaArtifactInMavenPublication)
         addProperty(repoOwner)
         addProperty(mavenCentralPassword)
         addProperty(mavenCentralUsername)
@@ -119,7 +119,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         }
         getOptionalProperty("repoOwner")?.takeIf { it.isNotBlank() }?.let {
             repoOwner.set(it)
-            log("set POM URL: $it")
+            log("set repoOwner: $it")
         }
         getOptionalProperty("projectHomepage")?.takeIf { it.isNotBlank() }?.let {
             projectUrl.set(it)
@@ -172,24 +172,10 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.configureDefaultPublications() = configure(PublishingExtension::class) {
-        forEachKotlinPlugin("jvm") {
-            publications.maybeCreate<MavenPublication>("jvm").run {
-                from(components["java"])
-            }
-        }
-        forEachKotlinPlugin("js") {
-            publications.maybeCreate<MavenPublication>("js").run {
-                from(components["kotlin"])
-            }
-        }
-        publications.withType<MavenPublication>().configureEach { pub ->
-            if ("OSSRH" !in pub.name) {
-                pub.artifact(tasks.findByName("javadocJar"))
-            }
-        }
+        val disableDefaultPublications = getBooleanProperty("disableDefaultPublications", true)
         tasks.withType<AbstractPublishToMaven>()
             .matching { task -> publishTasks.any { task.name.startsWith(it) } }
-            .configureEach { it.enabled = false }
+            .configureEach { it.enabled = disableDefaultPublications }
     }
 
     private fun Project.configurePublishOnCentralExtension() = configure(PublishOnCentralExtension::class) {
@@ -206,11 +192,15 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.fixMavenPublicationsJavadocArtifact() {
-        forEachKotlinPlugin("multiplatform") {
-            plugins.withType(PublishOnMavenPlugin::class.java) { _ ->
-                configure(PublishOnCentralExtension::class) {
-                    docStyle.set(DocStyle.HTML)
-                }
+        plugins.withType(PublishOnMavenPlugin::class.java) { _ ->
+            configure(PublishOnCentralExtension::class) {
+                val docStyleString = getOptionalProperty("dokkaArtifactInMavenPublication")
+                val docStyleValue = DocStyle.values()
+                    .filter { it.name.equals(docStyleString, ignoreCase = true) }
+                    .firstOrNull()
+                    ?: error("Invalid value for property dokkaArtifactInMavenPublication: $docStyleString")
+                docStyle.set(docStyleValue)
+                log("use ${docStyleValue.name} style for javadoc JAR when publishing")
             }
         }
     }

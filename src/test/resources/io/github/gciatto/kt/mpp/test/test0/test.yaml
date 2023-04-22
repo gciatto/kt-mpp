@@ -54,7 +54,6 @@ tests:
         - "publishAllPublicationsToMavenCentralRepository"
         - "publishJavaOSSRHPublicationToMavenCentralRepository"
         - "publishJavaOSSRHPublicationToMavenLocal"
-        - "publishJsPackageToCustomRegistry"
         - "publishJsPublicationToMavenCentralRepository"
         - "publishJsPublicationToMavenLocal"
         - "publishJvmPublicationToMavenCentralRepository"
@@ -76,7 +75,7 @@ tests:
         - "uploadKotlinMultiplatformToMavenCentralNexus"
         - "uploadKotlinOSSRHToMavenCentralNexus"
         # npm
-        - "publishJsPackageToCustomRegistry - Publishes NPM package to NPM registry"
+        - "publishJsPackageToNpmjsRegistry"
         # detekt
         - "detekt"
         - "detektJsMain"

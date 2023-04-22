@@ -77,6 +77,10 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     private val Project.propertiesHelper: PropertiesHelperExtension
         get() = extensions.getByType(PropertiesHelperExtension::class.java)
 
+    protected fun Project.getPropertyDescriptor(name: String): PropertyDescriptor =
+        propertiesHelper.properties[name]
+            ?: error("Unregistered property in project ${project.name}: $name")
+
     protected fun Project.getProperty(name: String): String {
         if (name !in properties) {
             logMissingProperty(name)
@@ -85,9 +89,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     }
 
     private fun Project.logMissingProperty(name: String) {
-        val descriptor = propertiesHelper.properties[name]
-            ?: error("Unregistered property in project ${project.name}: $name")
-        descriptor.logHelpIfNecessary(project)
+        getPropertyDescriptor(name).logHelpIfNecessary(project)
     }
 
     protected fun Project.getOptionalProperty(name: String): String? {
@@ -119,8 +121,13 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
 
     context(Project)
     protected fun NpmPublishExtension.syncNpmVersionWithProject() {
-        version.set(provider { project.npmCompliantVersion })
-        log("let version of NPM publication be equal to the project's one")
+        version.set(
+            provider {
+                project.npmCompliantVersion.also {
+                    log("set NPM publication version to $it")
+                }
+            }
+        )
     }
 
     private fun Project.makeAssembleTaskDependOnJarTask(task: Jar) {

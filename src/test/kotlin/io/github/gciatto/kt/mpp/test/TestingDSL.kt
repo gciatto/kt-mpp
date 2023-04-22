@@ -21,6 +21,8 @@ data class Expectation(
     val file_exists: List<ExistingFile> = emptyList(),
     val success: List<String> = emptyList(),
     val failure: List<String> = emptyList(),
+    val not_executed: List<String> = emptyList(),
+    val skipped: List<String> = emptyList(),
     val output_contains: List<String> = emptyList(),
     val output_matches: List<String> = emptyList(),
     val output_doesnt_contain: List<String> = emptyList(),
