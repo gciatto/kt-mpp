@@ -155,6 +155,8 @@ Overall, you may need to define, provide the following properties:
 
 - `allWarningsAsErrors` (optional, default value: `true`): if true, the Kotlin compiler will consider all warnings as errors.
 
+- `disableJavadocTask` (optional, default value: `true`): if true, default javadoc task will be disabled.
+
 - `ktCompilerArgs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler, for all platforms.
 
 - `ktCompilerArgsJvm` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JVM sources.
@@ -171,6 +173,10 @@ Overall, you may need to define, provide the following properties:
 
 - `nodeVersion` (optional, default value: `""`): the version of NodeJS to use for running Kotlin JS scripts.
 
+- `docStyle` (optional, default value: `"html"`): the Dokka style to be used for Maven publications (one of {`"html"`, `"gfm"`, `"javadoc"`, `"jekyll"`}).
+
+- `repoOwner` (optional): name of the GitHub user/organization owning the repository of this project. Setting this property will assign default values to the following properties in case they are unset/blank: `<projectHomepage>`, `<scmUrl>`, and `<scmConnection>`.
+
 - `mavenCentralPassword` (optional): the password of the user willing to release Maven publications on Maven Central.
 
 - `mavenCentralUsername` (optional): the username of the user willing to release Maven publications on Maven Central.
@@ -180,8 +186,6 @@ Overall, you may need to define, provide the following properties:
 - `otherMavenUsername` (optional): the username of the user willing to release Maven publications on `<mavenRepo>`.
 
 - `otherMavenPassword` (optional): the password of the user willing to release Maven publications on `<mavenRepo>`.
-
-- `repoOwner` (optional): name of the GitHub user/organization owning the repository of this project. Setting this property will assign default values to the following properties in case they are unset/blank: `<projectHomepage>`, `<scmUrl>`, and `<scmConnection>`.
 
 - `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
 
