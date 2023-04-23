@@ -9,6 +9,9 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
+    override val relevantPublications: Set<String> =
+        setOf("jvm", "js", "kotlinMultiplatform")
+
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")

@@ -175,7 +175,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         val disableDefaultPublications = getBooleanProperty("disableDefaultPublications", true)
         tasks.withType<AbstractPublishToMaven>()
             .matching { task -> publishTasks.any { task.name.startsWith(it) } }
-            .configureEach { it.enabled = disableDefaultPublications }
+            .configureEach { it.enabled = !disableDefaultPublications }
     }
 
     private fun Project.configurePublishOnCentralExtension() = configure(PublishOnCentralExtension::class) {

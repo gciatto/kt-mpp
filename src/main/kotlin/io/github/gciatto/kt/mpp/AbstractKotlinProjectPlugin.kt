@@ -5,6 +5,10 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.VersionConstraint
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
@@ -20,10 +24,57 @@ import kotlin.jvm.optionals.asSequence
 @Suppress("TooManyFunctions")
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
 
+    companion object {
+        private const val PUBLICATION_TASK_NAME_PATTERN = "([A-Z]\\w+?)(?:Publication)?To([A-Z]\\w+)"
+        private val pubTaskNamePattern = "^(publish|upload)$PUBLICATION_TASK_NAME_PATTERN$".toRegex()
+    }
+
     private val targetName: String = targetName.lowercase(Locale.getDefault()).also {
         require(it in SUPPORTED_KOTLIN_TARGETS) {
             "Unsupported target: $it. Supported targets are: ${SUPPORTED_KOTLIN_TARGETS.joinToString()}"
         }
+    }
+
+    final override fun apply(target: Project) {
+        super.apply(target)
+        target.plugins.withType(MavenPublishPlugin::class.java) {
+            target.configure(PublishingExtension::class) {
+                target.run { customizePublishing() }
+            }
+        }
+    }
+
+    protected abstract val relevantPublications: Set<String>
+
+    private fun String.declined() =
+        capital().let { it + if (it.endsWith("h")) "es" else "s" }
+
+    context (Project)
+    private fun PublishingExtension.customizePublishing() {
+        publications.withType(MavenPublication::class.java).matching { it.name in relevantPublications }.all { pub ->
+            log("configuring relevant publication ${pub.name}")
+            tasks.withType(AbstractPublishToMaven::class.java).all { task ->
+                pubTaskNamePattern.matchEntire(task.name)?.let {
+                    if (it.groupValues[2].equals(pub.name, ignoreCase = true)) {
+                        val umbrellaTask = tasks.maybeCreate("${it.groupValues[1]}ProjectTo${it.groupValues[3]}")
+                        umbrellaTask.group = "Publishing"
+                        val description = "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
+                            "via tasks: ${task.name}"
+                        umbrellaTask.description = umbrellaTask.description
+                            ?.let { desc -> desc + ", ${task.name}" }
+                            ?: description
+                        umbrellaTask.dependsOn(task)
+                        log("let task ${umbrellaTask.path} depend on ${task.path}")
+                    }
+                }
+            }
+        }
+        fixPublishing()
+    }
+
+    context (Project)
+    protected open fun PublishingExtension.fixPublishing() {
+        // does nothing be default
     }
 
     private fun Project.getVersionFromCatalog(name: String, catalog: String? = null): VersionConstraint? {

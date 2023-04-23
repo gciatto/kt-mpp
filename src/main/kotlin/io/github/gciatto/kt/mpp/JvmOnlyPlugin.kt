@@ -7,6 +7,8 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
+    override val relevantPublications: Set<String> = setOf("kotlinOSSRH", "javaOSSRH")
+
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")

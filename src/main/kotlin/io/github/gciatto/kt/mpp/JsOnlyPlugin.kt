@@ -6,6 +6,8 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 
 class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
+    override val relevantPublications: Set<String> = setOf("kotlinOSSRH")
+
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")

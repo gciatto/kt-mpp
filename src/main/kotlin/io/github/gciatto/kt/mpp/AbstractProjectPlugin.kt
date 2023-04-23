@@ -22,7 +22,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected abstract fun Project.applyThisPlugin()
 
-    final override fun apply(target: Project) {
+    override fun apply(target: Project) {
         val propertiesHelper = target.extensions.run {
             findByType(PropertiesHelperExtension::class.java)
                 ?: create("propertiesHelper", PropertiesHelperExtension::class.java).also {
