@@ -1,3 +1,31 @@
+## [1.2.2](https://github.com/gciatto/kt-mpp/compare/1.2.1...1.2.2) (2023-04-02)
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v3.5.0 ([db08b43](https://github.com/gciatto/kt-mpp/commit/db08b43a52c55448e8ab8fff42cec7b26241a915))
+* **deps:** update danysk/action-checkout action to v0.2.7 ([85bf2c0](https://github.com/gciatto/kt-mpp/commit/85bf2c030af8c81fd4d1d628a6bd8fca9b3ef150))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.1 ([76877d8](https://github.com/gciatto/kt-mpp/commit/76877d8712f939954cf694ecb1ad114df5d3f120))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.2 ([d32b01a](https://github.com/gciatto/kt-mpp/commit/d32b01a96e0873fb5c39b3525e664d41f019ce7e))
+
+
+### Dependency updates
+
+* **core-deps:** update dependency org.jetbrains.kotlin.jvm to v1.8.20 ([022149d](https://github.com/gciatto/kt-mpp/commit/022149d4599237ae93dda1cea9ebe68b30499d59))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.19 ([fe87fe0](https://github.com/gciatto/kt-mpp/commit/fe87fe034e824ad4b5b75a71cae78e584633402a))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.20 ([98cb9d8](https://github.com/gciatto/kt-mpp/commit/98cb9d8980ea747b7b524e3b69720564838232c1))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.21 ([b86083c](https://github.com/gciatto/kt-mpp/commit/b86083cac710333abe6a31b59c6ce305cd16fb81))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.22 ([7e7fca9](https://github.com/gciatto/kt-mpp/commit/7e7fca9ddd7b0d3747a7a3821efcd27b70880d42))
+* **deps:** update plugin com.gradle.enterprise to v3.12.6 ([9ae0d61](https://github.com/gciatto/kt-mpp/commit/9ae0d616c402db3222ba4d8b1df466e22b87361d))
+* **deps:** update plugin gitsemver to v1.1.5 ([06377ea](https://github.com/gciatto/kt-mpp/commit/06377ea0816547278ca842e1fa9cabc3351ddb8b))
+
+## [1.2.1](https://github.com/gciatto/kt-mpp/compare/1.2.0...1.2.1) (2023-03-21)
+
+
+### Bug Fixes
+
+* more readable custom JS registry name ([a87fb61](https://github.com/gciatto/kt-mpp/commit/a87fb612deba0421f3e12963ece4eca9983422db))
+
 ## [1.2.0](https://github.com/gciatto/kt-mpp/compare/1.1.1...1.2.0) (2023-03-21)
 
 

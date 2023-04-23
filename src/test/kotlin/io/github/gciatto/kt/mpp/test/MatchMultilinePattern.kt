@@ -11,6 +11,6 @@ class MatchMultilinePattern(private val pattern: String) : Matcher<String> {
     private fun result(success: Boolean): MatcherResult = MatcherResult(
         passed = success,
         failureMessageFn = { "Output does not contain pattern $regex" },
-        negatedFailureMessageFn = { "Output contains pattern $regex, while it shouldn't" }
+        negatedFailureMessageFn = { "Output contains pattern $regex, while it shouldn't" },
     )
 }

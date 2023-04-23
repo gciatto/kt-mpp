@@ -49,7 +49,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
 
     private fun KotlinMultiplatformExtension.dependenciesFor(
         sourceSet: String,
-        action: KotlinDependencyHandler.() -> Unit
+        action: KotlinDependencyHandler.() -> Unit,
     ) = sourceSets.getByName(sourceSet).dependencies(action)
 
     context(Project, KotlinMultiplatformExtension)

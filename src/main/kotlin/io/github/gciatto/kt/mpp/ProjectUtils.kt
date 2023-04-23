@@ -1,4 +1,5 @@
 @file:Suppress("TooManyFunctions")
+
 package io.github.gciatto.kt.mpp
 
 import dev.petuska.npm.publish.NpmPublishPlugin

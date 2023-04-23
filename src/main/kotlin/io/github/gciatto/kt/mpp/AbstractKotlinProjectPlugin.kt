@@ -91,7 +91,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
                 log(
                     message = "failed attempt to find version of `$name` in catalog" +
                         if (catalog == null) "s" else " $catalog",
-                    logLevel = LogLevel.WARN
+                    logLevel = LogLevel.WARN,
                 )
             }
         }
@@ -170,13 +170,13 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun DependencyHandlerScope.addMainDependencies(
         project: Project,
         target: String,
-        skipBom: Boolean = false
+        skipBom: Boolean = false,
     ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
     protected fun KotlinDependencyHandler.addMainDependencies(
         project: Project,
         target: String,
-        skipBom: Boolean = false
+        skipBom: Boolean = false,
     ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
     private fun DependencyScope.addTestDependencies(project: Project, target: String, skipAnnotations: Boolean) {
@@ -193,13 +193,13 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun KotlinDependencyHandler.addTestDependencies(
         project: Project,
         target: String = targetName,
-        skipAnnotations: Boolean = false
+        skipAnnotations: Boolean = false,
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
     protected fun DependencyHandlerScope.addTestDependencies(
         project: Project,
         target: String = targetName,
-        skipAnnotations: Boolean = false
+        skipAnnotations: Boolean = false,
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
     protected fun Project.addPlatformSpecificTaskAliases() {

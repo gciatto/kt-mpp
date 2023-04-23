@@ -114,7 +114,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun <T : Any> ExtensionContainer.create(
         name: String,
         klass: KClass<T>,
-        vararg constructorArguments: Any
+        vararg constructorArguments: Any,
     ): T = create(name, klass.java, *constructorArguments)
 
     protected fun <T : Any> ExtensionContainer.getByType(klass: KClass<T>): T = getByType(klass.java)
@@ -126,7 +126,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
                 project.npmCompliantVersion.also {
                     log("set NPM publication version to $it")
                 }
-            }
+            },
         )
     }
 

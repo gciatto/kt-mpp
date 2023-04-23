@@ -14,8 +14,8 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: DanySK/action-checkout@0.2.6
-      - uses: DanySK/build-check-deploy-gradle-action@2.2.0
+        uses: DanySK/action-checkout@0.2.9
+      - uses: DanySK/build-check-deploy-gradle-action@2.2.3
         with:
           # Dry-deployment
           check-command: ./gradlew build --parallel
@@ -50,7 +50,7 @@ jobs:
       && github.event_name != 'pull_request'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.4.0
+        uses: actions/checkout@v3.5.2
         with:
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
       - name: Find the version of Node from package.json
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-node@v3.6.0
         with:
           node-version: ${{ steps.node-version.outputs.version }}
-      - uses: DanySK/build-check-deploy-gradle-action@2.2.0
+      - uses: DanySK/build-check-deploy-gradle-action@2.2.3
         with:
           build-command: true
           check-command: true

@@ -1,11 +1,11 @@
 package io.github.gciatto.kt.mpp
 
-import org.gradle.api.Project
 import dev.petuska.npm.publish.NpmPublishPlugin
 import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.NpmRegistry
 import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
 import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
+import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 
 class PublishOnNpmPlugin : AbstractProjectPlugin() {
@@ -67,7 +67,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                 if (it) {
                     log(
                         "dry-run mode for NPM publishing plugin: no package will actually be release on NPM!",
-                        LogLevel.WARN
+                        LogLevel.WARN,
                     )
                 }
             }
@@ -88,24 +88,24 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                         pkg.packageName.set(
                             "${rootProject.name}-${project.name}".also {
                                 log("set JS package name to $it")
-                            }
+                            },
                         )
                     }
                     packageJson {
                         homepage.set(
                             centralExtension.projectUrl.map {
                                 it.also { log("set package.json homepage to $it") }
-                            }
+                            },
                         )
                         description.set(
                             centralExtension.projectDescription.map {
                                 it.also { log("set package.json description to $it") }
-                            }
+                            },
                         )
                         license.set(
                             centralExtension.licenseName.map {
                                 it.also { log("set package.json license to $it") }
-                            }
+                            },
                         )
                         val developers = project.getAllDevs()
                         if (developers.isNotEmpty()) {
@@ -121,7 +121,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                                 .also {
                                     val contributorsList = it.joinToString(prefix = "[", postfix = "]")
                                     log("add package.json contributors: $contributorsList")
-                                }
+                                },
                         )
                         private.set(false)
                         bugs { bugs ->
@@ -139,7 +139,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                             repos.url.set(
                                 centralExtension.scmConnection.map {
                                     it.also { log("set package.json repo URL to $it") }
-                                }
+                                },
                             )
                         }
                     }

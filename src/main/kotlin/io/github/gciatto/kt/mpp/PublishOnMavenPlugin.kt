@@ -87,7 +87,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             val actualPassphrase = signingPassword!!.getAsEitherFileOrValue(project)
             log(
                 "configure signatory for publication for project $name: " +
-                    "key=${actualKey.asPassword()}, passphrase=${actualPassphrase.asPassword()}"
+                    "key=${actualKey.asPassword()}, passphrase=${actualPassphrase.asPassword()}",
             )
             useInMemoryPgpKeys(actualKey, actualPassphrase)
         } else {
