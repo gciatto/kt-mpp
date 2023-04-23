@@ -9,13 +9,6 @@ interface DefaultProperties {
             mandatory = false,
             defaultValue = true
         )
-    val disableDefaultPublications: PropertyDescriptor
-        get() = PropertyDescriptor(
-            name = "disableDefaultPublications",
-            description = "If true, default publications' tasks will be disabled",
-            mandatory = false,
-            defaultValue = true
-        )
     val allWarningsAsErrors: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "allWarningsAsErrors",
@@ -304,7 +297,7 @@ interface DefaultProperties {
         get() = PropertyDescriptor(
             name = "versionsFromCatalog",
             description = "The name of the catalog from which Kotlin, JVM, and Node versions should be taken." +
-                "Leave empty in case all declared catalogs should be considered, as well as if no one should.",
+                "Leave empty in case all declared catalogs should be considered, as well as if no one should",
             mandatory = false,
             defaultValue = ""
         )
@@ -317,10 +310,10 @@ interface DefaultProperties {
             defaultValue = ""
         )
 
-    val dokkaArtifactInMavenPublication: PropertyDescriptor
+    val docStyle: PropertyDescriptor
         get() = PropertyDescriptor(
-            name = "dokkaArtifactInMavenPublication",
-            description = "The Dokka artifact type to be used for Maven publications" +
+            name = "docStyle",
+            description = "The Dokka style to be used for Maven publications" +
                 " (one of {'html', 'gfm', 'javadoc', 'jekyll'})",
             mandatory = false,
             defaultValue = "html"

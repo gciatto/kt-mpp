@@ -10,15 +10,13 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     override fun PropertiesHelperExtension.declareProperties() {
-        addProperty(disableDefaultPublications)
-        addProperty(dokkaArtifactInMavenPublication)
+        addProperty(docStyle)
         addProperty(repoOwner)
         addProperty(mavenCentralPassword)
         addProperty(mavenCentralUsername)
@@ -171,13 +169,6 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         defaultMppPublications.map { "publish${it.capital()}Publication" }
     }
 
-    private fun Project.configureDefaultPublications() = configure(PublishingExtension::class) {
-        val disableDefaultPublications = getBooleanProperty("disableDefaultPublications", true)
-        tasks.withType<AbstractPublishToMaven>()
-            .matching { task -> publishTasks.any { task.name.startsWith(it) } }
-            .configureEach { it.enabled = !disableDefaultPublications }
-    }
-
     private fun Project.configurePublishOnCentralExtension() = configure(PublishOnCentralExtension::class) {
         autoConfigureAllPublications.set(true)
     }
@@ -194,7 +185,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     private fun Project.fixMavenPublicationsJavadocArtifact() {
         plugins.withType(PublishOnMavenPlugin::class.java) { _ ->
             configure(PublishOnCentralExtension::class) {
-                val docStyleString = getOptionalProperty("dokkaArtifactInMavenPublication")
+                val docStyleString = getOptionalProperty("docStyle")
                 val docStyleValue = DocStyle.values()
                     .filter { it.name.equals(docStyleString, ignoreCase = true) }
                     .firstOrNull()
@@ -211,7 +202,6 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             apply(plugin = "org.danilopianini.publish-on-central")
             log("apply org.danilopianini.publish-on-central plugin")
             configurePublishOnCentralExtension()
-            configureDefaultPublications()
             configureMavenRepositories()
             configurePublications()
             addMissingInformationToPublications()
