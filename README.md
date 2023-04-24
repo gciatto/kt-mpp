@@ -155,43 +155,57 @@ Overall, you may need to define, provide the following properties:
 
 - `allWarningsAsErrors` (optional, default value: `true`): if true, the Kotlin compiler will consider all warnings as errors.
 
+- `developer<ID>Email` (optional): the email of developer `<ID>` (useful for Maven/NPM publications).
+
+- `developer<ID>Name` (optional): the full name of developer `<ID>` (useful for Maven/NPM publications).
+
+- `developer<ID>Org` (optional): reference to the organization `<ORG>` of developer `<ID>` (useful for Maven/NPM publications).
+
+- `developer<ID>Url` (optional): the homepage URL of developer `<ID>` (useful for Maven/NPM publications).
+
 - `disableJavadocTask` (optional, default value: `true`): if true, default javadoc task will be disabled.
-
-- `ktCompilerArgs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler, for all platforms.
-
-- `ktCompilerArgsJvm` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JVM sources.
-
-- `ktCompilerArgsJs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JS sources.
-
-- `mochaTimeout` (mandatory, default value: `"180s"`): the amount of time to be .
-
-- `ktTargetJvmDisable` (optional, default value: `false`): if true, disables the JVM target on a multi-platform project.
-
-- `ktTargetJsDisable` (optional, default value: `false`): if true, disables the JS target on a multi-platform project.
-
-- `versionsFromCatalog` (optional, default value: `""`): the name of the catalog from which Kotlin, JVM, and Node versions should be taken.Leave empty in case all declared catalogs should be considered, as well as if no one should..
-
-- `nodeVersion` (optional, default value: `""`): the version of NodeJS to use for running Kotlin JS scripts.
 
 - `docStyle` (optional, default value: `"html"`): the Dokka style to be used for Maven publications (one of {`"html"`, `"gfm"`, `"javadoc"`, `"jekyll"`}).
 
-- `repoOwner` (optional): name of the GitHub user/organization owning the repository of this project. Setting this property will assign default values to the following properties in case they are unset/blank: `<projectHomepage>`, `<scmUrl>`, and `<scmConnection>`.
+- `issuesEmail` (optional): issue tracking email (useful for Maven/NPM publications).
+
+- `issuesUrl` (optional): issue tracking web page URL (useful for Maven/NPM publications).
+
+- `ktCompilerArgsJs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JS sources.
+
+- `ktCompilerArgsJvm` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JVM sources.
+
+- `ktCompilerArgs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler, for all platforms.
+
+- `ktTargetJsDisable` (optional, default value: `false`): if true, disables the JS target on a multi-platform project.
+
+- `ktTargetJvmDisable` (optional, default value: `false`): if true, disables the JVM target on a multi-platform project.
 
 - `mavenCentralPassword` (optional): the password of the user willing to release Maven publications on Maven Central.
 
 - `mavenCentralUsername` (optional): the username of the user willing to release Maven publications on Maven Central.
 
-- `otherMavenRepo` (optional, default value: `"""`): the URL of Maven repository upon which Maven publications will be released.
+- `mochaTimeout` (mandatory, default value: `"180s"`): the amount of time to be .
 
-- `otherMavenUsername` (optional): the username of the user willing to release Maven publications on `<mavenRepo>`.
+- `nodeVersion` (optional, default value: `""`): the version of NodeJS to use for running Kotlin JS scripts.
+
+- `npmDryRun` (optional, default value: false): if true, release of NPM packages will simply be simulated (i.e., no actual release).
+
+- `npmOrganization` (optional, default value: `""`): if non-blank, Kotlin JS projects will be released as NPM packages named `@<npmOrganization>/<rootProject.name>-<project.name>`, otherwise the package name will simply be `<rootProject.name>-<project.name>`.
+
+- `npmRepo` (optional, default value: `"https://registry.npmjs.org"`): the URL of NPM registry upon which NPM publications will be released.If missing or blank, https://registry.npmjs.org will be used.
+
+- `npmToken` (optional): the authentication token of the user willing to release NPM publications on `npmRepo`.
+
+- `<ORG>Name` (optional): the full name of organization `<ORG>` (useful for Maven/NPM publications).
+
+- `<ORG>Url` (optional): the URL of the homepage of organization `<ORG>` (useful for Maven/NPM publications).
 
 - `otherMavenPassword` (optional): the password of the user willing to release Maven publications on `<mavenRepo>`.
 
-- `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
+- `otherMavenRepo` (optional, default value: `"""`): the URL of Maven repository upon which Maven publications will be released.
 
-- `signingPassword` (optional, default value: `""`): the passphrase of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
-
-- `projectLongName` (optional): non-necessarily path-compliant project name (to be used in place of project.name for Maven/NPM publications).
+- `otherMavenUsername` (optional): the username of the user willing to release Maven publications on `<mavenRepo>`.
 
 - `projectDescription` (optional): full project description (useful for Maven/NPM publications).
 
@@ -201,35 +215,19 @@ Overall, you may need to define, provide the following properties:
 
 - `projectLicenseUrl` (optional, default value: `"https://www.apache.org/licenses/LICENSE-2.0"`): the URL of the license of this project (useful for Maven/NPM publications).
 
+- `projectLongName` (optional): non-necessarily path-compliant project name (to be used in place of project.name for Maven/NPM publications).
+
+- `repoOwner` (optional): name of the GitHub user/organization owning the repository of this project. Setting this property will assign default values to the following properties in case they are unset/blank: `<projectHomepage>`, `<scmUrl>`, and `<scmConnection>`.
+
 - `scmConnection` (optional): the connection string for the DVCS repository hosting the code of this project(useful for Maven/NPM publications).
 
 - `scmUrl` (optional): the URL of the DVCS repository hosting the code of this project (useful for Maven/NPM publications).
 
-- `developerIdName` (optional): the full name of developer `<ID>` (useful for Maven/NPM publications).
+- `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications. It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
 
-- `developerIdUrl` (optional): the homepage URL of developer `<ID>` (useful for Maven/NPM publications).
+- `signingPassword` (optional, default value: `""`): the passphrase of the private key to be used for signing Maven publications. It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
 
-- `developer<ID>Email` (optional): the email of developer `<ID>` (useful for Maven/NPM publications).
-
-- `developerIdOrg` (optional): reference to the organization `<ORG>` of developer `<ID>` (useful for Maven/NPM publications).
-
-- `<ORG>Name` (optional): the full name of organization `<ORG>` (useful for Maven/NPM publications).
-
-- `<ORG>Url` (optional): the URL of the homepage of organization `<ORG>` (useful for Maven/NPM publications).
-
-- `npmOrganization` (optional, default value: `""`): if non-blank, Kotlin JS projects will be released as NPM packages named `@<npmOrganization>/<rootProject.name>-<project.name>`, otherwise the package name will simply be `<rootProject.name>-<project.name>`.
-
-- `npmDryRun` (optional, default value: false): if true, release of NPM packages will simply be simulated (i.e., no actual release).
-
-- `npmRepo` (optional, default value: `"https://registry.npmjs.org"`): the URL of NPM registry upon which NPM publications will be released.If missing or blank, https://registry.npmjs.org will be used.
-
-- `npmToken` (optional): the authentication token of the user willing to release NPM publications on `npmRepo`.
-
-- `issuesUrl` (optional): issue tracking web page URL (useful for Maven/NPM publications).
-
-- `issuesEmail` (optional): issue tracking email (useful for Maven/NPM publications).
-
-- `dokkaArtifactInMavenPublication` (optional, default value: `"html"`): the Dokka artifact type to be used for Maven publications (one of {`"html"`, `gfm`, `javadoc`, `jekyll`})
+- `versionsFromCatalog` (optional, default value: `""`): the name of the catalog from which Kotlin, JVM, and Node versions should be taken. Leave empty in case all declared catalogs should be considered, as well as if no one should.
 
 ## How to use
 

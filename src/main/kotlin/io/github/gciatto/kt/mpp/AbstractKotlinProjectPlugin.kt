@@ -140,7 +140,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
 
     context(Project)
     protected fun KotlinCommonOptions.configureKotlinOptions(target: String) {
-        allWarningsAsErrors = getBooleanProperty("allWarningsAsErrors", default = true)
+        allWarningsAsErrors = getBooleanProperty("allWarningsAsErrors")
         if (allWarningsAsErrors) {
             log("consider all warnings as errors when compiling Kotlin sources in $target")
         }

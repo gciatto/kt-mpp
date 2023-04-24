@@ -23,7 +23,7 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             }
         }
         tasks.getByName("javadoc") {
-            it.enabled = !getBooleanProperty("disableJavadocTask", true)
+            it.enabled = !getBooleanProperty("disableJavadocTask")
         }
         dependencies {
             addMainDependencies(project, target = "jdk8")

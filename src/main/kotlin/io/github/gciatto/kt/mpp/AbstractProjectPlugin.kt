@@ -92,16 +92,13 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         getPropertyDescriptor(name).logHelpIfNecessary(project)
     }
 
-    protected fun Project.getOptionalProperty(name: String): String? {
-        val result = findProperty(name)?.toString()
-        if (result == null) {
-            logMissingProperty(name)
-        }
-        return result
-    }
+    protected fun Project.getOptionalProperty(name: String): String? =
+        findProperty(name)?.toString()
+            ?: getPropertyDescriptor(name).also { it.logHelpIfNecessary(project) }.defaultValue?.toString()
 
-    protected fun Project.getBooleanProperty(name: String, default: Boolean = false): Boolean =
-        getOptionalProperty(name)?.toBooleanStrictOrNull() ?: default
+    protected fun Project.getBooleanProperty(name: String): Boolean =
+        getOptionalProperty(name)?.toBooleanStrictOrNull()
+            ?: error("Property $name has no default value, and this is a bug. Please report it.")
 
     protected fun Task.sibling(name: String) =
         path.split(":").let {

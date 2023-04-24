@@ -9,6 +9,7 @@ interface DefaultProperties {
             mandatory = false,
             defaultValue = true,
         )
+
     val allWarningsAsErrors: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "allWarningsAsErrors",
@@ -276,8 +277,8 @@ interface DefaultProperties {
     val signingKey: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "signingKey",
-            description = "The ASCII-armored value of the private key to be used for signing Maven publications." +
-                "It should be provided along with <signingPassword>." +
+            description = "The ASCII-armored value of the private key to be used for signing Maven publications. " +
+                "It should be provided along with <signingPassword>. " +
                 "If missing or blank, publication artifact signing will be disabled",
             mandatory = false,
             defaultValue = "",
@@ -286,8 +287,8 @@ interface DefaultProperties {
     val signingPassword: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "signingPassword",
-            description = "The passphrase of the private key to be used for signing Maven publications." +
-                "It should be provided along with <signingPassword>." +
+            description = "The passphrase of the private key to be used for signing Maven publications. " +
+                "It should be provided along with <signingPassword>. " +
                 "If missing or blank, publication artifact signing will be disabled",
             mandatory = false,
             defaultValue = "",
@@ -296,7 +297,7 @@ interface DefaultProperties {
     val versionsFromCatalog: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "versionsFromCatalog",
-            description = "The name of the catalog from which Kotlin, JVM, and Node versions should be taken." +
+            description = "The name of the catalog from which Kotlin, JVM, and Node versions should be taken. " +
                 "Leave empty in case all declared catalogs should be considered, as well as if no one should",
             mandatory = false,
             defaultValue = "",

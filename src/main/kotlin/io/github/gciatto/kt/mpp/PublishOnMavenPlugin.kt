@@ -182,9 +182,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             configure(PublishOnCentralExtension::class) {
                 val docStyleString = getOptionalProperty("docStyle")
                 val docStyleValue = DocStyle.values()
-                    .filter { it.name.equals(docStyleString, ignoreCase = true) }
-                    .firstOrNull()
-                    ?: error("Invalid value for property dokkaArtifactInMavenPublication: $docStyleString")
+                    .firstOrNull { it.name.equals(docStyleString, ignoreCase = true) }
+                    ?: error("Invalid value for property docStyle: $docStyleString")
                 docStyle.set(docStyleValue)
                 log("use ${docStyleValue.name} style for javadoc JAR when publishing")
             }
