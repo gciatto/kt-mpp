@@ -163,12 +163,6 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         }
     }
 
-    private val defaultMppPublications = setOf("kotlinMultiplatform", "js", "jvm")
-
-    private val publishTasks by lazy {
-        defaultMppPublications.map { "publish${it.capital()}Publication" }
-    }
-
     private fun Project.configurePublishOnCentralExtension() = configure(PublishOnCentralExtension::class) {
         autoConfigureAllPublications.set(true)
     }
