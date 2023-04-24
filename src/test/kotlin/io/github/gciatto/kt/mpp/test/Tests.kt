@@ -15,6 +15,7 @@ import org.gradle.internal.impldep.org.junit.rules.TemporaryFolder
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -31,7 +32,7 @@ class Tests : StringSpec(
                 val testConfiguration = Config {
                     addSpec(Root)
                 }.from.yaml.inputStream(it.open())
-                testConfiguration[Root.tests].map { it to yamlFile.parentFile }
+                testConfiguration[Root.tests].map { test -> test to yamlFile.parentFile }
             }
             .forEach { (test, location) ->
                 log.debug("Test to be executed: $test from $location")
@@ -81,7 +82,7 @@ class Tests : StringSpec(
     },
 ) {
     companion object {
-        val log = LoggerFactory.getLogger(Tests::class.java)
+        val log: Logger = LoggerFactory.getLogger(Tests::class.java)
 
         private fun BuildResult.outcomeOf(path: String) = checkNotNull(task(path)?.outcome) {
             "Task $path was not present among the executed tasks"
