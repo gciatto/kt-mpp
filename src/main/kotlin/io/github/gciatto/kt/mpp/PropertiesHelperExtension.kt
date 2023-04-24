@@ -11,7 +11,7 @@ open class PropertiesHelperExtension : DefaultProperties {
         name: String,
         description: String,
         mandatory: Boolean,
-        defaultValue: Any? = null
+        defaultValue: Any? = null,
     ) = PropertyDescriptor(name, description, mandatory, defaultValue).also { addProperty(it) }
 
     internal fun addProperty(property: PropertyDescriptor) {

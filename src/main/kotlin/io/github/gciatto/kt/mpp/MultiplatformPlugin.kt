@@ -9,6 +9,9 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
+    override val relevantPublications: Set<String> =
+        setOf("jvm", "js", "kotlinMultiplatform")
+
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
@@ -46,7 +49,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
 
     private fun KotlinMultiplatformExtension.dependenciesFor(
         sourceSet: String,
-        action: KotlinDependencyHandler.() -> Unit
+        action: KotlinDependencyHandler.() -> Unit,
     ) = sourceSets.getByName(sourceSet).dependencies(action)
 
     context(Project, KotlinMultiplatformExtension)
@@ -64,6 +67,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         dependenciesFor("jvmTest") {
             addTestDependencies(project, "junit", skipAnnotations = true)
         }
+        addMultiplatformTaskAliases("jvm")
     }
 
     context(Project, KotlinMultiplatformExtension)
@@ -80,6 +84,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         dependenciesFor("jsTest") {
             addTestDependencies(project, "js", skipAnnotations = true)
         }
+        addMultiplatformTaskAliases("js")
     }
 
     override fun PropertiesHelperExtension.declareProperties() {

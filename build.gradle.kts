@@ -4,8 +4,8 @@ import de.aaschmid.gradle.plugins.cpd.Cpd
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
+import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.dokka)
     implementation(libs.ktlint)
     implementation(libs.detekt)
+    implementation(libs.publishOnCentral)
     testImplementation(gradleTestKit())
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)
@@ -179,7 +180,7 @@ gradlePlugin {
             confName: String = name,
             descr: String,
             klass: String,
-            vararg moreTags: String
+            vararg moreTags: String,
         ) = create(name) {
             id = "$group.${project.name}.$name"
             displayName = "Default $confName configuration for Kotlin multi-platform projects"
@@ -193,70 +194,70 @@ gradlePlugin {
             name = "bug-finder",
             descr = "bug-finder (currently, Detekt)",
             klass = "BugFinderPlugin",
-            moreTags = arrayOf("bug-finder", "detekt")
+            moreTags = arrayOf("bug-finder", "detekt"),
         )
 
         innerPlugin(
             name = "documentation",
             descr = "documentation generator (currently, Dokka)",
             klass = "DocumentationPlugin",
-            moreTags = arrayOf("documentation", "dokka")
+            moreTags = arrayOf("documentation", "dokka"),
         )
 
         innerPlugin(
             name = "linter",
             descr = "linter (currently, KtLint)",
             klass = "LinterPlugin",
-            moreTags = arrayOf("linter", "ktlint")
+            moreTags = arrayOf("linter", "ktlint"),
         )
 
         innerPlugin(
             name = "maven-publish",
             descr = "maven publication",
             klass = "PublishOnMavenPlugin",
-            moreTags = arrayOf("maven")
+            moreTags = arrayOf("maven"),
         )
 
         innerPlugin(
             name = "npm-publish",
             descr = "npm publication",
             klass = "PublishOnNpmPlugin",
-            moreTags = arrayOf("npm")
+            moreTags = arrayOf("npm"),
         )
 
         innerPlugin(
             name = "versions",
             descr = "version revealer",
             klass = "VersionsPlugin",
-            moreTags = arrayOf("version")
+            moreTags = arrayOf("version"),
         )
 
         innerPlugin(
             name = "js-only",
             descr = "JS only project configuration",
             klass = "JsOnlyPlugin",
-            moreTags = arrayOf("js")
+            moreTags = arrayOf("js"),
         )
 
         innerPlugin(
             name = "jvm-only",
             descr = "JVM only project configuration",
             klass = "JvmOnlyPlugin",
-            moreTags = arrayOf("jvm")
+            moreTags = arrayOf("jvm"),
         )
 
         innerPlugin(
             name = "multiplatform",
             descr = "multi-platform project configuration",
             klass = "MultiplatformPlugin",
-            moreTags = arrayOf("multiplatform")
+            moreTags = arrayOf("multiplatform"),
         )
 
         innerPlugin(
             name = "multi-project-helper",
             descr = "multi-platform & multi-project helper plugin",
             klass = "MultiProjectHelperPlugin",
-            moreTags = arrayOf()
+            moreTags = arrayOf(),
         )
 
         tasks.create("generatePluginsInfo") {
@@ -267,7 +268,7 @@ gradlePlugin {
                 outputs.file(targetFile)
                 doLast {
                     @Suppress("ktlint")
-                    val text = "@file:Suppress(\"MaxLineLength\")\n" +
+                    val text = "@file:Suppress(\"MaxLineLength\")\n\n" +
                         "package ${project.group}.kt.mpp\n\n" +
                         "object Plugins {\n" +
                         "    /* ktlint-disable */\n" +
@@ -295,4 +296,20 @@ tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
             this@create.dependsOn(this)
         }
     }
+}
+
+tasks.create<Copy>("copyLibsToTest") {
+    group = "verification"
+    description = "Copies the gradle/libs.versions.toml file into test projects"
+    from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
+    sourceSets.test {
+        resources.srcDirs.forEach { testResourcesDir ->
+            fileTree(testResourcesDir) { include("**/test.yaml") }.asFileTree.visit {
+                if (!isDirectory) {
+                    destinationDir = file.parentFile.resolve("gradle")
+                }
+            }
+        }
+    }
+    tasks.getByName("processTestResources").dependsOn(this)
 }

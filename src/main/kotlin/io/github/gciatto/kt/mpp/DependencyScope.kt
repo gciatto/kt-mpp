@@ -24,7 +24,7 @@ sealed interface DependencyScope {
 }
 
 private class GradleDependencyHandler2DependencyScopeAdapter(
-    private val handler: DependencyHandler
+    private val handler: DependencyHandler,
 ) : DependencyScope {
     override fun api(dependency: Any) {
         handler.add("api", dependency)
@@ -43,7 +43,7 @@ private class GradleDependencyHandler2DependencyScopeAdapter(
 }
 
 private class KotlinDependencyHandler2DependencyScopeAdapter(
-    private val handler: KotlinDependencyHandler
+    private val handler: KotlinDependencyHandler,
 ) : DependencyScope {
     override fun api(dependency: Any) {
         handler.api(dependency)

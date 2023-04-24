@@ -1,8 +1,6 @@
 package io.github.gciatto.kt.mpp
 
 import org.gradle.api.Project
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
 
 class VersionsPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
@@ -20,14 +18,5 @@ class VersionsPlugin : AbstractProjectPlugin() {
             it.doLast { println(project.npmCompliantVersion) }
         }
         log("apply ${Plugins.versions.name} plugin")
-        afterEvaluate {
-            plugins.withId("maven-publish") {
-                configure(PublishingExtension::class) {
-                    publications.withType(MavenPublication::class.java) {
-                        it.copyMavenGroupAndVersionFromProject()
-                    }
-                }
-            }
-        }
     }
 }

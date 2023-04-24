@@ -1,14 +1,206 @@
 tests:
-  - description: "Root project should be multiplatform"
+  - description: "Root project is multiplatform, hence it has tasks concerning all platforms"
     configuration:
-      tasks: ":tasks"
+      tasks:
+        - ":tasks"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "Tasks runnable from root project 'test0'"
+        # build
+        - "assemble"
+        - "assembleJsPackage"
+        - "jsJar"
+        - "jsMainClasses"
+        - "jsSourcesJar"
+        - "jsTestClasses"
+        - "jvmJar"
+        - "jvmMainClasses"
+        - "jvmSourcesJar"
+        - "jvmTestClasses"
+        - "kotlinSourcesJar"
+        # documentation
+        - "dokkaHtml"
+        - "dokkaHtmlMultiModule"
+        - "dokkaHtmlMultiModuleZip"
+        # ktlint
+        - "ktlintFormat"
+        - "ktlintApplyToIdea"
+        - "ktlintApplyToIdeaGlobally"
+        - "ktlintGenerateBaseline"
+        - "ktlintCheck"
+        # nodejs
+        - "jsPackageJson"
+        - "jsTestPackageJson"
+        - "kotlinNodeJsSetup"
+        - "kotlinNpmInstall"
+        - "kotlinYarnSetup"
+        - "nodeKotlinClean"
+        - "packageJson"
+        - "rootPackageJson"
+        - "testPackageJson"
+        # signing
+        - "signAllPublications"
+        - "signJavaOSSRHPublication"
+        - "signJsPublication"
+        - "signJvmPublication"
+        - "signKotlinMultiplatformPublication"
+        - "signKotlinOSSRHPublication"
+        # maven
+        - "publish"
+        - "publishAllPublicationsToMavenCentralRepository"
+        - "publishJavaOSSRHPublicationToMavenCentralRepository"
+        - "publishJavaOSSRHPublicationToMavenLocal"
+        - "publishJsPublicationToMavenCentralRepository"
+        - "publishJsPublicationToMavenLocal"
+        - "publishJvmPublicationToMavenCentralRepository"
+        - "publishJvmPublicationToMavenLocal"
+        - "publishKotlinMultiplatformPublicationToMavenCentralRepository"
+        - "publishKotlinMultiplatformPublicationToMavenLocal"
+        - "publishKotlinOSSRHPublicationToMavenCentralRepository"
+        - "publishKotlinOSSRHPublicationToMavenLocal"
+        - "publishToMavenLocal"
+        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
+        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
+        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+        # nexus
+        - "closeStagingRepositoryOnMavenCentral"
+        - "createStagingRepositoryOnMavenCentral"
+        - "dropStagingRepositoryOnMavenCentral"
+        - "releaseStagingRepositoryOnMavenCentral"
+        - "uploadAllPublicationsToMavenCentralNexus"
+        - "uploadJavaOSSRHToMavenCentralNexus"
+        - "uploadJsToMavenCentralNexus"
+        - "uploadJvmToMavenCentralNexus"
+        - "uploadKotlinMultiplatformToMavenCentralNexus"
+        - "uploadKotlinOSSRHToMavenCentralNexus"
+        # npm
+        - "publishJsPackageToNpmjsRegistry"
+        # detekt
+        - "detekt"
+        - "detektJsMain"
+        - "detektJsTest"
+        - "detektJvmMain"
+        - "detektJvmTest"
+        - "detektMain"
+        - "detektMetadataCommonMain"
+        - "detektMetadataMain"
+        - "detektTest"
+        # verification
+        - "jsNodeTest"
+        - "jsTest"
+        - "jvmTest"
+        - "nodeTest"
+        - "test"
+        # versions
+        - "printNpmVersion"
+        - "printVersion"
+  - description: "Sub-project :subproject-mp is multiplatform, hence it has tasks concerning all platforms"
+    configuration:
+      tasks:
+        - ":subproject-mp:tasks"
+        - ":subproject-mp:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':subproject-mp:tasks'
+        - ':subproject-mp:showPublications'
+      output_contains:
+        - "subproject-mp: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
+        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
+        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+  - description: "Sub-project :full is multiplatform, hence it has tasks concerning all platforms"
+    configuration:
+      tasks:
+        - ":full:tasks"
+        - ":full:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        -  ':full:tasks'
+        - ":full:showPublications"
+      output_contains:
+        - "full: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
+        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
+        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+  - description: "Sub-project :subproject-jvm is JVM-only, hence it has tasks concerning the JVM platform"
+    configuration:
+      tasks:
+        - ":subproject-jvm:tasks"
+        - ":subproject-jvm:showPublications"
       options:
         - "--stacktrace"
         - "--info"
     expectation:
-      success: ':tasks'
+      success:
+        - ":subproject-jvm:tasks"
+        - ":subproject-jvm:showPublications"
       output_contains:
-        - Tasks runnable from root project 'test0'
+        - "subproject-jvm: publications: javaOSSRH, kotlinOSSRH"
+        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishJavaOSSRHPublicationToMavenCentralRepository, publishKotlinOSSRHPublicationToMavenCentralRepository"
+        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishJavaOSSRHPublicationToMavenLocal, publishKotlinOSSRHPublicationToMavenLocal"
+        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJavaOSSRHToMavenCentralNexus, uploadKotlinOSSRHToMavenCentralNexus"
+  - description: "Attempting to publish a JVM project should involve sources generation"
+    configuration:
+      tasks:
+        - ":subproject-jvm:publishProjectToMavenLocal"
+      options:
+        - "--dry-run"
+        - "--stacktrace"
+    expectation:
+      output_contains:
+        - ":subproject-jvm:sourcesJar SKIPPED"
+  - description: "Sub-project :subproject-js is JS-only, hence it has tasks concerning the JS platform"
+    configuration:
+      tasks:
+        - ":subproject-js:tasks"
+        - ":subproject-js:showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':subproject-js:tasks'
+        - ':subproject-js:showPublications'
+      output_contains:
+        - "subproject-js: publications: kotlinOSSRH"
+        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinOSSRHPublicationToMavenCentralRepository"
+        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinOSSRHPublicationToMavenLocal"
+        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadKotlinOSSRHToMavenCentralNexus"
+
+  - description: "Sub-project :subproject-other has no prior configuration"
+    configuration:
+      tasks:
+        - ":subproject-other:tasks"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':subproject-other:tasks'
+  - description: "Try to compile all sub-projects"
+    configuration:
+      tasks:
+        - "classes"
+        - "testClasses"
+      options:
+        - "--continue"
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:classes"
+        - ":subproject-jvm:testClasses"
+        - ":subproject-mp:classes"
+        - ":subproject-mp:testClasses"
+        - ":subproject-js:mainClasses"
+        - ":subproject-js:testClasses"
+        - ":full:classes"
+        - ":full:testClasses"
   - description: "Print properties explanation"
     configuration:
       tasks: ":full:explainProperties"
@@ -16,3 +208,142 @@ tests:
         - "--stacktrace"
     expectation:
       success: ':full:explainProperties'
+  - description: "Running :full:test should test all platforms and compile all dependencies"
+    configuration:
+      tasks: ":full:test"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:compileKotlin"
+        - ":subproject-jvm:compileJava"
+        - ":subproject-js:mainClasses"
+        - ":subproject-mp:jvmMainClasses"
+        - ":subproject-mp:jsMainClasses"
+        - ":full:jvmMainClasses"
+        - ":full:jsMainClasses"
+        - ":full:jvmTestClasses"
+        - ":full:jsTestClasses"
+        - ":full:jvmTest"
+        - ":full:jsTest"
+  - description: "All sub-projects should have the same version of the rootProject"
+    configuration:
+      tasks: "printVersion"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:printVersion"
+        - ":subproject-js:printVersion"
+        - ":subproject-mp:printVersion"
+        - ":subproject-other:printVersion"
+        - ":printVersion"
+        - ":full:printVersion"
+      output_matches:
+        - "^> Task :printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :full:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-js:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-jvm:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-mp:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+        - "^> Task :subproject-other:printVersion[\\s\\n\\r]+1\\.0\\.0$"
+  - description: "Metadata generation works"
+    configuration:
+      tasks:
+        - "generateMetadataFileForJavaOSSRHPublication"
+        - "generateMetadataFileForJsPublication"
+        - "generateMetadataFileForJvmPublication"
+        - "generateMetadataFileForKotlinMultiplatformPublication"
+        - "generateMetadataFileForKotlinOSSRHPublication"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":full:generateMetadataFileForJavaOSSRHPublication"
+        - ":full:generateMetadataFileForJsPublication"
+        - ":full:generateMetadataFileForJvmPublication"
+        - ":full:generateMetadataFileForKotlinMultiplatformPublication"
+        - ":full:generateMetadataFileForKotlinOSSRHPublication"
+  - description: "Upload to Maven implies sources and javadoc being generated"
+    configuration:
+      tasks:
+        - "publishProjectToMavenLocal"
+        - "printMavenLocal"
+      options:
+        - "--stacktrace"
+        - "--continue"
+    expectation:
+      success:
+        - ":full:publishKotlinMultiplatformPublicationToMavenLocal"
+        - ":full:publishJvmPublicationToMavenLocal"
+        - ":full:publishJsPublicationToMavenLocal"
+        - ":subproject-mp:publishKotlinMultiplatformPublicationToMavenLocal"
+        - ":subproject-mp:publishJvmPublicationToMavenLocal"
+        - ":subproject-mp:publishJsPublicationToMavenLocal"
+        - ":subproject-jvm:publishKotlinOSSRHPublicationToMavenLocal"
+        - ":subproject-jvm:publishJavaOSSRHPublicationToMavenLocal"
+        - ":subproject-js:publishKotlinOSSRHPublicationToMavenLocal"
+      # find build/.m2 -type f -wholename '*'
+      file_exists:
+        - name: build/.m2/repository/io/github/gciatto/full/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/full-js/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib.asc
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.klib
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.klib.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.pom.asc
+        #
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom.asc

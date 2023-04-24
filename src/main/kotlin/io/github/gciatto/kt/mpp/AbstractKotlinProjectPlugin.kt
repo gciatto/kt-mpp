@@ -5,7 +5,10 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.VersionConstraint
 import org.gradle.api.logging.LogLevel
-import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
@@ -22,13 +25,56 @@ import kotlin.jvm.optionals.asSequence
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
 
     companion object {
-        private val SUPPORTED_TARGETS = setOf("jvm", "js", "multiplatform")
+        private const val PUBLICATION_TASK_NAME_PATTERN = "([A-Z]\\w+?)(?:Publication)?To([A-Z]\\w+)"
+        private val pubTaskNamePattern = "^(publish|upload)$PUBLICATION_TASK_NAME_PATTERN$".toRegex()
     }
 
     private val targetName: String = targetName.lowercase(Locale.getDefault()).also {
-        require(it in SUPPORTED_TARGETS) {
-            "Unsupported target: $it. Supported targets are: ${SUPPORTED_TARGETS.joinToString()}"
+        require(it in SUPPORTED_KOTLIN_TARGETS) {
+            "Unsupported target: $it. Supported targets are: ${SUPPORTED_KOTLIN_TARGETS.joinToString()}"
         }
+    }
+
+    final override fun apply(target: Project) {
+        super.apply(target)
+        target.plugins.withType(MavenPublishPlugin::class.java) {
+            target.configure(PublishingExtension::class) {
+                target.run { customizePublishing() }
+            }
+        }
+    }
+
+    protected abstract val relevantPublications: Set<String>
+
+    private fun String.declined() =
+        capital().let { it + if (it.endsWith("h")) "es" else "s" }
+
+    context (Project)
+    private fun PublishingExtension.customizePublishing() {
+        publications.withType(MavenPublication::class.java).matching { it.name in relevantPublications }.all { pub ->
+            log("configuring relevant publication ${pub.name}")
+            tasks.withType(AbstractPublishToMaven::class.java).all { task ->
+                pubTaskNamePattern.matchEntire(task.name)?.let {
+                    if (it.groupValues[2].equals(pub.name, ignoreCase = true)) {
+                        val umbrellaTask = tasks.maybeCreate("${it.groupValues[1]}ProjectTo${it.groupValues[3]}")
+                        umbrellaTask.group = "Publishing"
+                        val description = "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
+                            "via tasks: ${task.name}"
+                        umbrellaTask.description = umbrellaTask.description
+                            ?.let { desc -> desc + ", ${task.name}" }
+                            ?: description
+                        umbrellaTask.dependsOn(task)
+                        log("let task ${umbrellaTask.path} depend on ${task.path}")
+                    }
+                }
+            }
+        }
+        fixPublishing()
+    }
+
+    context (Project)
+    protected open fun PublishingExtension.fixPublishing() {
+        // does nothing be default
     }
 
     private fun Project.getVersionFromCatalog(name: String, catalog: String? = null): VersionConstraint? {
@@ -45,7 +91,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
                 log(
                     message = "failed attempt to find version of `$name` in catalog" +
                         if (catalog == null) "s" else " $catalog",
-                    logLevel = LogLevel.WARN
+                    logLevel = LogLevel.WARN,
                 )
             }
         }
@@ -70,7 +116,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun kotlinPlugin(name: String = targetName) =
-        "org.jetbrains.kotlin.$name"
+        io.github.gciatto.kt.mpp.kotlinPlugin(name)
 
     context(Project)
     protected fun KotlinJvmOptions.configureJvmKotlinOptions(target: String) {
@@ -124,13 +170,13 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun DependencyHandlerScope.addMainDependencies(
         project: Project,
         target: String,
-        skipBom: Boolean = false
+        skipBom: Boolean = false,
     ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
     protected fun KotlinDependencyHandler.addMainDependencies(
         project: Project,
         target: String,
-        skipBom: Boolean = false
+        skipBom: Boolean = false,
     ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
     private fun DependencyScope.addTestDependencies(project: Project, target: String, skipAnnotations: Boolean) {
@@ -147,35 +193,42 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun KotlinDependencyHandler.addTestDependencies(
         project: Project,
         target: String = targetName,
-        skipAnnotations: Boolean = false
+        skipAnnotations: Boolean = false,
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
     protected fun DependencyHandlerScope.addTestDependencies(
         project: Project,
         target: String = targetName,
-        skipAnnotations: Boolean = false
+        skipAnnotations: Boolean = false,
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
-    protected fun Project.addTaskAliases() {
-        tasks.register("${targetName}Test") {
+    protected fun Project.addPlatformSpecificTaskAliases() {
+        tasks.create("${targetName}Test") {
             it.group = "verification"
             it.dependsOn("test")
             log("add ${it.path} task as an alias for ${it.sibling("test")}")
         }
-        tasks.register("${targetName}MainClasses") {
+        tasks.create("${targetName}MainClasses") {
             it.group = "build"
             it.dependsOn("mainClasses")
             log("add ${it.path} task as an alias for ${it.sibling("mainClasses")}")
         }
-        tasks.register("${targetName}TestClasses") {
+        tasks.create("${targetName}TestClasses") {
             it.group = "build"
             it.dependsOn("testClasses")
             log("add ${it.path} task as an alias for ${it.sibling("testClasses")}")
         }
     }
 
+    protected fun Project.addMultiplatformTaskAliases(target: String) {
+        tasks.named("test").configure {
+            it.dependsOn("${target}Test")
+            log("let task ${it.path} be triggered by ${it.sibling("test")}")
+        }
+    }
+
     protected fun KotlinTarget.targetCompilationId(compilation: KotlinCompilation<*>): String =
-        "${name}${compilation.compilationName.capitalized()}"
+        "${name}${compilation.compilationName.capital()}"
 
     protected fun targetCompilationId(task: KotlinCompile<*>): String =
         task.name.replace("compile", "")

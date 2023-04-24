@@ -7,6 +7,8 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
+    override val relevantPublications: Set<String> = setOf("kotlinOSSRH", "javaOSSRH")
+
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
@@ -20,18 +22,22 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
                 configureJvmKotlinOptions(targetCompilationId(task))
             }
         }
+        tasks.getByName("javadoc") {
+            it.enabled = !getBooleanProperty("disableJavadocTask", true)
+        }
         dependencies {
             addMainDependencies(project, target = "jdk8")
-            addTestDependencies(project, target = "junit")
+            addTestDependencies(project, target = "junit", skipAnnotations = true)
         }
         configure(JavaPluginExtension::class) {
             withSourcesJar()
             log("configure JVM library to include sources JAR")
         }
-        addTaskAliases()
+        addPlatformSpecificTaskAliases()
     }
 
     override fun PropertiesHelperExtension.declareProperties() {
+        addProperty(disableJavadocTask)
         addProperty(allWarningsAsErrors)
         addProperty(ktCompilerArgs)
         addProperty(ktCompilerArgsJvm)

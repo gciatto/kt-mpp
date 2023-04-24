@@ -8,7 +8,7 @@ data class PropertyDescriptor(
     val name: String,
     val description: String,
     val mandatory: Boolean,
-    val defaultValue: Any? = null
+    val defaultValue: Any? = null,
 ) {
 
     private var alreadyLogged: Boolean = false

@@ -155,6 +155,8 @@ Overall, you may need to define, provide the following properties:
 
 - `allWarningsAsErrors` (optional, default value: `true`): if true, the Kotlin compiler will consider all warnings as errors.
 
+- `disableJavadocTask` (optional, default value: `true`): if true, default javadoc task will be disabled.
+
 - `ktCompilerArgs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler, for all platforms.
 
 - `ktCompilerArgsJvm` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JVM sources.
@@ -171,15 +173,23 @@ Overall, you may need to define, provide the following properties:
 
 - `nodeVersion` (optional, default value: `""`): the version of NodeJS to use for running Kotlin JS scripts.
 
-- `mavenRepo` (optional, default value: `"https://oss.sonatype.org/service/local/staging/deploy/maven2/"`): the URL of Maven repository upon which Maven publications will be released.
+- `docStyle` (optional, default value: `"html"`): the Dokka style to be used for Maven publications (one of {`"html"`, `"gfm"`, `"javadoc"`, `"jekyll"`}).
 
-- `mavenUsername` (optional): the username of the user willing to release Maven publications on <mavenRepo>.
+- `repoOwner` (optional): name of the GitHub user/organization owning the repository of this project. Setting this property will assign default values to the following properties in case they are unset/blank: `<projectHomepage>`, `<scmUrl>`, and `<scmConnection>`.
 
-- `mavenPassword` (optional): the password of the user willing to release Maven publications on <mavenRepo>.
+- `mavenCentralPassword` (optional): the password of the user willing to release Maven publications on Maven Central.
 
-- `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications.It should be provided along with <signingPassword>.If missing or blank, publication artifact signing will be disabled.
+- `mavenCentralUsername` (optional): the username of the user willing to release Maven publications on Maven Central.
 
-- `signingPassword` (optional, default value: `""`): the passphrase of the private key to be used for signing Maven publications.It should be provided along with <signingPassword>.If missing or blank, publication artifact signing will be disabled.
+- `otherMavenRepo` (optional, default value: `"""`): the URL of Maven repository upon which Maven publications will be released.
+
+- `otherMavenUsername` (optional): the username of the user willing to release Maven publications on `<mavenRepo>`.
+
+- `otherMavenPassword` (optional): the password of the user willing to release Maven publications on `<mavenRepo>`.
+
+- `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
+
+- `signingPassword` (optional, default value: `""`): the passphrase of the private key to be used for signing Maven publications.It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
 
 - `projectLongName` (optional): non-necessarily path-compliant project name (to be used in place of project.name for Maven/NPM publications).
 

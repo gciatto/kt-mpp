@@ -6,6 +6,8 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 
 class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
+    override val relevantPublications: Set<String> = setOf("kotlinOSSRH")
+
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
@@ -22,13 +24,19 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
                     }
                 }
                 configureNodeJs()
+                sourceSets.getByName("main") {
+                    dependencies {
+                        addMainDependencies(project, target = "js")
+                    }
+                }
+                sourceSets.getByName("test") {
+                    dependencies {
+                        addTestDependencies(project, target = "js", skipAnnotations = true)
+                    }
+                }
             }
         }
-        dependencies {
-            addMainDependencies(project, target = "js")
-            addTestDependencies(project, target = "js")
-        }
-        addTaskAliases()
+        addPlatformSpecificTaskAliases()
     }
 
     override fun PropertiesHelperExtension.declareProperties() {
