@@ -1,3 +1,22 @@
+## [2.0.1](https://github.com/gciatto/kt-mpp/compare/2.0.0...2.0.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* error messages and optinal properties management ([643d02c](https://github.com/gciatto/kt-mpp/commit/643d02c9a9e5fbe385a47d1a3e67d40260984169))
+
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.4 ([7939ac9](https://github.com/gciatto/kt-mpp/commit/7939ac93db932b8ef20c2fac47b57d64f76f62b0))
+
+
+### Dependency updates
+
+* **deps:** update plugin gitsemver to v1.1.9 ([54c08db](https://github.com/gciatto/kt-mpp/commit/54c08dbbdafd88feb9abe595d8ceb078ebe0a1d6))
+* **deps:** update plugin kotlin-qa to v0.39.0 ([4b6b8d6](https://github.com/gciatto/kt-mpp/commit/4b6b8d6c76e508e85925507e1a18e0ed3e940687))
+* **deps:** update plugin multijvmtesting to v0.4.23 ([5653ed2](https://github.com/gciatto/kt-mpp/commit/5653ed296f886ad06c4d9e6006a6a6e580225302))
+
 ## [2.0.0](https://github.com/gciatto/kt-mpp/compare/1.2.2...2.0.0) (2023-04-24)
 
 
