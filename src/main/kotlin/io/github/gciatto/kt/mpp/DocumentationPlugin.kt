@@ -8,7 +8,7 @@ import org.jetbrains.dokka.gradle.DokkaPlugin
 
 class DocumentationPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
-        forAllKotlinPlugins {
+        forAllKotlinPlugins { _ ->
             val dokka = apply(DokkaPlugin::class)
             log("apply ${dokka::class.java.name} as doc generator")
             tasks.withType(DokkaMultiModuleTask::class.java) {

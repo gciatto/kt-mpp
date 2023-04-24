@@ -11,7 +11,7 @@ data class Organization(val name: String, val url: String?) {
     }
 
     override fun toString(): String =
-        name + (url?.let { " ($it)" } ?: "")
+        name + url?.let { " ($it)" }.orEmpty()
 
     companion object {
         fun Project.getOrg(key: String): Organization {

@@ -13,9 +13,9 @@ data class Developer(val name: String, val url: String?, val email: String?, val
     )
 
     override fun toString(): String =
-        name + (email?.let { " <$email>" } ?: "") +
-            (url?.let { " (homepage: $url)" } ?: "") +
-            (org?.let { " @ $org" } ?: "")
+        name + email?.let { " <$email>" }.orEmpty() +
+            url?.let { " (homepage: $url)" }.orEmpty() +
+            org?.let { " @ $org" }.orEmpty()
 
     fun applyTo(maven: MavenPomDeveloperSpec) {
         maven.developer { dev ->

@@ -76,17 +76,20 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
         this.packageJson { pkg ->
             pkg.homepage.set(
                 centralExtension.projectUrl.map {
-                    it.also { log("set package.json homepage to $it") }
+                    log("set package.json homepage to $it")
+                    it
                 },
             )
             pkg.description.set(
                 centralExtension.projectDescription.map {
-                    it.also { log("set package.json description to $it") }
+                    log("set package.json description to $it")
+                    it
                 },
             )
             pkg.license.set(
                 centralExtension.licenseName.map {
-                    it.also { log("set package.json license to $it") }
+                    log("set package.json license to $it")
+                    it
                 },
             )
             val developers = project.getAllDevs()
@@ -120,7 +123,8 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                 repos.type.set("git")
                 repos.url.set(
                     centralExtension.scmConnection.map {
-                        it.also { log("set package.json repo URL to $it") }
+                        log("set package.json repo URL to $it")
+                        it
                     },
                 )
             }

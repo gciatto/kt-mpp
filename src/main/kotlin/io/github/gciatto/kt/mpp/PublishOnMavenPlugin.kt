@@ -79,6 +79,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         }
     }
 
+    @Suppress("UnsafeCallOnNullableType")
     private fun Project.configureSigning() = configure(SigningExtension::class) {
         val signingKey: String? = getOptionalProperty("signingKey")
         val signingPassword: String? = getOptionalProperty("signingPassword")
