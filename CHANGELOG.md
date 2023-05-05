@@ -1,3 +1,19 @@
+## [2.0.2](https://github.com/gciatto/kt-mpp/compare/2.0.1...2.0.2) (2023-05-05)
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.1.1 ([cccd820](https://github.com/gciatto/kt-mpp/commit/cccd820e7bff47f2dcc1353b9756706824c12e36))
+* **deps:** update dependency dev.petuska:npm-publish-gradle-plugin to v3.3.0 ([e84b951](https://github.com/gciatto/kt-mpp/commit/e84b95114fc9911a0d6841f073d4a170b96bc34d))
+* **deps:** update dependency dev.petuska:npm-publish-gradle-plugin to v3.3.1 ([71ea8ee](https://github.com/gciatto/kt-mpp/commit/71ea8ee79145ffbf70f2dc5b70113fd0d91c0af1))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.26 ([2d10579](https://github.com/gciatto/kt-mpp/commit/2d105798380f6bf87edb569ebdfa9a140e5aa040))
+* **deps:** update ktlint to v11.3.2 ([bbe265d](https://github.com/gciatto/kt-mpp/commit/bbe265dc8b16897186f3abb6ef6e08ac6d22b7e7))
+* **deps:** update plugin com.gradle.enterprise to v3.13.1 ([9ece8ec](https://github.com/gciatto/kt-mpp/commit/9ece8ecea8586852c4e1df70a129fd83497575ba))
+* **deps:** update plugin jacoco-testkit to v1.0.12 ([b19979b](https://github.com/gciatto/kt-mpp/commit/b19979b79d37f9404af9546e9d62d1f71ac7bcd4))
+* **deps:** update plugin kotlin-qa to v0.40.0 ([ed580b4](https://github.com/gciatto/kt-mpp/commit/ed580b428a5d7e5b28abe0f940e972d2421ab37b))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.7 ([e067810](https://github.com/gciatto/kt-mpp/commit/e067810b97a07e5f60210122741d8717ceadd2f7))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v0.5.0 ([e5b2073](https://github.com/gciatto/kt-mpp/commit/e5b2073677c88100ef137f927dec06b7088eaf8b))
+
 ## [2.0.1](https://github.com/gciatto/kt-mpp/compare/2.0.0...2.0.1) (2023-04-24)
 
 
