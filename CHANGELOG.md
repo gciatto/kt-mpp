@@ -1,3 +1,33 @@
+## [2.0.3](https://github.com/gciatto/kt-mpp/compare/2.0.2...2.0.3) (2023-05-23)
+
+
+### Bug Fixes
+
+* include javadoc jar in publications ([04f71fa](https://github.com/gciatto/kt-mpp/commit/04f71faadc9b31b8b831eef2bb9ffd7ed9af0bb6))
+
+
+### Dependency updates
+
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.158 ([5fc0a27](https://github.com/gciatto/kt-mpp/commit/5fc0a278540dadc599db608beacbd67f2f393f4c))
+* **deps:** update kotest to v5.6.2 ([7801fc9](https://github.com/gciatto/kt-mpp/commit/7801fc9716079fd841d9cfc3649fd0cd709de904))
+* **deps:** update kotlin monorepo to v1.8.21 ([e5fbed7](https://github.com/gciatto/kt-mpp/commit/e5fbed7275268c8cadd1ba141a277761836273cc))
+* **deps:** update plugin com.gradle.enterprise to v3.13.2 ([1402e44](https://github.com/gciatto/kt-mpp/commit/1402e44cbd9a79e99d6f000d0556aa958f7baa94))
+* **deps:** update plugin kotlin-qa to v0.41.0 ([42e2e8d](https://github.com/gciatto/kt-mpp/commit/42e2e8d81a09fb129c07853a59dd3854f237517d))
+* **deps:** update plugin multijvmtesting to v0.5.0 ([69c5e5a](https://github.com/gciatto/kt-mpp/commit/69c5e5af1737efe91aa1f44bdfebe6424c640b66))
+* **deps:** update plugin multijvmtesting to v0.5.1 ([f2a8abb](https://github.com/gciatto/kt-mpp/commit/f2a8abb9a47acc151d675b40aaf847859983d1b3))
+* **deps:** update publishoncentral to v5.0.5 ([9d9d953](https://github.com/gciatto/kt-mpp/commit/9d9d9537150419ecba6d745fb6f011e05f169408))
+
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.5 ([17c74b5](https://github.com/gciatto/kt-mpp/commit/17c74b5763b1f550d85a0387b77b71aa989b9db9))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.6 ([4adb252](https://github.com/gciatto/kt-mpp/commit/4adb252580e11683b5cb5704b596a8de0903f43f))
+
+
+### General maintenance
+
+* **ci:** disable fail fast ([207a9c7](https://github.com/gciatto/kt-mpp/commit/207a9c73f47e0900a48820f9ee167e0f37780cba))
+
 ## [2.0.2](https://github.com/gciatto/kt-mpp/compare/2.0.1...2.0.2) (2023-05-05)
 
 
