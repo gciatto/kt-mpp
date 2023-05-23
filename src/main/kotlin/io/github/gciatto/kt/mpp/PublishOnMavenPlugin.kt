@@ -186,6 +186,12 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                     ?: error("Invalid value for property docStyle: $docStyleString")
                 docStyle.set(docStyleValue)
                 log("use ${docStyleValue.name} style for javadoc JAR when publishing")
+                configure(PublishingExtension::class) {
+                    publications.withType(MavenPublication::class.java).matching { "OSSRH" !in it.name }.configureEach {
+                        it.artifact(tasks.named("javadocJar"))
+                        log("add javadoc JAR to publication ${it.name}")
+                    }
+                }
             }
         }
     }

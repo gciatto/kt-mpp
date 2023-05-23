@@ -287,6 +287,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom
@@ -295,6 +297,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-js/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom
@@ -303,6 +307,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-jvm/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom
@@ -311,6 +317,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-js/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom
@@ -319,6 +327,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom
@@ -327,6 +337,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/1.0.0/subproject-mp-1.0.0.pom
@@ -335,6 +347,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-js/1.0.0/subproject-mp-js-1.0.0.pom
@@ -343,6 +357,8 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0-sources.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0-javadoc.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom
