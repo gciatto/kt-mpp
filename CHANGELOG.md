@@ -1,3 +1,17 @@
+## [2.0.4](https://github.com/gciatto/kt-mpp/compare/2.0.3...2.0.4) (2023-05-24)
+
+
+### Bug Fixes
+
+* js package name for root projects ([9fa2e32](https://github.com/gciatto/kt-mpp/commit/9fa2e325bc0e3978d4abb48f9ff757c336509b08))
+
+
+### Dependency updates
+
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.159 ([7ae009f](https://github.com/gciatto/kt-mpp/commit/7ae009f03d614f353fa8989003f512c35c38f793))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.160 ([dc1d4b2](https://github.com/gciatto/kt-mpp/commit/dc1d4b29fb457e54e80de92899b67bd1ae1b7d70))
+* **deps:** update plugin kotlin-qa to v0.42.0 ([f98b8e8](https://github.com/gciatto/kt-mpp/commit/f98b8e8c0cd98fbaecc05dd32d537b131d44bd09))
+
 ## [2.0.3](https://github.com/gciatto/kt-mpp/compare/2.0.2...2.0.3) (2023-05-23)
 
 
