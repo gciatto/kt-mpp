@@ -68,7 +68,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     private fun NpmPackage.configureNpmPackages(centralExtension: PublishOnCentralExtension) {
         project.afterEvaluate { _ ->
             packageName.set(
-                "${rootProject.name}-${project.name}".also {
+                jsPackageName.also {
                     log("set JS package name to $it")
                 },
             )

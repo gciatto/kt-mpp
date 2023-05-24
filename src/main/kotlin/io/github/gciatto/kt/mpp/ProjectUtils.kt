@@ -157,3 +157,10 @@ fun Project.ifAllPluginsAltogether(plugins: List<Any>, action: () -> Unit) {
 fun Project.ifAllPluginsAltogether(name: Any, vararg names: Any, action: () -> Unit) {
     ifAllPluginsAltogether(listOf(name, *names), action)
 }
+
+val Project.jsPackageName: String
+    get() = if (project == rootProject) {
+        rootProject.name
+    } else {
+        "${rootProject.name}-${project.name}"
+    }
