@@ -1,3 +1,13 @@
+## [2.0.5](https://github.com/gciatto/kt-mpp/compare/2.0.4...2.0.5) (2023-06-05)
+
+
+### Dependency updates
+
+* **core-deps:** update dokka to v1.8.20 ([3a6f26a](https://github.com/gciatto/kt-mpp/commit/3a6f26a9a078abb697e7abda26a21e8345a7e88b))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.27 ([225fcf6](https://github.com/gciatto/kt-mpp/commit/225fcf6eae5942ae12793468a0a88bf0f18e348e))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.30 ([26ee148](https://github.com/gciatto/kt-mpp/commit/26ee148af7b35bd056539292e977b3b0558790c7))
+* **deps:** update plugin com.gradle.enterprise to v3.13.3 ([23f594c](https://github.com/gciatto/kt-mpp/commit/23f594cda9ebb8007ab3f39fcf111f95b06fe350))
+
 ## [2.0.4](https://github.com/gciatto/kt-mpp/compare/2.0.3...2.0.4) (2023-05-24)
 
 
