@@ -46,5 +46,6 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
         addProperty(mochaTimeout)
         addProperty(versionsFromCatalog)
         addProperty(nodeVersion)
+        addProperty(useKotlinBom)
     }
 }

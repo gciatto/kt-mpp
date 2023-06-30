@@ -97,5 +97,6 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         addProperty(ktTargetJsDisable)
         addProperty(versionsFromCatalog)
         addProperty(nodeVersion)
+        addProperty(useKotlinBom)
     }
 }
