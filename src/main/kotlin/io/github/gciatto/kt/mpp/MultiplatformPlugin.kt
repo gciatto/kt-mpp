@@ -32,7 +32,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 js { configureJs() }
             }
             dependenciesFor("commonMain") {
-                addMainDependencies(project, "common", skipBom = false)
+                addMainDependencies(project, "common", skipBom = !getBooleanProperty("useKotlinBom"))
             }
             dependenciesFor("commonTest") {
                 addTestDependencies(project, "common", skipAnnotations = false)

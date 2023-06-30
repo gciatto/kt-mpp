@@ -26,7 +26,7 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             it.enabled = !getBooleanProperty("disableJavadocTask")
         }
         dependencies {
-            addMainDependencies(project, target = "jdk8")
+            addMainDependencies(project, target = "jdk8", skipBom = !getBooleanProperty("useKotlinBom"))
             addTestDependencies(project, target = "junit", skipAnnotations = true)
         }
         configure(JavaPluginExtension::class) {
@@ -43,5 +43,6 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         addProperty(ktCompilerArgsJvm)
         addProperty(mochaTimeout)
         addProperty(versionsFromCatalog)
+        addProperty(useKotlinBom)
     }
 }

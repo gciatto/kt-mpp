@@ -294,6 +294,14 @@ interface DefaultProperties {
             defaultValue = "",
         )
 
+    val useKotlinBom: PropertyDescriptor
+        get() = PropertyDescriptor(
+            name = "useKotlinBom",
+            description = "If true, the kotlin-bom dependency will be added to all kotlin projects",
+            mandatory = false,
+            defaultValue = false,
+        )
+
     val versionsFromCatalog: PropertyDescriptor
         get() = PropertyDescriptor(
             name = "versionsFromCatalog",

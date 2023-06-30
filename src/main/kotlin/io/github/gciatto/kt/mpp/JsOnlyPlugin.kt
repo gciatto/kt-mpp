@@ -26,7 +26,7 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
                 configureNodeJs()
                 sourceSets.getByName("main") {
                     dependencies {
-                        addMainDependencies(project, target = "js")
+                        addMainDependencies(project, target = "js", skipBom = !getBooleanProperty("useKotlinBom"))
                     }
                 }
                 sourceSets.getByName("test") {
