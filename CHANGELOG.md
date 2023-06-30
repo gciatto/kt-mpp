@@ -1,3 +1,37 @@
+## [2.1.0](https://github.com/gciatto/kt-mpp/compare/2.0.5...2.1.0) (2023-06-30)
+
+
+### Features
+
+* make it possible to disable kotlin bom ([c0de3db](https://github.com/gciatto/kt-mpp/commit/c0de3dbff7b471f9bb96035630050ff7b6d81b47))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v3.5.3 ([014fcd2](https://github.com/gciatto/kt-mpp/commit/014fcd251385d777951f37256da0b631ff7f4359))
+* **deps:** update danysk/action-checkout action to v0.2.10 ([671cd86](https://github.com/gciatto/kt-mpp/commit/671cd8605903fff0afed81f111806f5c69f62f6a))
+
+
+### Dependency updates
+
+* **deps:** update dependency org.jlleitschuh.gradle.ktlint to v11.4.0 ([c88ed4f](https://github.com/gciatto/kt-mpp/commit/c88ed4f480701ab93c4601b3366d776c9ad1fbcc))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.32 ([12523d5](https://github.com/gciatto/kt-mpp/commit/12523d5da17ec67775145172587df2290ade21f1))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.34 ([e9c4d7c](https://github.com/gciatto/kt-mpp/commit/e9c4d7cfac12bc53f6d5db98a8660cacd55a508d))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.37 ([c1c2654](https://github.com/gciatto/kt-mpp/commit/c1c265402d90512a3444ab08c02b6be6a45770a2))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.38 ([8b01490](https://github.com/gciatto/kt-mpp/commit/8b01490491a578016a37f1c35a155adee94047f4))
+* **deps:** update ktlint to v11.4.1 ([f27e82e](https://github.com/gciatto/kt-mpp/commit/f27e82ee19bc954ed1d61eebbf931dfdcc76643d))
+* **deps:** update ktlint to v11.4.2 ([c874066](https://github.com/gciatto/kt-mpp/commit/c8740669f1949d7046a7eb78160ab58e31c74efe))
+* **deps:** update plugin com.gradle.enterprise to v3.13.4 ([d154946](https://github.com/gciatto/kt-mpp/commit/d15494690ce0f797aba7032a12fa0ebbedfb13d2))
+* **deps:** update plugin gitsemver to v1.1.10 ([412b12d](https://github.com/gciatto/kt-mpp/commit/412b12d83dad7559c7a7eaaa3f82b48ffa7d4195))
+* **deps:** update plugin kotlin-qa to v0.42.1 ([32ff359](https://github.com/gciatto/kt-mpp/commit/32ff3593cdae7091e89c1fccf4338fa24228186a))
+* **deps:** update plugin kotlin-qa to v0.43.0 ([50193e2](https://github.com/gciatto/kt-mpp/commit/50193e2fb8252f6ec543cf93db6788292fe62052))
+* **deps:** update plugin kotlin-qa to v0.44.0 ([b1d5099](https://github.com/gciatto/kt-mpp/commit/b1d509951d096a90eb9661f4f252c79950cb8cef))
+* **deps:** update plugin kotlin-qa to v0.45.0 ([69f8e4d](https://github.com/gciatto/kt-mpp/commit/69f8e4d4d41ffe6c96710b8df955a7eac6c027cc))
+* **deps:** update plugin kotlin-qa to v0.46.0 ([66316c1](https://github.com/gciatto/kt-mpp/commit/66316c172cc734efd67a1db353e1c9e74b207c90))
+* **deps:** update plugin multijvmtesting to v0.5.2 ([80f309c](https://github.com/gciatto/kt-mpp/commit/80f309c6c902e7619bce91114886d81f7d67cb9c))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.8 ([445785b](https://github.com/gciatto/kt-mpp/commit/445785bd257310a6c090787dd81a94f2dd64130a))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.9 ([07a6653](https://github.com/gciatto/kt-mpp/commit/07a66536ebd63bc0397ee011c8cf4f923e695c26))
+
 ## [2.0.5](https://github.com/gciatto/kt-mpp/compare/2.0.4...2.0.5) (2023-06-05)
 
 
