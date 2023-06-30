@@ -1,3 +1,11 @@
+## [2.1.2](https://github.com/gciatto/kt-mpp/compare/2.1.1...2.1.2) (2023-06-30)
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.2 ([69f0dff](https://github.com/gciatto/kt-mpp/commit/69f0dff62e9f288abc45afb5df81c9e365ef6529))
+* **deps:** update plugin kotlin-qa to v0.46.1 ([605cb88](https://github.com/gciatto/kt-mpp/commit/605cb8852b456da3d270c1782373912c795edf1b))
+
 ## [2.1.1](https://github.com/gciatto/kt-mpp/compare/2.1.0...2.1.1) (2023-06-30)
 
 
