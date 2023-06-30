@@ -1,3 +1,15 @@
+## [2.1.1](https://github.com/gciatto/kt-mpp/compare/2.1.0...2.1.1) (2023-06-30)
+
+
+### Bug Fixes
+
+* register useKotlinBom property into js and mpp plugins ([eed90d2](https://github.com/gciatto/kt-mpp/commit/eed90d232a29da37ddac4e1261a58ef9327ed77a))
+
+
+### Dependency updates
+
+* **deps:** update detekt plugin to 1.23.0 ([64b6977](https://github.com/gciatto/kt-mpp/commit/64b69779833774d37f62059d5dee66542a1bcbc3))
+
 ## [2.1.0](https://github.com/gciatto/kt-mpp/compare/2.0.5...2.1.0) (2023-06-30)
 
 
