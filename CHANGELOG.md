@@ -1,3 +1,21 @@
+## [2.1.3](https://github.com/gciatto/kt-mpp/compare/2.1.2...2.1.3) (2023-07-03)
+
+
+### Bug Fixes
+
+* use publish-on-central v5.0.9 which fixes releasing process ([62cf333](https://github.com/gciatto/kt-mpp/commit/62cf333ce33d73feb78aee8c610b0964ad303092))
+
+
+### Dependency updates
+
+* **deps:** update plugin multijvmtesting to v0.5.3 ([8cb023e](https://github.com/gciatto/kt-mpp/commit/8cb023e0560ec9d044e0500cc0589f552b1f3e67))
+* **deps:** update publishoncentral to v5.0.8 ([9cdd305](https://github.com/gciatto/kt-mpp/commit/9cdd3054a5a0b060e748b836fd3d5df991891917))
+
+
+### General maintenance
+
+* **build:** harmoze kotlin dependencies resolution ([9949205](https://github.com/gciatto/kt-mpp/commit/99492057a4344a431ec7c7ad765ca9576761ac82))
+
 ## [2.1.2](https://github.com/gciatto/kt-mpp/compare/2.1.1...2.1.2) (2023-06-30)
 
 
