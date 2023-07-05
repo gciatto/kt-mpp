@@ -1,3 +1,16 @@
+## [2.2.0](https://github.com/gciatto/kt-mpp/compare/2.1.3...2.2.0) (2023-07-05)
+
+
+### Features
+
+* auto-configure :detektAll a dependency of :check ([1235f89](https://github.com/gciatto/kt-mpp/commit/1235f8966bc9749e37553998b4e49dcadb42e485))
+
+
+### Dependency updates
+
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.39 ([dda3edb](https://github.com/gciatto/kt-mpp/commit/dda3edb0e659ac323105fb4e4d58146e396a86b1))
+* **deps:** update ktlint to v11.5.0 ([09e231f](https://github.com/gciatto/kt-mpp/commit/09e231fb972db3a7cee2a0e6d9bde9884e46f5cc))
+
 ## [2.1.3](https://github.com/gciatto/kt-mpp/compare/2.1.2...2.1.3) (2023-07-03)
 
 
