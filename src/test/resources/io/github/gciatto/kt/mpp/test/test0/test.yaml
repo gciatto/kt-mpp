@@ -1,4 +1,43 @@
 tests:
+  - description: Projects have detektAll task with correct dependencies
+    configuration:
+      tasks:
+        - "check"
+      options:
+        - "--stacktrace"
+        - "--dry-run"
+    expectation:
+      output_contains:
+        - ":detekt"
+        - ":detektJsMain"
+        - ":detektJsTest"
+        - ":detektJvmMain"
+        - ":detektJvmTest"
+        - ":detektMetadataCommonMain"
+        - ":detektMetadataMain"
+        - ":detektAll"
+        - ":full:detekt"
+        - ":full:detektJsMain"
+        - ":full:detektJsTest"
+        - ":full:detektJvmMain"
+        - ":full:detektJvmTest"
+        - ":full:detektMetadataCommonMain"
+        - ":full:detektMetadataMain"
+        - ":full:detektAll"
+        - ":subproject-js:detekt"
+        - ":subproject-js:detektAll"
+        - ":subproject-jvm:detekt"
+        - ":subproject-jvm:detektMain"
+        - ":subproject-jvm:detektTest"
+        - ":subproject-jvm:detektAll"
+        - ":subproject-mp:detekt"
+        - ":subproject-mp:detektJsMain"
+        - ":subproject-mp:detektJsTest"
+        - ":subproject-mp:detektJvmMain"
+        - ":subproject-mp:detektJvmTest"
+        - ":subproject-mp:detektMetadataCommonMain"
+        - ":subproject-mp:detektMetadataMain"
+        - ":subproject-mp:detektAll"
   - description: "Root project is multiplatform, hence it has tasks concerning all platforms"
     configuration:
       tasks:
