@@ -1,3 +1,18 @@
+## [2.2.1](https://github.com/gciatto/kt-mpp/compare/2.2.0...2.2.1) (2023-07-10)
+
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v3.7.0 ([333703e](https://github.com/gciatto/kt-mpp/commit/333703ee676e22ff1748918a5857b3cc0a7fce84))
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.2.1 ([fc1048b](https://github.com/gciatto/kt-mpp/commit/fc1048b111dd3c280208a47baf0546f16d508e00))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.161 ([c2035e3](https://github.com/gciatto/kt-mpp/commit/c2035e36233eaf60fb3f9f7214a523f4c8d69d2c))
+* **deps:** update plugin multijvmtesting to v0.5.4 ([14f70e3](https://github.com/gciatto/kt-mpp/commit/14f70e3823d38f9ebc38bc31372bdce7a2eb4229))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v0.6.0 ([a07eaed](https://github.com/gciatto/kt-mpp/commit/a07eaed469e2cd0bc1a660d8833023f5e88b5f77))
+
 ## [2.2.0](https://github.com/gciatto/kt-mpp/compare/2.1.3...2.2.0) (2023-07-05)
 
 
