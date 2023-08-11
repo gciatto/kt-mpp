@@ -1,6 +1,5 @@
-package io.github.gciatto.kt.mpp.test.test1
+package io.github.gciatto.test1
 
-import io.github.gciatto.test0.currentPlatformMessage
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

@@ -1,4 +1,4 @@
-package io.github.gciatto.test0
+package io.github.gciatto.test1
 
 /**
  * Returns the name of the current platform.
