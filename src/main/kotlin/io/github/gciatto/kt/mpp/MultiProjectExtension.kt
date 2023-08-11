@@ -72,7 +72,7 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
         }
 
     private fun selectKtProjects(): Set<Project> =
-        selectProjects(ProjectType.KOTLIN, jvmProjects, jsProjects, otherProjects)
+        selectProjects(ProjectType.KOTLIN, jvmProjectsCache, jsProjectsCache, otherProjectsCache)
 
     private var jvmProjectsCache: Set<Project>? = null
 
@@ -83,7 +83,7 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
         }
 
     private fun selectJvmProjects(): Set<Project> =
-        selectProjects(ProjectType.JVM, ktProjects, jsProjects, otherProjects)
+        selectProjects(ProjectType.JVM, ktProjectsCache, jsProjectsCache, otherProjectsCache)
 
     private var jsProjectsCache: Set<Project>? = null
 
@@ -94,7 +94,7 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
         }
 
     private fun selectJsProjects(): Set<Project> =
-        selectProjects(ProjectType.JS, ktProjects, jvmProjects, otherProjects)
+        selectProjects(ProjectType.JS, ktProjectsCache, jvmProjectsCache, otherProjectsCache)
 
     private var otherProjectsCache: Set<Project>? = null
 
@@ -121,11 +121,11 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
     }
 
     private fun selectOtherProjects(): Set<Project> =
-        selectProjects(ProjectType.OTHER, ktProjects, jvmProjects, jsProjects)
+        selectProjects(ProjectType.OTHER, ktProjectsCache, jvmProjectsCache, jsProjectsCache)
 
-    private fun selectProjects(default: ProjectType, vararg skippable: Set<Project>) =
+    private fun selectProjects(default: ProjectType, vararg skippable: Set<Project>?) =
         if (defaultProjectType == default) {
-            val toSkip = skippable.asSequence().flatMap { it.asSequence() }.toSet()
+            val toSkip = skippable.asSequence().filterNotNull().flatMap { it.asSequence() }.toSet()
             rootProject.allProjects.filter { it !in toSkip }.toSet()
         } else {
             emptySet()
@@ -148,6 +148,7 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
     override var otherProjectTemplate: ProjectConfiguration = defaultOtherProject
 
     override fun applyProjectTemplates() {
+        autoAssignProjectsIfNecessary()
         val projectSets = listOf(ktProjects, jvmProjects, jsProjects, otherProjects)
         val projectTemplates = listOf(ktProjectTemplate, jvmProjectTemplate, jsProjectTemplate, otherProjectTemplate)
         for ((projectSet, template) in projectSets.zip(projectTemplates)) {
@@ -155,6 +156,19 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
                 for (plugin in template) {
                     project.apply(plugin = plugin.name)
                 }
+            }
+        }
+    }
+
+    private fun autoAssignProjectsIfNecessary() {
+        if (listOf(ktProjectsCache, jvmProjectsCache, jsProjectsCache, otherProjectsCache).all { it == null }) {
+            val allProjects = rootProject.allProjects.toSet()
+            when (defaultProjectType) {
+                ProjectType.KOTLIN -> ktProjects = allProjects
+                ProjectType.JVM -> jvmProjects = allProjects
+                ProjectType.JS -> jsProjects = allProjects
+                ProjectType.OTHER -> otherProjects = allProjects
+                else -> error("Unhandled project type: $defaultProjectType")
             }
         }
     }
