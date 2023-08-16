@@ -298,20 +298,26 @@ tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
     }
 }
 
-tasks.create<Copy>("copyLibsToTest") {
-    group = "verification"
-    description = "Copies the gradle/libs.versions.toml file into test projects"
-    from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
+fun testDirs(): List<File> = buildList {
     sourceSets.test {
         resources.srcDirs.forEach { testResourcesDir ->
             fileTree(testResourcesDir) { include("**/test.yaml") }.asFileTree.visit {
                 if (!isDirectory) {
-                    destinationDir = file.parentFile.resolve("gradle")
+                    add(file.parentFile)
                 }
             }
         }
     }
-    tasks.getByName("processTestResources").dependsOn(this)
+}
+
+for (dir in testDirs()) {
+    tasks.create<Copy>("copyLibsTo${dir.name.capitalized()}") {
+        group = "verification"
+        description = "Copies the gradle/libs.versions.toml file into test projects"
+        from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
+        into(dir.resolve("gradle"))
+        tasks.getByName("processTestResources").dependsOn(this)
+    }
 }
 
 configurations.all {
