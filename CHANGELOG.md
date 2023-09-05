@@ -1,3 +1,54 @@
+## [2.2.2](https://github.com/gciatto/kt-mpp/compare/2.2.1...2.2.2) (2023-09-05)
+
+
+### Dependency updates
+
+* **deps:** update dependency dev.petuska:npm-publish-gradle-plugin to v3.4.0 ([d4afc31](https://github.com/gciatto/kt-mpp/commit/d4afc314da1818c9f6c21287263f41327fab92b5))
+* **deps:** update dependency dev.petuska:npm-publish-gradle-plugin to v3.4.1 ([8e09d06](https://github.com/gciatto/kt-mpp/commit/8e09d06c485ad2224cbc914d2e53001adde43362))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.162 ([9c28b20](https://github.com/gciatto/kt-mpp/commit/9c28b20969fc34928fccee3256424cc562ddddd2))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.40 ([4cd205b](https://github.com/gciatto/kt-mpp/commit/4cd205bc8e6b401edb5bb2b85a6c7c3ac1c950c7))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.41 ([ba57b64](https://github.com/gciatto/kt-mpp/commit/ba57b64ad06bf97fe841473b221c9ca724b2f143))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.42 ([4074584](https://github.com/gciatto/kt-mpp/commit/40745845cad9f52e4ca3755f13c3965d9505195a))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.43 ([175bf16](https://github.com/gciatto/kt-mpp/commit/175bf16f4fce8dcc1d0f8ce0ef6c6390c0fa3543))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.53 ([87813ca](https://github.com/gciatto/kt-mpp/commit/87813ca7aabe6926136f2ce06afa80d8f2b2a189))
+* **deps:** update detekt to v1.23.1 ([e722957](https://github.com/gciatto/kt-mpp/commit/e7229570a15af99cf05a92665084b3190f2a5b53))
+* **deps:** update ktlint to v11.5.1 ([a2dfc54](https://github.com/gciatto/kt-mpp/commit/a2dfc54c6ecf4da6ede6f95c0496c5c579a26ca8))
+* **deps:** update node.js to 18.17 ([a1a8173](https://github.com/gciatto/kt-mpp/commit/a1a81732af7ee7e611e71b574a5df602c9504094))
+* **deps:** update plugin com.gradle.enterprise to v3.14 ([be297bc](https://github.com/gciatto/kt-mpp/commit/be297bc283830c885f73b365118864b411287606))
+* **deps:** update plugin com.gradle.enterprise to v3.14.1 ([2173592](https://github.com/gciatto/kt-mpp/commit/21735926ca915274280f8a154cf383e3cf0bb651))
+* **deps:** update plugin gradlepluginpublish to v1.2.1 ([15f7a73](https://github.com/gciatto/kt-mpp/commit/15f7a732d2aa964c35f29c5be2eabd1bb29addb5))
+* **deps:** update plugin multijvmtesting to v0.5.5 ([f24cbc7](https://github.com/gciatto/kt-mpp/commit/f24cbc7aa5be723bdc091413f4293ec6cec10e2a))
+* **deps:** update publishoncentral to v5.0.10 ([4f921ea](https://github.com/gciatto/kt-mpp/commit/4f921eae1ecb5ebf75901c7bbc97c6b733f943ca))
+* **deps:** update publishoncentral to v5.0.13 ([c7a8034](https://github.com/gciatto/kt-mpp/commit/c7a80341b39327dfd932a56fa846bd98ec6a10b0))
+
+
+### Bug Fixes
+
+* auto-infer project type in case subprojects are not explicitly marked ([1c416f9](https://github.com/gciatto/kt-mpp/commit/1c416f9d1f5faae0369563c4cb3dadafb4bf26d6))
+* **build:** dependencies of copyLibsToTest task ([0b324d9](https://github.com/gciatto/kt-mpp/commit/0b324d98e9513f79454ccb8fe0f08ebdf3a367bc))
+* detektAll task lazily attached to check task ([9bc0355](https://github.com/gciatto/kt-mpp/commit/9bc0355284f5c142630b5059e4a0f8907ee2dbf1))
+* warning in RootMultiProjectExtension ([a3df1d1](https://github.com/gciatto/kt-mpp/commit/a3df1d1480c74344b0b1cd0ffc5affd287b0b757))
+
+
+### Tests
+
+* fix repositories in test1 ([fa2d2da](https://github.com/gciatto/kt-mpp/commit/fa2d2da7b5d674f753e03c8e9f82aac294836e22))
+* fix test1 ([d651e5d](https://github.com/gciatto/kt-mpp/commit/d651e5d19d45532d8550268e5f6c185d989efb2c))
+
+
+### Build and continuous integration
+
+* **deps:** update danysk/action-checkout action to v0.2.12 ([41791f0](https://github.com/gciatto/kt-mpp/commit/41791f03e078623bc3af3862547dfecfcb7ffc9f))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.7 ([3ba2d28](https://github.com/gciatto/kt-mpp/commit/3ba2d2872b3534a86033bafc961d6d263cd4ac0f))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.8 ([205f2c5](https://github.com/gciatto/kt-mpp/commit/205f2c52ec9619bf49fb9c0fad748de49fa7c01e))
+
+
+### General maintenance
+
+* **build:** multiple copyLibs tasks ([0c3e433](https://github.com/gciatto/kt-mpp/commit/0c3e4337732050c76c1080d820ab8b237c5af174))
+* **build:** publish tagged scan ([b18fdc1](https://github.com/gciatto/kt-mpp/commit/b18fdc148d4556d6c5d289e56487c09aabfe8d54))
+* **ci:** avoid parallel build ([42c4761](https://github.com/gciatto/kt-mpp/commit/42c4761c74bdb0c71b5029e0d869cf983468a695))
+
 ## [2.2.1](https://github.com/gciatto/kt-mpp/compare/2.2.0...2.2.1) (2023-07-10)
 
 
