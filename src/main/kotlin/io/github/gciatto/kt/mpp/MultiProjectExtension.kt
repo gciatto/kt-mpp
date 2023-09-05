@@ -168,7 +168,6 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
                 ProjectType.JVM -> jvmProjects = allProjects
                 ProjectType.JS -> jsProjects = allProjects
                 ProjectType.OTHER -> otherProjects = allProjects
-                else -> error("Unhandled project type: $defaultProjectType")
             }
         }
     }
