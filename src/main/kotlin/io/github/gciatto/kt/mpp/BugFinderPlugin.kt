@@ -18,7 +18,9 @@ class BugFinderPlugin : AbstractProjectPlugin() {
         tasks.withType(Detekt::class.java)
             .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
             .all { detektAll.dependsOn(it) }
-        tasks.getByName("check").dependsOn(detektAll)
-        log("add task ${detektAll.path} and make $path:check depend on it")
+        tasks.matching { it.name == "check" }.all {
+            it.dependsOn(detektAll)
+            log("add task ${detektAll.path} and make ${it.path} depend on it")
+        }
     }
 }
