@@ -19,7 +19,7 @@ jobs:
       - uses: DanySK/build-check-deploy-gradle-action@2.2.8
         with:
           # Dry-deployment
-          check-command: ./gradlew build --parallel --continue
+          check-command: ./gradlew build --continue
           deploy-command: >-
             ./gradlew
             uploadKotlinOSSRHToMavenCentralNexus
