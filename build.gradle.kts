@@ -1,6 +1,7 @@
 @file:Suppress("OPT_IN_USAGE")
 
 import de.aaschmid.gradle.plugins.cpd.Cpd
+import io.gitlab.arturbosch.detekt.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -268,7 +269,7 @@ gradlePlugin {
                 outputs.file(targetFile)
                 doLast {
                     @Suppress("ktlint")
-                    val text = "@file:Suppress(\"MaxLineLength\")\n@file:Suppress(\"ktlint\")\n\n" +
+                    val text = "@file:Suppress(\"MaxLineLength\", \"ktlint\")\n\n" +
                         "package ${project.group}.kt.mpp\n\n" +
                         "object Plugins {\n" +
                         pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
@@ -285,6 +286,13 @@ gradlePlugin {
         }
     }
 }
+
+tasks.withType(Detekt::class.java)
+    .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
+    .all {
+        val detektTask = this
+        tasks.check.configure { dependsOn(detektTask) }
+    }
 
 tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
     group = "publishing"
