@@ -16,3 +16,9 @@ multiProjectHelper {
     defaultProjectType = ProjectType.KOTLIN
     applyProjectTemplates()
 }
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
