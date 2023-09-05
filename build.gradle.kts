@@ -312,6 +312,7 @@ tasks.create<Copy>("copyLibsToTest") {
         }
     }
     tasks.getByName("processTestResources").dependsOn(this)
+    tasks.withType(Cpd::class.java) { dependsOn(this@create) }
 }
 
 configurations.all {
