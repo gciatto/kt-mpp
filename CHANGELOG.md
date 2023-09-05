@@ -1,3 +1,13 @@
+## [2.2.3](https://github.com/gciatto/kt-mpp/compare/2.2.2...2.2.3) (2023-09-05)
+
+
+### Dependency updates
+
+* **core-deps:** update dokka to v1.9.0 ([2759115](https://github.com/gciatto/kt-mpp/commit/2759115b19f40a0e96abf835266f91bb241aa7d0))
+* **deps:** update kotest to v5.7.1 ([c3ab6bb](https://github.com/gciatto/kt-mpp/commit/c3ab6bb4289c1af1a800f0ebb5d4d82c69b488bf))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.10 ([9965636](https://github.com/gciatto/kt-mpp/commit/99656364566cdb6aeb3ac81f907d7dd94bf26188))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v0.7.0 ([72d774a](https://github.com/gciatto/kt-mpp/commit/72d774ad4bcc295b625fcf4f44c035846a750b43))
+
 ## [2.2.2](https://github.com/gciatto/kt-mpp/compare/2.2.1...2.2.2) (2023-09-05)
 
 
