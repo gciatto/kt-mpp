@@ -238,13 +238,15 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun configureNodeJs() {
         nodejs {
             log("configure kotlin JS to target NodeJS")
-            testTask(Action {
-                it.useMocha {
-                    log("use Mocha as JS test framework")
-                    timeout = getProperty("mochaTimeout")
-                    log("set Mocha per-test-case timeout to $timeout")
-                }
-            })
+            testTask(
+                Action {
+                    it.useMocha {
+                        log("use Mocha as JS test framework")
+                        timeout = getProperty("mochaTimeout")
+                        log("set Mocha per-test-case timeout to $timeout")
+                    }
+                },
+            )
         }
     }
 }

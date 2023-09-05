@@ -45,13 +45,12 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         if (username != null && pwd != null) {
             user.set(username)
             password.set(pwd)
-            /* ktlint-disable */
+            @Suppress("ktlint")
             log(
                 "configure Maven repository $name " +
                     "(URL: $url, username: ${user.get().asField()}, " +
                     "password: ${password.get().asPassword()})"
             )
-            /* ktlint-enable */
         }
     }
 
@@ -68,13 +67,12 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             repository(it) {
                 user.set(mavenUsername)
                 password.set(mavenPassword)
-                /* ktlint-disable */
+                @Suppress("ktlint")
                 log(
                     "configure Maven repository $name " +
                         "(URL: $it, username: ${user.get().asField()}, " +
                         "password: ${password.get().asPassword()})"
                 )
-                /* ktlint-enable */
             }
         }
     }
@@ -92,12 +90,11 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             )
             useInMemoryPgpKeys(actualKey, actualPassphrase)
         } else {
-            /* ktlint-disable */
+            @Suppress("ktlint")
             log(
                 "one property in {signingKey, signingPassword} is unset or blank, " +
                     "hence Maven publications won't be signed"
             )
-            /* ktlint-enable */
         }
         val signAll = tasks.create("signAllPublications") { it.group = "signing" }
         tasks.withType(Sign::class.java) {

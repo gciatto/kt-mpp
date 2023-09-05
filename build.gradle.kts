@@ -268,12 +268,10 @@ gradlePlugin {
                 outputs.file(targetFile)
                 doLast {
                     @Suppress("ktlint")
-                    val text = "@file:Suppress(\"MaxLineLength\")\n\n" +
+                    val text = "@file:Suppress(\"MaxLineLength\")\n@file:Suppress(\"ktlint\")\n\n" +
                         "package ${project.group}.kt.mpp\n\n" +
                         "object Plugins {\n" +
-                        "    /* ktlint-disable */\n" +
                         pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
-                        "    /* ktlint-enable */\n" +
                         "}\n"
                     targetFile.writeText(text)
                 }
