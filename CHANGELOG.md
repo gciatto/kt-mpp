@@ -1,3 +1,10 @@
+## [2.3.0](https://github.com/gciatto/kt-mpp/compare/2.2.4...2.3.0) (2023-09-06)
+
+
+### Features
+
+* use kotlin 1.9.x ([#143](https://github.com/gciatto/kt-mpp/issues/143)) ([347c216](https://github.com/gciatto/kt-mpp/commit/347c216f871acd044504671a7d5549797efd2ded))
+
 ## [2.2.4](https://github.com/gciatto/kt-mpp/compare/2.2.3...2.2.4) (2023-09-05)
 
 
