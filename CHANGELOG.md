@@ -1,3 +1,27 @@
+## [2.2.4](https://github.com/gciatto/kt-mpp/compare/2.2.3...2.2.4) (2023-09-05)
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.3 ([b101684](https://github.com/gciatto/kt-mpp/commit/b101684fc59f42a76875cb7235a8bed1089b04a4))
+* **deps:** update dependency io.kotest:kotest-assertions-core-jvm to v5.7.2 ([a8a8885](https://github.com/gciatto/kt-mpp/commit/a8a88857b68ea41a918aed3faca9068d9a51b5a2))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v4 ([e39893b](https://github.com/gciatto/kt-mpp/commit/e39893bee7ac83727f5a5e39bff1875e8e558e13))
+* **deps:** update actions/setup-node action to v3.8.1 ([d1835c5](https://github.com/gciatto/kt-mpp/commit/d1835c56db3f291ba9f12f6e7328fac2e642ec3e))
+
+## [2.2.3](https://github.com/gciatto/kt-mpp/compare/2.2.2...2.2.3) (2023-09-05)
+
+
+### Dependency updates
+
+* **core-deps:** update dokka to v1.9.0 ([2759115](https://github.com/gciatto/kt-mpp/commit/2759115b19f40a0e96abf835266f91bb241aa7d0))
+* **deps:** update kotest to v5.7.1 ([c3ab6bb](https://github.com/gciatto/kt-mpp/commit/c3ab6bb4289c1af1a800f0ebb5d4d82c69b488bf))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.10 ([9965636](https://github.com/gciatto/kt-mpp/commit/99656364566cdb6aeb3ac81f907d7dd94bf26188))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v0.7.0 ([72d774a](https://github.com/gciatto/kt-mpp/commit/72d774ad4bcc295b625fcf4f44c035846a750b43))
+
 ## [2.2.2](https://github.com/gciatto/kt-mpp/compare/2.2.1...2.2.2) (2023-09-05)
 
 
