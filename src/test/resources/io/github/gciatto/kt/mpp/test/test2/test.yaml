@@ -1,0 +1,84 @@
+tests:
+  - description: "Multi-platform root-project retrieves dependencies correctly"
+    configuration:
+      tasks:
+        - ":build"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':build'
+  - description: "Multi-platform root-project has tasks concerning all platforms"
+    configuration:
+      tasks:
+        - ":tasks"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
+        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
+        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+  - description: "Multi-platform root-project has correct publications"
+    configuration:
+      tasks:
+        - ":showPublications"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ':showPublications'
+      output_contains:
+        - 'test2: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH'
+  - description: "Upload multiplatform root-project to Maven implies sources and javadoc being generated"
+    configuration:
+      tasks:
+        - "publishProjectToMavenLocal"
+        - "printMavenLocal"
+      options:
+        - "--stacktrace"
+        - "--continue"
+    expectation:
+      success:
+        - ":publishKotlinMultiplatformPublicationToMavenLocal"
+        - ":publishJvmPublicationToMavenLocal"
+        - ":publishJsPublicationToMavenLocal"
+      # find build/.m2 -type f -wholename '*'
+      file_exists:
+        - name: build/.m2/repository/io/github/gciatto/test2/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0.module
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0-javadoc.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0.pom.asc
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0.module.asc
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0-kotlin-tooling-metadata.json.asc
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0-kotlin-tooling-metadata.json
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/test2/1.0.0/test2-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0.module
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0-javadoc.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0.module.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0.pom.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/test2-jvm/1.0.0/test2-jvm-1.0.0.jar
+        - name: build/.m2/repository/io/github/gciatto/test2-js/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.pom.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.klib.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0-javadoc.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.module.asc
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.module
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.klib
