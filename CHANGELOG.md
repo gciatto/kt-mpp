@@ -1,3 +1,15 @@
+## [2.3.1](https://github.com/gciatto/kt-mpp/compare/2.3.0...2.3.1) (2023-09-07)
+
+
+### Bug Fixes
+
+* import org.danilopianini.publish-on-central in afterEvaluate ([7c7119f](https://github.com/gciatto/kt-mpp/commit/7c7119f3b0b19620d2ebed3c091ebd0f82396df4))
+
+
+### Tests
+
+* add test2 for root project adding plugins directly ([a62e4e6](https://github.com/gciatto/kt-mpp/commit/a62e4e63ad6f208366088c6c71cfddf59c119665))
+
 ## [2.3.0](https://github.com/gciatto/kt-mpp/compare/2.2.4...2.3.0) (2023-09-06)
 
 
