@@ -1,3 +1,16 @@
+## [2.3.3](https://github.com/gciatto/kt-mpp/compare/2.3.2...2.3.3) (2023-10-16)
+
+
+### Dependency updates
+
+* **core-deps:** update dokka to v1.9.10 ([786dfcd](https://github.com/gciatto/kt-mpp/commit/786dfcd9ab68c34cdd0bf9e14aac9b2ace08cf6c))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.163 ([40868f5](https://github.com/gciatto/kt-mpp/commit/40868f5c7bdc4b02bf3e33646d20cf328d5ad258))
+* **deps:** update ktlint to v11.6.1 ([68a37e3](https://github.com/gciatto/kt-mpp/commit/68a37e313b0329871c30460fc0b7ee73bcfc6d13))
+* **deps:** update plugin com.gradle.enterprise to v3.15.1 ([a289c07](https://github.com/gciatto/kt-mpp/commit/a289c073d9e9737678038938884fc23b143f752b))
+* **deps:** update plugin kotlin-qa to v0.51.0 ([184080a](https://github.com/gciatto/kt-mpp/commit/184080ac9a58886e80d8309e2a17ea4bffc0537b))
+* **deps:** update plugin multijvmtesting to v0.5.6 ([dc132ec](https://github.com/gciatto/kt-mpp/commit/dc132ec577211e2d97eab31a956dacd79b8306e7))
+* **deps:** update publishoncentral to v5.0.15 ([444bb15](https://github.com/gciatto/kt-mpp/commit/444bb157d781342fa966278d08e2f88af859957e))
+
 ## [2.3.2](https://github.com/gciatto/kt-mpp/compare/2.3.1...2.3.2) (2023-10-05)
 
 
