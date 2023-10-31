@@ -33,7 +33,7 @@ gitSemVer = "org.danilopianini.git-sensitive-semantic-versioning:2.0.1"
 gradlePluginPublish = "com.gradle.plugin-publish:1.2.1"
 jacoco-testkit = "pl.droidsonroids.jacoco.testkit:1.0.12"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.52.0"
+kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.53.0"
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ktlint-idea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
 multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.5.6"
