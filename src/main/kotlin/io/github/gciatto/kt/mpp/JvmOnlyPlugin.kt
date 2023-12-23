@@ -23,10 +23,11 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             }
         }
         tasks.getByName("javadoc") {
-            it.enabled = !getBooleanProperty("disableJavadocTask")
+            it.enabled = !(multiPlatformHelper.disableJavadocTask.orNull ?: false)
         }
         dependencies {
-            addMainDependencies(project, target = "jdk8", skipBom = !getBooleanProperty("useKotlinBom"))
+            val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
+            addMainDependencies(project, target = "jdk8", skipBom = !useBom)
             addTestDependencies(project, target = "junit", skipAnnotations = true)
         }
         configure(JavaPluginExtension::class) {
@@ -34,15 +35,5 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
             log("configure JVM library to include sources JAR")
         }
         addPlatformSpecificTaskAliases()
-    }
-
-    override fun PropertiesHelperExtension.declareProperties() {
-        addProperty(disableJavadocTask)
-        addProperty(allWarningsAsErrors)
-        addProperty(ktCompilerArgs)
-        addProperty(ktCompilerArgsJvm)
-        addProperty(mochaTimeout)
-        addProperty(versionsFromCatalog)
-        addProperty(useKotlinBom)
     }
 }

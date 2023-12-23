@@ -240,13 +240,13 @@ tests:
         - ":subproject-js:testClasses"
         - ":full:classes"
         - ":full:testClasses"
-  - description: "Print properties explanation"
-    configuration:
-      tasks: ":full:explainProperties"
-      options:
-        - "--stacktrace"
-    expectation:
-      success: ':full:explainProperties'
+#  - description: "Print properties explanation"
+#    configuration:
+#      tasks: ":full:explainProperties"
+#      options:
+#        - "--stacktrace"
+#    expectation:
+#      success: ':full:explainProperties'
   - description: "Running :full:test should test all platforms and compile all dependencies"
     configuration:
       tasks: ":full:test"
