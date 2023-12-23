@@ -1,3 +1,117 @@
+## [2.3.4](https://github.com/gciatto/kt-mpp/compare/2.3.3...2.3.4) (2023-11-29)
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.5 ([bd52cb4](https://github.com/gciatto/kt-mpp/commit/bd52cb4dd1f3f8ce0c2fb9d3a2451e8bb4db262b))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.164 ([1f3d8aa](https://github.com/gciatto/kt-mpp/commit/1f3d8aa2d8089c762f4e71764c13b1546b6b8930))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.165 ([57dfa27](https://github.com/gciatto/kt-mpp/commit/57dfa270ffa3635aedf0e380b6ad0bb381198015))
+* **deps:** update dependency io.gitlab.arturbosch.detekt:detekt-gradle-plugin to v1.23.3 ([5f1771b](https://github.com/gciatto/kt-mpp/commit/5f1771b5732644d74a86c0c705c98eef457594d2))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.69 ([2e5b631](https://github.com/gciatto/kt-mpp/commit/2e5b63114d3e12b8cf448e00d5a9d00c0d51c2db))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.70 ([1ac62d9](https://github.com/gciatto/kt-mpp/commit/1ac62d9a2c069a837018bff73fc7e9de0e11939f))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.71 ([e7a4712](https://github.com/gciatto/kt-mpp/commit/e7a4712985a1c8c31d4a30c60c7de3543278f2bb))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.72 ([26bddf8](https://github.com/gciatto/kt-mpp/commit/26bddf800a4089bae3f0b596fb630e4e1dff4243))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.73 ([87ca087](https://github.com/gciatto/kt-mpp/commit/87ca087cb3a8b88c9153a1bc6ef96e2d570dc2b8))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.74 ([b5a69d4](https://github.com/gciatto/kt-mpp/commit/b5a69d437e005c67dac184c272cae1e05f2455d0))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.75 ([3eb6fff](https://github.com/gciatto/kt-mpp/commit/3eb6fff4dd0517ab3fb9f41aa49af0620d408b32))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.76 ([b8d2645](https://github.com/gciatto/kt-mpp/commit/b8d26457814879e36dd5db75a713f24097aa304d))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.77 ([2a21312](https://github.com/gciatto/kt-mpp/commit/2a213129491cb02e15a1e36c0341a1039e0818c0))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.78 ([ee8b824](https://github.com/gciatto/kt-mpp/commit/ee8b8240043bf3518c5944c58e2386e5763bce96))
+* **deps:** update detekt to v1.23.2 ([63d4b8e](https://github.com/gciatto/kt-mpp/commit/63d4b8ed76f52cd93ee8eddf74b239e6f84771f0))
+* **deps:** update detekt to v1.23.4 ([5cb2be4](https://github.com/gciatto/kt-mpp/commit/5cb2be4b0a52cbaffaa7c3703866b84e8b91c32b))
+* **deps:** update kotest to v5.8.0 ([1f77cd9](https://github.com/gciatto/kt-mpp/commit/1f77cd9ac4ce1ff7ecae59bb20cfbd5475444eef))
+* **deps:** update node.js to 20.10 ([edf847a](https://github.com/gciatto/kt-mpp/commit/edf847a35b5fbd1268f12ffa264b09ee9455c5e4))
+* **deps:** update node.js to 20.9 ([3e53c57](https://github.com/gciatto/kt-mpp/commit/3e53c57a9340ab03e9b72e6d42cb22ab83488fc6))
+* **deps:** update node.js to v20 ([8340578](https://github.com/gciatto/kt-mpp/commit/83405780eacd9758e63481efd2dd95d3b9505112))
+* **deps:** update plugin gitsemver to v1.1.11 ([dfe8d0c](https://github.com/gciatto/kt-mpp/commit/dfe8d0c9b25ed13f1f9517ba5add4820ad5ee0fc))
+* **deps:** update plugin gitsemver to v1.1.13 ([891b965](https://github.com/gciatto/kt-mpp/commit/891b965a472b988d917bf07b927bd85cf9da3bad))
+* **deps:** update plugin gitsemver to v1.1.14 ([d0bdc93](https://github.com/gciatto/kt-mpp/commit/d0bdc931af76dbe4746bc93670292d00f2e44296))
+* **deps:** update plugin gitsemver to v1.1.15 ([91711a1](https://github.com/gciatto/kt-mpp/commit/91711a1f545d006f4e7d7f68a64e0a43b6f4c690))
+* **deps:** update plugin gitsemver to v2 ([5a5bad0](https://github.com/gciatto/kt-mpp/commit/5a5bad083e3e95fc2b12f786923d58b966e10a45))
+* **deps:** update plugin gitsemver to v2.0.1 ([f89a90d](https://github.com/gciatto/kt-mpp/commit/f89a90db92d0da71c7aff9f78cf92d1a6dd258f4))
+* **deps:** update plugin gitsemver to v2.0.2 ([eb0bda0](https://github.com/gciatto/kt-mpp/commit/eb0bda0d21de7aa786d750e57281986fb14e2a7d))
+* **deps:** update plugin gitsemver to v2.0.3 ([b994932](https://github.com/gciatto/kt-mpp/commit/b994932f7b8bcf41ef9b444325e46956d82b87ba))
+* **deps:** update plugin gitsemver to v2.0.4 ([40dee09](https://github.com/gciatto/kt-mpp/commit/40dee09e6fad7d671a7e74e6c8478bccffd9c786))
+* **deps:** update plugin kotlin-qa to v0.51.1 ([a6a2976](https://github.com/gciatto/kt-mpp/commit/a6a297656ec27383e256199aae3ad58d851cf0d7))
+* **deps:** update plugin kotlin-qa to v0.52.0 ([728e0fa](https://github.com/gciatto/kt-mpp/commit/728e0facbf25841afa14a7a43bb06e6fdde61b6e))
+* **deps:** update plugin kotlin-qa to v0.53.0 ([6f3d920](https://github.com/gciatto/kt-mpp/commit/6f3d920405886e4c76f8af2c5a63086426a8a585))
+* **deps:** update plugin multijvmtesting to v0.5.7 ([8ab5a26](https://github.com/gciatto/kt-mpp/commit/8ab5a2646e59baaf455af7793d2dec941eb929bd))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.11 ([2477393](https://github.com/gciatto/kt-mpp/commit/24773933216cb5a2b91b8129aa04c358b45c97a7))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.13 ([55f1b8b](https://github.com/gciatto/kt-mpp/commit/55f1b8bda95b9150934a21063cd2764b1d5c4b79))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.14 ([794ae0e](https://github.com/gciatto/kt-mpp/commit/794ae0ee881e6593323aa3f7c3da714546191668))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.15 ([04438ab](https://github.com/gciatto/kt-mpp/commit/04438ab2e67a4cc5f5cd89c856c71e1bd9e084ab))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.16 ([cf437f2](https://github.com/gciatto/kt-mpp/commit/cf437f257eb1115b8dee0941e919951f1af7eb2f))
+* **deps:** update publishoncentral to v5.0.16 ([c40081b](https://github.com/gciatto/kt-mpp/commit/c40081b182809c25fa146c6209a97b3e7649dbfd))
+* **deps:** update publishoncentral to v5.0.17 ([c71cb25](https://github.com/gciatto/kt-mpp/commit/c71cb253468abedc5683f417b8f8ab11f3582505))
+* **deps:** update publishoncentral to v5.0.18 ([5b1533f](https://github.com/gciatto/kt-mpp/commit/5b1533f2d4c25d9faeb4c59a8c3d5f3141482b2b))
+* **deps:** update publishoncentral to v5.0.19 ([27da817](https://github.com/gciatto/kt-mpp/commit/27da817a064c842c5674dd4dd54a2439beebe76f))
+* **deps:** update publishoncentral to v5.0.20 ([4d1309a](https://github.com/gciatto/kt-mpp/commit/4d1309a7d329174c84669613e047394d1d7eecdc))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v4.1.1 ([886ae46](https://github.com/gciatto/kt-mpp/commit/886ae46ff2af0d5fefc6a8cf9bcee4230b399d90))
+* **deps:** update actions/setup-node action to v3.8.2 ([8de299a](https://github.com/gciatto/kt-mpp/commit/8de299ac628c829bcaafddcf3203a4ed290dcdfb))
+* **deps:** update actions/setup-node action to v4 ([a9eb083](https://github.com/gciatto/kt-mpp/commit/a9eb083912da8ce36b5c275d74292693414c5ba9))
+* **deps:** update danysk/action-checkout action to v0.2.14 ([b0702ab](https://github.com/gciatto/kt-mpp/commit/b0702abb758c5e729f0855e2920d4f07450ee94d))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.11 ([2926b89](https://github.com/gciatto/kt-mpp/commit/2926b8942ca45108200479577545d8ad6a2b1d93))
+
+## [2.3.3](https://github.com/gciatto/kt-mpp/compare/2.3.2...2.3.3) (2023-10-16)
+
+
+### Dependency updates
+
+* **core-deps:** update dokka to v1.9.10 ([786dfcd](https://github.com/gciatto/kt-mpp/commit/786dfcd9ab68c34cdd0bf9e14aac9b2ace08cf6c))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.163 ([40868f5](https://github.com/gciatto/kt-mpp/commit/40868f5c7bdc4b02bf3e33646d20cf328d5ad258))
+* **deps:** update ktlint to v11.6.1 ([68a37e3](https://github.com/gciatto/kt-mpp/commit/68a37e313b0329871c30460fc0b7ee73bcfc6d13))
+* **deps:** update plugin com.gradle.enterprise to v3.15.1 ([a289c07](https://github.com/gciatto/kt-mpp/commit/a289c073d9e9737678038938884fc23b143f752b))
+* **deps:** update plugin kotlin-qa to v0.51.0 ([184080a](https://github.com/gciatto/kt-mpp/commit/184080ac9a58886e80d8309e2a17ea4bffc0537b))
+* **deps:** update plugin multijvmtesting to v0.5.6 ([dc132ec](https://github.com/gciatto/kt-mpp/commit/dc132ec577211e2d97eab31a956dacd79b8306e7))
+* **deps:** update publishoncentral to v5.0.15 ([444bb15](https://github.com/gciatto/kt-mpp/commit/444bb157d781342fa966278d08e2f88af859957e))
+
+## [2.3.2](https://github.com/gciatto/kt-mpp/compare/2.3.1...2.3.2) (2023-10-05)
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.4 ([837f88c](https://github.com/gciatto/kt-mpp/commit/837f88c96cd448347d2325ca38ce6559c36a560f))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.54 ([da77c4a](https://github.com/gciatto/kt-mpp/commit/da77c4a7d3856b01ed104b58b356854e64b4cd36))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.55 ([486e98c](https://github.com/gciatto/kt-mpp/commit/486e98c3a0ae43ab33d1b0ec5515b422444bb266))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.65 ([5dd3315](https://github.com/gciatto/kt-mpp/commit/5dd3315a17bf954940eb821c6473c93d5e3e88d2))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.68 ([c1f29f6](https://github.com/gciatto/kt-mpp/commit/c1f29f64659e546caaa1f655abceaaf07ba8126d))
+* **deps:** update ktlint to v11.6.0 ([5edd405](https://github.com/gciatto/kt-mpp/commit/5edd4059f125d9d8e72662ca66aee57a2f78f5e3))
+* **deps:** update node.js to 18.18 ([b323245](https://github.com/gciatto/kt-mpp/commit/b3232458c506d775a4fcd093a56726c51508bb21))
+* **deps:** update plugin com.gradle.enterprise to v3.15 ([8c4f43f](https://github.com/gciatto/kt-mpp/commit/8c4f43f2631bddca33fe35fed60ec3899f5fa748))
+* **deps:** update plugin kotlin-qa to v0.50.0 ([ecacc70](https://github.com/gciatto/kt-mpp/commit/ecacc70ae5bfede1979d5861d8a1808a6c5283cb))
+* **deps:** update publishoncentral to v5.0.14 ([1f561da](https://github.com/gciatto/kt-mpp/commit/1f561da41a7dedc6559e598ab707f56d6482e785))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v4.1.0 ([cc429fa](https://github.com/gciatto/kt-mpp/commit/cc429fabfc84c29c06ad4df68514d4f6db6ff377))
+* **deps:** update danysk/action-checkout action to v0.2.13 ([4a83358](https://github.com/gciatto/kt-mpp/commit/4a833587aaebf4c9e1c7f3ce7da08c1274c2f0c2))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.10 ([1e5bb12](https://github.com/gciatto/kt-mpp/commit/1e5bb12ed03753ebcfce2a6561c16e5324ce2a0b))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.9 ([3592298](https://github.com/gciatto/kt-mpp/commit/3592298579b1f4a5473927c8ddb33d341d93ee93))
+
+## [2.3.1](https://github.com/gciatto/kt-mpp/compare/2.3.0...2.3.1) (2023-09-07)
+
+
+### Bug Fixes
+
+* import org.danilopianini.publish-on-central in afterEvaluate ([7c7119f](https://github.com/gciatto/kt-mpp/commit/7c7119f3b0b19620d2ebed3c091ebd0f82396df4))
+
+
+### Tests
+
+* add test2 for root project adding plugins directly ([a62e4e6](https://github.com/gciatto/kt-mpp/commit/a62e4e63ad6f208366088c6c71cfddf59c119665))
+
+## [2.3.0](https://github.com/gciatto/kt-mpp/compare/2.2.4...2.3.0) (2023-09-06)
+
+
+### Features
+
+* use kotlin 1.9.x ([#143](https://github.com/gciatto/kt-mpp/issues/143)) ([347c216](https://github.com/gciatto/kt-mpp/commit/347c216f871acd044504671a7d5549797efd2ded))
+
 ## [2.2.4](https://github.com/gciatto/kt-mpp/compare/2.2.3...2.2.4) (2023-09-05)
 
 

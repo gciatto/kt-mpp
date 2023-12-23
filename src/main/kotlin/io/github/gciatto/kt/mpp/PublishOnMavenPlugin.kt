@@ -1,7 +1,5 @@
 package io.github.gciatto.kt.mpp
 
-import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
-import org.danilopianini.gradle.mavencentral.DocStyle
 import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.danilopianini.gradle.mavencentral.Repository
 import org.gradle.api.Plugin
@@ -14,32 +12,6 @@ import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
-
-    override fun PropertiesHelperExtension.declareProperties() {
-        addProperty(docStyle)
-        addProperty(repoOwner)
-        addProperty(mavenCentralPassword)
-        addProperty(mavenCentralUsername)
-        addProperty(otherMavenRepo)
-        addProperty(otherMavenUsername)
-        addProperty(otherMavenPassword)
-        addProperty(signingKey)
-        addProperty(signingPassword)
-        addProperty(projectLongName)
-        addProperty(projectDescription)
-        addProperty(projectHomepage)
-        addProperty(projectLicense)
-        addProperty(projectLicenseUrl)
-        addProperty(scmConnection)
-        addProperty(scmUrl)
-        addProperty(developerIdName)
-        addProperty(developerIdUrl)
-        addProperty(developerIdEmail)
-        addProperty(developerIdOrg)
-        addProperty(orgName)
-        addProperty(orgUrl)
-    }
-
     context(Project)
     private fun Repository.configure(username: String?, pwd: String?) {
         if (username != null && pwd != null) {
@@ -57,14 +29,14 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     private fun Project.configureMavenRepositories() = configure(PublishOnCentralExtension::class) {
         configureMavenCentral.set(true)
         mavenCentral.run {
-            val mavenCentralUsername: String? = getOptionalProperty("mavenCentralUsername")
-            val mavenCentralPassword: String? = getOptionalProperty("mavenCentralPassword")
+            val mavenCentralUsername: String? = multiPlatformHelper.mavenCentralUsername.orNull
+            val mavenCentralPassword: String? = multiPlatformHelper.mavenCentralPassword.orNull
             configure(mavenCentralUsername, mavenCentralPassword)
         }
-        getOptionalProperty("otherMavenRepo")?.takeIf { it.isNotBlank() && "oss.sonatype.org" !in it }?.let {
-            val mavenUsername: String? = getOptionalProperty("otherMavenUsername")
-            val mavenPassword: String? = getOptionalProperty("otherMavenPassword")
-            repository(it) {
+        multiPlatformHelper.otherMavenRepo.orNull?.takeIf { "oss.sonatype.org" !in it.host }?.let {
+            val mavenUsername: String? = multiPlatformHelper.otherMavenUsername.orNull
+            val mavenPassword: String? = multiPlatformHelper.otherMavenPassword.orNull
+            repository(it.toString()) {
                 user.set(mavenUsername)
                 password.set(mavenPassword)
                 @Suppress("ktlint")
@@ -79,8 +51,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     @Suppress("UnsafeCallOnNullableType")
     private fun Project.configureSigning() = configure(SigningExtension::class) {
-        val signingKey: String? = getOptionalProperty("signingKey")
-        val signingPassword: String? = getOptionalProperty("signingPassword")
+        val signingKey: String? = multiPlatformHelper.signingKey.orNull
+        val signingPassword: String? = multiPlatformHelper.signingPassword.orNull
         if (arrayOf(signingKey, signingPassword).none { it.isNullOrBlank() }) {
             val actualKey = signingKey!!.getAsEitherFileOrValue(project)
             val actualPassphrase = signingPassword!!.getAsEitherFileOrValue(project)
@@ -105,34 +77,14 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     }
 
     private fun Project.configurePublications() = configure(PublishOnCentralExtension::class) {
-        getOptionalProperty("projectLongName")?.let {
-            projectLongName.set(it)
-            log("set POM name: $it")
-        }
-        (description ?: getOptionalProperty("projectDescription"))?.let {
-            projectDescription.set(it)
-            log("set POM description: $it")
-        }
-        getOptionalProperty("repoOwner")?.takeIf { it.isNotBlank() }?.let {
-            repoOwner.set(it)
-            log("set repoOwner: $it")
-        }
-        getOptionalProperty("projectHomepage")?.takeIf { it.isNotBlank() }?.let {
-            projectUrl.set(it)
-            log("set POM URL: $it")
-        }
-        getOptionalProperty("projectLicense")?.takeIf { it.isNotBlank() }?.let {
-            licenseName.set(it)
-            log("set POM license name: $it")
-        }
-        getOptionalProperty("projectLicenseUrl")?.takeIf { it.isNotBlank() }?.let {
-            licenseUrl.set(it)
-            log("set POM license URL: $it")
-        }
-        getOptionalProperty("scmConnection")?.takeIf { it.isNotBlank() }?.let {
-            scmConnection.set(it)
-            log("add POM SCM connection: $it")
-        }
+        val mpp = multiPlatformHelper
+        projectLongName.set(mpp.projectLongName.getLogging("set POM name: %s"))
+        projectDescription.set(mpp.projectDescription.getLogging("set POM description: %s"))
+        repoOwner.set(mpp.repoOwner.getLogging("set repoOwner: %s"))
+        projectUrl.set(mpp.projectHomepage.asStringLogging("set POM URL: %s"))
+        licenseName.set(mpp.projectLicense.getLogging("set POM license name: %s"))
+        licenseUrl.set(mpp.projectLicenseUrl.asStringLogging("set POM license URL: %s"))
+        scmConnection.set(mpp.scmConnection.getLogging("add POM SCM connection: %s"))
         addMissingInformationToPublications()
     }
 
@@ -140,22 +92,17 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         publications.withType(MavenPublication::class.java) { pub ->
             pub.pom { pom ->
                 pom.developers { devs ->
-                    for (dev in project.getAllDevs()) {
-                        dev.applyTo(devs)
-                        log("add POM developer publication ${pub.name}: $dev")
+                    multiPlatformHelper.developers.configureEach {
+                        it.applyTo(devs)
+                        log("add POM developer for publication ${pub.name}: $it")
                     }
                 }
                 pom.scm { scm ->
-                    getOptionalProperty("scmUrl")?.takeIf { it.isNotBlank() }?.let {
-                        scm.url.set(it)
-                        log("add POM SCM URL in publication ${pub.name}: $it")
-                    }
+                    val logMsg = "set POM SCM URL for publication ${pub.name}: %s"
+                    scm.url.set(multiPlatformHelper.scmUrl.asStringLogging(logMsg))
                 }
                 pom.issueManagement { issues ->
-                    getOptionalProperty("issuesUrl")?.takeIf { it.isNotBlank() }?.let {
-                        issues.url.set(it)
-                        log("set POM issue URL to $it")
-                    }
+                    issues.url.set(multiPlatformHelper.issuesUrl.asStringLogging("set POM issues URL to %s"))
                 }
             }
         }
@@ -177,12 +124,8 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     private fun Project.fixMavenPublicationsJavadocArtifact() {
         plugins.withType(PublishOnMavenPlugin::class.java) { _ ->
             configure(PublishOnCentralExtension::class) {
-                val docStyleString = getOptionalProperty("docStyle")
-                val docStyleValue = DocStyle.values()
-                    .firstOrNull { it.name.equals(docStyleString, ignoreCase = true) }
-                    ?: error("Invalid value for property docStyle: $docStyleString")
-                docStyle.set(docStyleValue)
-                log("use ${docStyleValue.name} style for javadoc JAR when publishing")
+                val logMsg = "use %s style for javadoc JAR when publishing"
+                docStyle.set(multiPlatformHelper.docStyle.getLogging(logMsg))
                 configure(PublishingExtension::class) {
                     publications.withType(MavenPublication::class.java).matching { "OSSRH" !in it.name }.configureEach {
                         it.artifact(tasks.named("javadocJar"))

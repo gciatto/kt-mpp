@@ -1,20 +1,21 @@
 [versions]
-detekt = "1.23.1"
-dokka = "1.9.0"
+detekt = "1.23.4"
+dokka = "1.9.10"
 jvm = "11"
 konf = "1.1.2"
-kotest = "5.7.2"
+kotest = "5.8.0"
 kotlin = "1.9.0"
-ktlint = "11.5.1"
+ktlint = "11.6.1"
 node = "18-latest"
-publishOnCentral = "5.0.13"
+publishOnCentral = "5.0.22"
 
 [libraries]
-classgraph = "io.github.classgraph:classgraph:4.8.162"
+classgraph = "io.github.classgraph:classgraph:4.8.165"
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
 konf-yaml = { module = "com.uchuhimo:konf-yaml", version.ref = "konf" }
 kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
@@ -28,13 +29,13 @@ kotlin-testing = [ "kotest-junit5-jvm", "kotest-assertions-core-jvm" ]
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-gitSemVer = "org.danilopianini.git-sensitive-semantic-versioning:1.1.10"
+gitSemVer = "org.danilopianini.git-sensitive-semantic-versioning:2.0.5"
 gradlePluginPublish = "com.gradle.plugin-publish:1.2.1"
 jacoco-testkit = "pl.droidsonroids.jacoco.testkit:1.0.12"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.49.1"
+kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.53.0"
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ktlint-idea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
-multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.5.5"
+multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.5.7"
 publishOnCentral = { id = "org.danilopianini.publish-on-central", version.ref = "publishOnCentral" }
 taskTree = "com.dorongold.task-tree:2.1.1"

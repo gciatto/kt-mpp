@@ -6,9 +6,9 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.ExtensionContainer
+import org.gradle.api.provider.Provider
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.bundling.Jar
-import java.io.File
 import java.util.Locale
 import kotlin.reflect.KClass
 
@@ -22,50 +22,31 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected abstract fun Project.applyThisPlugin()
 
-    override fun apply(target: Project) {
-        val propertiesHelper = target.extensions.run {
-            findByType(PropertiesHelperExtension::class.java)
-                ?: create("propertiesHelper", PropertiesHelperExtension::class.java).also {
-                    target.addPropertiesHelperTasks(it)
-                    target.log("add propertiesHelper extension")
-                }
+    private fun Project.addMultiPlatformHelperExtensionIfNecessary() {
+        if (extensions.findByName("multiPlatformHelper") == null) {
+            extensions.create("multiPlatformHelper", MultiPlatformHelperExtensionImpl::class.java, this)
         }
-        propertiesHelper.declareProperties()
+    }
+
+    override fun apply(target: Project) {
+        target.rootProject.addMultiPlatformHelperExtensionIfNecessary()
+        target.addMultiPlatformHelperExtensionIfNecessary()
         target.applyThisPlugin()
     }
 
-    private fun Project.addPropertiesHelperTasks(ext: PropertiesHelperExtension) {
-        val explainProperties = tasks.maybeCreate("explainProperties").run {
-            group = "properties"
-            doLast {
-                println(ext.generateExplanatoryText())
-            }
+    context(Project)
+    protected fun <T : Any> Provider<T>.getLogging(template: String): Provider<T> =
+        map {
+            log(template.format(it))
+            it
         }
-        val generateGradlePropertiesFile = tasks.maybeCreate("generateGradlePropertiesFile").run {
-            group = "properties"
-            doLast {
-                if (!ext.overwriteGradlePropertiesFile && gradlePropertiesFile.exists()) {
-                    val tmp = File.createTempFile("gradle", "properties")
-                    if (!tmp.renameTo(tmp)) {
-                        error("Cannot move $gradlePropertiesPath to temp directory")
-                    }
-                    gradlePropertiesFile.bufferedWriter().use { writer ->
-                        writer.append(ext.generateGradlePropertiesText())
-                        tmp.bufferedReader().use { reader ->
-                            reader.lines().forEach(writer::append)
-                        }
-                    }
-                } else {
-                    gradlePropertiesFile.writeText(ext.generateGradlePropertiesText())
-                }
-            }
-        }
-        log("add tasks ${explainProperties.path}, ${generateGradlePropertiesFile.path}")
-    }
 
-    protected open fun PropertiesHelperExtension.declareProperties() {
-        // does nothing by default
-    }
+    context(Project)
+    protected fun <T : Any> Provider<T>.asStringLogging(template: String): Provider<String> =
+        map {
+            log(template.format(it))
+            it.toString()
+        }
 
     protected fun <T : Plugin<Project>> Project.apply(klass: KClass<T>): T =
         plugins.apply(klass.java)
@@ -73,32 +54,6 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     protected fun <T : Any> Project.configure(klass: KClass<T>, action: T.() -> Unit) {
         extensions.getByType(klass.java).run(action)
     }
-
-    private val Project.propertiesHelper: PropertiesHelperExtension
-        get() = extensions.getByType(PropertiesHelperExtension::class.java)
-
-    protected fun Project.getPropertyDescriptor(name: String): PropertyDescriptor =
-        propertiesHelper.properties[name]
-            ?: error("Unregistered property in project ${project.name}: $name")
-
-    protected fun Project.getProperty(name: String): String {
-        if (name !in properties) {
-            logMissingProperty(name)
-        }
-        return property(name).toString()
-    }
-
-    private fun Project.logMissingProperty(name: String) {
-        getPropertyDescriptor(name).logHelpIfNecessary(project)
-    }
-
-    protected fun Project.getOptionalProperty(name: String): String? =
-        findProperty(name)?.toString()
-            ?: getPropertyDescriptor(name).also { it.logHelpIfNecessary(project) }.defaultValue?.toString()
-
-    protected fun Project.getBooleanProperty(name: String): Boolean =
-        getOptionalProperty(name)?.toBooleanStrictOrNull()
-            ?: error("Property $name has no default value, and this is a bug. Please report it.")
 
     protected fun Task.sibling(name: String) =
         path.split(":").let {

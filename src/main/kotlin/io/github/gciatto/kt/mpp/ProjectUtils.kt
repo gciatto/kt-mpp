@@ -31,6 +31,9 @@ internal val Project.gradlePropertiesFile: File
 internal val Project.gradlePropertiesPath: String
     get() = gradlePropertiesFile.path
 
+internal val Project.multiPlatformHelper: MultiPlatformHelperExtension
+    get() = extensions.getByType(MultiPlatformHelperExtension::class.java)
+
 fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
     logger.log(logLevel, "$name: $message")
 }
@@ -158,7 +161,7 @@ fun Project.ifAllPluginsAltogether(name: Any, vararg names: Any, action: () -> U
     ifAllPluginsAltogether(listOf(name, *names), action)
 }
 
-val Project.jsPackageName: String
+internal val Project.jsPackageName: String
     get() = if (project == rootProject) {
         rootProject.name
     } else {
