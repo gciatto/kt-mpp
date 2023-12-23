@@ -139,17 +139,15 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
     @Suppress("UNUSED_PARAMETER")
     override fun Project.applyThisPlugin() {
         fun configurePlugin(plugin: Plugin<*>) {
-            afterEvaluate {
-                it.apply(plugin = "org.danilopianini.publish-on-central")
-                it.log("apply org.danilopianini.publish-on-central plugin")
-                it.configurePublishOnCentralExtension()
-                it.configureMavenRepositories()
-                it.configurePublications()
-                it.addMissingInformationToPublications()
-                it.configureSigning()
-                it.fixSignPublishTaskDependencies()
-                it.fixMavenPublicationsJavadocArtifact()
-            }
+            apply(plugin = "org.danilopianini.publish-on-central")
+            log("apply org.danilopianini.publish-on-central plugin")
+            configurePublishOnCentralExtension()
+            configureMavenRepositories()
+            configurePublications()
+            addMissingInformationToPublications()
+            configureSigning()
+            fixSignPublishTaskDependencies()
+            fixMavenPublicationsJavadocArtifact()
         }
         forAllKotlinPlugins { configurePlugin(it) }
     }
