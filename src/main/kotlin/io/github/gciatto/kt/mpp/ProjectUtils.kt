@@ -42,15 +42,19 @@ fun Project.kotlinVersion(version: String) = kotlinVersion(provider { version })
 
 fun Project.kotlinVersion(provider: Provider<String>) {
     val version = provider.getOrElse(KotlinVersion.CURRENT.toString())
-    configurations.all { configuration ->
+    configurations.matching { "detekt" !in it.name }.all { configuration ->
         configuration.resolutionStrategy.eachDependency { dependency ->
             if (dependency.requested.let { it.group == "org.jetbrains.kotlin" && it.name.startsWith("kotlin") }) {
                 dependency.useVersion(version)
-                dependency.because("All Kotlin modules should use the same version, and compiler uses $version")
+                dependency.because(
+                    "All Kotlin-related dependencies should use the same version," +
+                        "and user selected version $version",
+                )
+                val artifact = "${dependency.requested.group}:${dependency.requested.name}"
+                log("force version $version for dependency $artifact in configuration ${configuration.name}")
             }
         }
     }
-    log("enforce version for Kotlin dependencies: $version")
 }
 
 private fun String.getAsFile(charset: Charset = Charsets.UTF_8) =

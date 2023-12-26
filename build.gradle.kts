@@ -70,11 +70,13 @@ dependencies {
 }
 
 // Enforce Kotlin version coherence
-configurations.all {
+configurations.matching { "detekt" !in it.name }.all {
+    val configuration = this
     resolutionStrategy.eachDependency {
         if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {
             useVersion(KOTLIN_VERSION)
-            because("All Kotlin modules should use the same version, and compiler uses $KOTLIN_VERSION")
+            val artifact = "${requested.group}:${requested.name}"
+            because("Force version $version for $artifact in configuration ${configuration.name}")
         }
     }
 }
@@ -324,13 +326,5 @@ for (testDir in testDirectories()) {
         destinationDir = testDir.resolve("gradle")
         tasks.getByName("processTestResources").dependsOn(this)
         tasks.withType(Cpd::class.java) { dependsOn(this@create) }
-    }
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.jetbrains.kotlin") {
-            useVersion(libs.versions.kotlin.get())
-        }
     }
 }

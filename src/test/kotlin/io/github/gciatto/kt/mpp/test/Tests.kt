@@ -59,7 +59,11 @@ class Tests : StringSpec(
                         result.output should MatchMultilinePattern(it)
                     }
                     test.expectation.success.forEach {
-                        result.outcomeOf(it) shouldBeIn listOf(TaskOutcome.SUCCESS, TaskOutcome.UP_TO_DATE)
+                        result.outcomeOf(it) shouldBeIn listOf(
+                            TaskOutcome.SUCCESS,
+                            TaskOutcome.UP_TO_DATE,
+                            TaskOutcome.NO_SOURCE,
+                        )
                     }
                     test.expectation.failure.forEach {
                         result.outcomeOf(it) shouldBe TaskOutcome.FAILED

@@ -240,13 +240,29 @@ tests:
         - ":subproject-js:testClasses"
         - ":full:classes"
         - ":full:testClasses"
-#  - description: "Print properties explanation"
-#    configuration:
-#      tasks: ":full:explainProperties"
-#      options:
-#        - "--stacktrace"
-#    expectation:
-#      success: ':full:explainProperties'
+  - description: "Detekt task works and triggers sub-tasks"
+    configuration:
+      tasks: "detektAll"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":subproject-jvm:detekt"
+        - ":subproject-jvm:detektMain"
+        - ":subproject-jvm:detektTest"
+        - ":subproject-js:detekt"
+#        - ":subproject-js:detektMain"
+#        - ":subproject-js:detektTest"
+        - ":subproject-mp:detekt"
+        - ":subproject-mp:detektJvmMain"
+        - ":subproject-mp:detektJsMain"
+        - ":subproject-mp:detektJvmTest"
+        - ":subproject-mp:detektJsTest"
+        - ":full:detekt"
+        - ":full:detektJvmMain"
+        - ":full:detektJsMain"
+        - ":full:detektJvmTest"
+        - ":full:detektJsTest"
   - description: "Running :full:test should test all platforms and compile all dependencies"
     configuration:
       tasks: ":full:test"

@@ -5,11 +5,13 @@ import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
+import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import java.io.File
 import java.net.URL
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
@@ -50,6 +52,8 @@ interface MultiPlatformHelperExtension {
     val nodeVersion: Property<String>
     val docStyle: Property<DocStyle>
     val jsPackageName: Property<String>
+    val bugFinderConfigPath: Property<File>
+    val bugFinderConfig: FileCollection
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -110,6 +114,21 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
                     project.log("invalid URL: $it", LogLevel.WARN)
                 }
                 url.getOrNull()
+            }
+        }
+
+    private fun filePropertyWithConvention(defaultValue: File? = null) =
+        propertyWithConvention<File>(defaultValue) {
+            if (it.isBlank()) {
+                null
+            } else {
+                val file = runCatching { File(it) }
+                if (file.isFailure) {
+                    project.log("invalid file: $it", LogLevel.WARN)
+                } else if (file.isSuccess && !file.getOrThrow().exists()) {
+                    project.log("file does not exist: $it", LogLevel.WARN)
+                }
+                file.getOrNull()
             }
         }
 
@@ -198,6 +217,17 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
         defaultValue = project.provider { project.jsPackageName },
         converter = { it },
     )
+
+    override val bugFinderConfigPath: Property<File> by filePropertyWithConvention(
+        project.rootProject.file(".detekt.yml"),
+    )
+
+    override val bugFinderConfig: FileCollection
+        get() = project.objects.fileCollection().also { collection ->
+            bugFinderConfigPath.orNull?.takeIf { it.exists() }?.let {
+                collection.from(it)
+            }
+        }
 
     init {
         for ((string, collection) in listOf(
