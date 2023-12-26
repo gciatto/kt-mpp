@@ -13,16 +13,12 @@ tests:
         - ":detektJsTest"
         - ":detektJvmMain"
         - ":detektJvmTest"
-        - ":detektMetadataCommonMain"
-        - ":detektMetadataMain"
         - ":detektAll"
         - ":full:detekt"
         - ":full:detektJsMain"
         - ":full:detektJsTest"
         - ":full:detektJvmMain"
         - ":full:detektJvmTest"
-        - ":full:detektMetadataCommonMain"
-        - ":full:detektMetadataMain"
         - ":full:detektAll"
         - ":subproject-js:detekt"
         - ":subproject-js:detektAll"
@@ -35,8 +31,6 @@ tests:
         - ":subproject-mp:detektJsTest"
         - ":subproject-mp:detektJvmMain"
         - ":subproject-mp:detektJvmTest"
-        - ":subproject-mp:detektMetadataCommonMain"
-        - ":subproject-mp:detektMetadataMain"
         - ":subproject-mp:detektAll"
   - description: "Root project is multiplatform, hence it has tasks concerning all platforms"
     configuration:
@@ -149,7 +143,7 @@ tests:
         - ':subproject-mp:tasks'
         - ':subproject-mp:showPublications'
       output_contains:
-        - "subproject-mp: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "subproject-mp: publications: js, jvm, kotlinMultiplatform, kotlinOSSRH"
         - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
         - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
         - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
@@ -165,7 +159,7 @@ tests:
         -  ':full:tasks'
         - ":full:showPublications"
       output_contains:
-        - "full: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "full: publications: js, jvm, kotlinMultiplatform, kotlinOSSRH"
         - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
         - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
         - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
@@ -268,6 +262,7 @@ tests:
       tasks: ":full:test"
       options:
         - "--stacktrace"
+        - --info
     expectation:
       success:
         - ":subproject-jvm:compileKotlin"
@@ -304,7 +299,6 @@ tests:
   - description: "Metadata generation works"
     configuration:
       tasks:
-        - "generateMetadataFileForJavaOSSRHPublication"
         - "generateMetadataFileForJsPublication"
         - "generateMetadataFileForJvmPublication"
         - "generateMetadataFileForKotlinMultiplatformPublication"
@@ -313,7 +307,6 @@ tests:
         - "--stacktrace"
     expectation:
       success:
-        - ":full:generateMetadataFileForJavaOSSRHPublication"
         - ":full:generateMetadataFileForJsPublication"
         - ":full:generateMetadataFileForJvmPublication"
         - ":full:generateMetadataFileForKotlinMultiplatformPublication"

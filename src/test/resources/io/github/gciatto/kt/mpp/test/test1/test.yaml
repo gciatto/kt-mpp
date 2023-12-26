@@ -5,6 +5,7 @@ tests:
         - "test"
       options:
         - "--stacktrace"
+        - --info
     expectation:
       success:
         - ':full:jvmTest'

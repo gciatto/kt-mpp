@@ -31,7 +31,7 @@ tests:
       success:
         - ':showPublications'
       output_contains:
-        - 'test2: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH'
+        - 'test2: publications: js, jvm, kotlinMultiplatform, kotlinOSSRH'
   - description: "Upload multiplatform root-project to Maven implies sources and javadoc being generated"
     configuration:
       tasks:

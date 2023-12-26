@@ -222,7 +222,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun Project.addMultiplatformTaskAliases(target: String) {
-        tasks.matching { it.name == "test" }.configureEach {
+        tasks.maybeCreate("test").let {
             it.dependsOn("${target}Test")
             log("let task ${it.path} be triggered by ${it.sibling("test")}")
         }
