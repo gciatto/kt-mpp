@@ -87,7 +87,7 @@ jobs:
             ./gradlew assemble
             NEXT_VERSION="${{ needs.staging-repo.outputs.next-version }}"
             OVERRIDE_VERSION=$([[ "$NEXT_VERSION" != "" ]] && echo "-PforceVersion=$(echo $NEXT_VERSION)" || echo "")
-            ./gradlew $OVERRIDE_VERSION -PstagingRepositoryId=${{ needs.staging-repo.outputs.maven-central-repo-id }} uploadAllPublicationsToMavenCentralNexus --parallel
+            ./gradlew $OVERRIDE_VERSION -PstagingRepositoryId=${{ needs.staging-repo.outputs.maven-central-repo-id }} uploadToMavenCentralNexus --parallel
           should-run-codecov: ${{ runner.os == 'Linux' }}
           should-deploy: ${{ contains(needs.staging-repo.result, 'success') }}
           maven-central-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

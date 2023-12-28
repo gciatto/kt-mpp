@@ -280,10 +280,10 @@ gradlePlugin {
                 doLast {
                     @Suppress("ktlint")
                     val text = "@file:Suppress(\"MaxLineLength\", \"ktlint\")\n\n" +
-                        "package ${project.group}.kt.mpp\n\n" +
-                        "object Plugins {\n" +
-                        pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
-                        "}\n"
+                            "package ${project.group}.kt.mpp\n\n" +
+                            "object Plugins {\n" +
+                            pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
+                            "}\n"
                     targetFile.writeText(text)
                 }
             }
@@ -312,6 +312,16 @@ tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
             this@create.dependsOn(this)
         }
     }
+}
+
+tasks.create("uploadToMavenCentralNexus") {
+    group = "publishing"
+    description = "Quick upload relevant publication to Nexus, altogether"
+    dependsOn(
+        "uploadAllPluginMarkersToMavenCentralNexus",
+        "uploadKotlinOSSRHToMavenCentralNexus",
+        "uploadPluginMavenToMavenCentralNexus",
+    )
 }
 
 fun testDirectories(): Set<File> = buildSet {
