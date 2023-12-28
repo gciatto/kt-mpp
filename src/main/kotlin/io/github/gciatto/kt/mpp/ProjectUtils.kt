@@ -14,6 +14,7 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
@@ -87,6 +88,12 @@ fun Project.jvmVersion(provider: Provider<String>) {
             jvmTarget = version.toString()
             log("set $path.jvmTarget=$jvmTarget")
         }
+    }
+    tasks.withType<JavaCompile> {
+        sourceCompatibility = version.toString()
+        log("set $path.sourceCompatibility=$sourceCompatibility")
+        targetCompatibility = version.toString()
+        log("set $path.targetCompatibility=$targetCompatibility")
     }
 }
 
