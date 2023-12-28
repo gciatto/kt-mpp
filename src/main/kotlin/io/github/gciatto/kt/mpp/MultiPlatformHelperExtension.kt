@@ -54,6 +54,7 @@ interface MultiPlatformHelperExtension {
     val jsPackageName: Property<String>
     val bugFinderConfigPath: Property<File>
     val bugFinderConfig: FileCollection
+    val jsBinaryType: Property<JsBinaryType>
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -228,6 +229,10 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
                 collection.from(it)
             }
         }
+
+    override val jsBinaryType: Property<JsBinaryType> by propertyWithConvention(JsBinaryType.LIBRARY) {
+        JsBinaryType.valueOf(it.uppercase(Locale.getDefault()))
+    }
 
     init {
         for ((string, collection) in listOf(

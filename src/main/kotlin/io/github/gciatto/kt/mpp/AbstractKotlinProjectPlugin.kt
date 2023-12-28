@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsBinaryContainer
 import java.util.Locale
 import kotlin.jvm.optionals.asSequence
 
@@ -247,6 +248,21 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
                     }
                 },
             )
+        }
+    }
+
+    context(Project)
+    protected fun KotlinJsBinaryContainer.configureAutomatically() {
+        when (multiPlatformHelper.jsBinaryType.orNull) {
+            JsBinaryType.LIBRARY -> {
+                library()
+                log("configure kotlin js to produce a library")
+            }
+            JsBinaryType.EXECUTABLE -> {
+                executable()
+                log("configure kotlin js to produce an executable")
+            }
+            else -> {}
         }
     }
 }

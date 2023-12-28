@@ -5,6 +5,7 @@ import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.NpmPackage
 import dev.petuska.npm.publish.extension.domain.NpmRegistry
 import org.gradle.api.Project
+import org.gradle.api.logging.LogLevel
 
 class PublishOnNpmPlugin : AbstractProjectPlugin() {
     context (Project)
@@ -17,6 +18,13 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val npmPublish = apply(NpmPublishPlugin::class)
         log("apply ${npmPublish::class.java.name} plugin")
+        if (multiPlatformHelper.jsBinaryType.let { it.isPresent && it.get() != JsBinaryType.LIBRARY }) {
+            log(
+                "publication on NPM via ${npmPublish::class.java.name} plugin will fail because " +
+                    "jsBinaryType is not set to LIBRARY",
+                LogLevel.WARN,
+            )
+        }
         configureNpmPublishing()
     }
 
@@ -39,10 +47,8 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     context (Project, NpmPublishExtension)
     private fun NpmPackage.configureNpmPackages() {
         val mpp = multiPlatformHelper
-        project.afterEvaluate { _ ->
-            packageName.set(mpp.jsPackageName.getLogging("set NPM package name: %s"))
-        }
-        this.packageJson { pkg ->
+        packageName.set(mpp.jsPackageName.getLogging("set NPM package name: %s"))
+        packageJson { pkg ->
             pkg.homepage.set(mpp.projectHomepage.asStringLogging("set package.json homepage: %s"))
             pkg.description.set(mpp.projectDescription.getLogging("set package.json description: %s"))
             pkg.license.set(mpp.projectLicense.getLogging("set package.json license: %s"))
@@ -52,24 +58,24 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                 pkg.author.set(pkg.person(mainDeveloper))
                 log("set package.json author to $mainDeveloper")
             }
-            pkg.contributors.set(
-                developers.drop(1)
-                    .map { pkg.person(it) }
-                    .toCollection(mutableListOf())
-                    .also {
-                        val contributorsList = it.joinToString(prefix = "[", postfix = "]")
-                        log("add package.json contributors: $contributorsList")
-                    },
-            )
+            if (developers.size > 1) {
+                val contributors = developers.subList(1, developers.size)
+                pkg.contributors.set(contributors.map { pkg.person(it) })
+                val contributorsList = contributors.joinToString(prefix = "[", postfix = "]")
+                log("add package.json contributors: $contributorsList")
+            }
             pkg.private.set(false)
+            log("about to set package.json bugs")
             pkg.bugs { bugs ->
                 bugs.url.set(mpp.issuesUrl.asStringLogging("set package.json bug URL to %s"))
                 bugs.email.set(mpp.issuesEmail.getLogging("set package.json bug email to %s"))
             }
+            log("about to set package.json repositories")
             pkg.repository { repos ->
                 repos.type.set("git")
                 repos.url.set(mpp.scmUrl.asStringLogging("set package.json repo URL to %s"))
             }
+            log("overridden package.json: ${pkg.finalise()}")
         }
     }
 
@@ -90,5 +96,6 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                     pkg.configureNpmPackages()
                 }
             }
+            version.set(project.provider { project.npmCompliantVersion })
         }
 }

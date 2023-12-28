@@ -170,7 +170,6 @@ tests:
         - ":subproject-jvm:showPublications"
       options:
         - "--stacktrace"
-        - "--info"
     expectation:
       success:
         - ":subproject-jvm:tasks"
@@ -262,7 +261,6 @@ tests:
       tasks: ":full:test"
       options:
         - "--stacktrace"
-        - --info
     expectation:
       success:
         - ":subproject-jvm:compileKotlin"
@@ -547,3 +545,20 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom.asc
+  - description: "NPM package is correctly generated"
+    configuration:
+      tasks:
+        - "publishJsPackageToNpmjsRegistry"
+      options:
+        - "--stacktrace"
+    expectation:
+      success:
+        - ":full:publishJsPackageToNpmjsRegistry"
+      output_contains:
+        - "npm notice Publishing to https://registry.npmjs.org// with tag latest and public access (dry-run)"
+        - "+ @myOrg/test0-full@1.0.0"
+      output_matches:
+        - "npm notice name:\\s+@myOrg/test0-full"
+        - "npm notice version:\\s+1\\.0\\.0"
+        - "npm notice filename:\\s+myOrg-test0-full-1\\.0\\.0\\.tgz"
+        - "npm notice total files:\\s+11"

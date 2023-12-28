@@ -74,6 +74,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
 
     context(Project, KotlinMultiplatformExtension)
     private fun KotlinJsTargetDsl.configureJs() {
+        binaries.configureAutomatically()
         compilations.all { compilation ->
             compilation.kotlinOptions {
                 configureJsKotlinOptions(targetCompilationId(compilation))
