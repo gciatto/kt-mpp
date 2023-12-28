@@ -1,6 +1,43 @@
 options:
   - "--stacktrace"
 tests:
+  - description: "Runtime versions are set according to catalog"
+    configuration:
+      tasks:
+        - "tasks"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test0: set nodeVersion="
+        - "test0: set :compileJava.sourceCompatibility=11"
+        - "test0: set :compileJava.targetCompatibility=11"
+        - "test0: set :compileTestJava.sourceCompatibility=11"
+        - "test0: set :compileTestJava.targetCompatibility=11"
+        - "full: set :full:compileJava.sourceCompatibility=11"
+        - "full: set :full:compileJava.targetCompatibility=11"
+        - "full: set :full:compileTestJava.sourceCompatibility=11"
+        - "full: set :full:compileTestJava.targetCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileJava.sourceCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileJava.targetCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileTestJava.sourceCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileTestJava.targetCompatibility=11"
+        - "subproject-jvm: set java.targetCompatibility=11"
+        - "subproject-jvm: set java.sourceCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileJava.sourceCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileJava.targetCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.sourceCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.targetCompatibility=11"
+        - "test0: set :compileKotlinJvm.jvmTarget=11"
+        - "test0: set :compileTestKotlinJvm.jvmTarget=11"
+        - "full: set :full:compileKotlinJvm.jvmTarget=11"
+        - "full: set :full:compileTestKotlinJvm.jvmTarget=11"
+        - "subproject-mp: set :subproject-mp:compileKotlinJvm.jvmTarget=11"
+        - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=11"
+        - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=11"
+        - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=11"
   - description: Projects have detektAll task with correct dependencies
     configuration:
       tasks:
@@ -318,19 +355,26 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom
           trim: true
           contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>full</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
             - |
-              <groupId>io.github.gciatto</groupId>
-              <artifactId>full</artifactId>
-              <version>1.0.0</version>
-              <name>Test0</name>
-              <description>Test project for kt-mpp plugin</description>
               <licenses>
                 <license>
                   <name>Apache-2.0</name>
                   <url>https://www.apache.org/licenses/LICENSE-2.0</url>
                 </license>
               </licenses>
-              <scm />
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
               <issueManagement>
                 <url>https://github.com/gciatto/kt-mpp/issues</url>
               </issueManagement>
@@ -361,20 +405,27 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom
           trim: true
           contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>full-js</artifactId>
+            - <version>1.0.0</version>
+            - <packaging>klib</packaging>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
             - |
-              <groupId>io.github.gciatto</groupId>
-              <artifactId>full-js</artifactId>
-              <version>1.0.0</version>
-              <packaging>klib</packaging>
-              <name>Test0</name>
-              <description>Test project for kt-mpp plugin</description>
               <licenses>
                 <license>
                   <name>Apache-2.0</name>
                   <url>https://www.apache.org/licenses/LICENSE-2.0</url>
                 </license>
               </licenses>
-              <scm/>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
               <issueManagement>
                 <url>https://github.com/gciatto/kt-mpp/issues</url>
               </issueManagement>
@@ -401,19 +452,26 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom
           trim: true
           contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>full-jvm</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
             - |
-              <groupId>io.github.gciatto</groupId>
-              <artifactId>full-jvm</artifactId>
-              <version>1.0.0</version>
-              <name>Test0</name>
-              <description>Test project for kt-mpp plugin</description>
               <licenses>
                 <license>
                   <name>Apache-2.0</name>
                   <url>https://www.apache.org/licenses/LICENSE-2.0</url>
                 </license>
               </licenses>
-              <scm/>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
               <issueManagement>
                 <url>https://github.com/gciatto/kt-mpp/issues</url>
               </issueManagement>
@@ -440,19 +498,26 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom
           trim: true
           contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>subproject-js</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
             - |
-              <groupId>io.github.gciatto</groupId>
-              <artifactId>subproject-js</artifactId>
-              <version>1.0.0</version>
-              <name>Test0</name>
-              <description>Test project for kt-mpp plugin</description>
               <licenses>
                 <license>
                   <name>Apache-2.0</name>
                   <url>https://www.apache.org/licenses/LICENSE-2.0</url>
                 </license>
               </licenses>
-              <scm />
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
               <issueManagement>
                 <url>https://github.com/gciatto/kt-mpp/issues</url>
               </issueManagement>
@@ -472,19 +537,26 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom
           trim: true
           contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>subproject-jvm</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
             - |
-              <groupId>io.github.gciatto</groupId>
-              <artifactId>subproject-jvm</artifactId>
-              <version>1.0.0</version>
-              <name>Test0</name>
-              <description>Test project for kt-mpp plugin</description>
               <licenses>
                 <license>
                   <name>Apache-2.0</name>
                   <url>https://www.apache.org/licenses/LICENSE-2.0</url>
                 </license>
               </licenses>
-              <scm/>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
               <issueManagement>
                 <url>https://github.com/gciatto/kt-mpp/issues</url>
               </issueManagement>
