@@ -462,6 +462,28 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom
+          trim: true
+          contents:
+            - |
+              <groupId>io.github.gciatto</groupId>
+              <artifactId>subproject-js</artifactId>
+              <version>1.0.0</version>
+              <name>Test0</name>
+              <description>Test project for kt-mpp plugin</description>
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+              <scm />
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-js</artifactId>
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/maven-metadata-local.xml
@@ -472,6 +494,28 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom
+          trim: true
+          contents:
+            - |
+              <groupId>io.github.gciatto</groupId>
+              <artifactId>subproject-jvm</artifactId>
+              <version>1.0.0</version>
+              <name>Test0</name>
+              <description>Test project for kt-mpp plugin</description>
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+              <scm/>
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/maven-metadata-local.xml
