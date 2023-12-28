@@ -1,10 +1,48 @@
+options:
+  - "--stacktrace"
 tests:
+  - description: "Runtime versions are set according to catalog"
+    configuration:
+      tasks:
+        - "tasks"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test0: set nodeVersion="
+        - "test0: set :compileJava.sourceCompatibility=11"
+        - "test0: set :compileJava.targetCompatibility=11"
+        - "test0: set :compileTestJava.sourceCompatibility=11"
+        - "test0: set :compileTestJava.targetCompatibility=11"
+        - "full: set :full:compileJava.sourceCompatibility=11"
+        - "full: set :full:compileJava.targetCompatibility=11"
+        - "full: set :full:compileTestJava.sourceCompatibility=11"
+        - "full: set :full:compileTestJava.targetCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileJava.sourceCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileJava.targetCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileTestJava.sourceCompatibility=11"
+        - "subproject-mp: set :subproject-mp:compileTestJava.targetCompatibility=11"
+        - "subproject-jvm: set java.targetCompatibility=11"
+        - "subproject-jvm: set java.sourceCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileJava.sourceCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileJava.targetCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.sourceCompatibility=11"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.targetCompatibility=11"
+        - "test0: set :compileKotlinJvm.jvmTarget=11"
+        - "test0: set :compileTestKotlinJvm.jvmTarget=11"
+        - "full: set :full:compileKotlinJvm.jvmTarget=11"
+        - "full: set :full:compileTestKotlinJvm.jvmTarget=11"
+        - "subproject-mp: set :subproject-mp:compileKotlinJvm.jvmTarget=11"
+        - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=11"
+        - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=11"
+        - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=11"
   - description: Projects have detektAll task with correct dependencies
     configuration:
       tasks:
         - "check"
       options:
-        - "--stacktrace"
         - "--dry-run"
     expectation:
       output_contains:
@@ -13,16 +51,12 @@ tests:
         - ":detektJsTest"
         - ":detektJvmMain"
         - ":detektJvmTest"
-        - ":detektMetadataCommonMain"
-        - ":detektMetadataMain"
         - ":detektAll"
         - ":full:detekt"
         - ":full:detektJsMain"
         - ":full:detektJsTest"
         - ":full:detektJvmMain"
         - ":full:detektJvmTest"
-        - ":full:detektMetadataCommonMain"
-        - ":full:detektMetadataMain"
         - ":full:detektAll"
         - ":subproject-js:detekt"
         - ":subproject-js:detektAll"
@@ -35,15 +69,11 @@ tests:
         - ":subproject-mp:detektJsTest"
         - ":subproject-mp:detektJvmMain"
         - ":subproject-mp:detektJvmTest"
-        - ":subproject-mp:detektMetadataCommonMain"
-        - ":subproject-mp:detektMetadataMain"
         - ":subproject-mp:detektAll"
   - description: "Root project is multiplatform, hence it has tasks concerning all platforms"
     configuration:
       tasks:
         - ":tasks"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':tasks'
@@ -142,14 +172,12 @@ tests:
       tasks:
         - ":subproject-mp:tasks"
         - ":subproject-mp:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':subproject-mp:tasks'
         - ':subproject-mp:showPublications'
       output_contains:
-        - "subproject-mp: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "subproject-mp: publications: js, jvm, kotlinMultiplatform, kotlinOSSRH"
         - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
         - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
         - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
@@ -158,14 +186,12 @@ tests:
       tasks:
         - ":full:tasks"
         - ":full:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         -  ':full:tasks'
         - ":full:showPublications"
       output_contains:
-        - "full: publications: javaOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "full: publications: js, jvm, kotlinMultiplatform, kotlinOSSRH"
         - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
         - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
         - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
@@ -174,9 +200,6 @@ tests:
       tasks:
         - ":subproject-jvm:tasks"
         - ":subproject-jvm:showPublications"
-      options:
-        - "--stacktrace"
-        - "--info"
     expectation:
       success:
         - ":subproject-jvm:tasks"
@@ -192,7 +215,6 @@ tests:
         - ":subproject-jvm:publishProjectToMavenLocal"
       options:
         - "--dry-run"
-        - "--stacktrace"
     expectation:
       output_contains:
         - ":subproject-jvm:sourcesJar SKIPPED"
@@ -201,8 +223,6 @@ tests:
       tasks:
         - ":subproject-js:tasks"
         - ":subproject-js:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':subproject-js:tasks'
@@ -217,8 +237,6 @@ tests:
     configuration:
       tasks:
         - ":subproject-other:tasks"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':subproject-other:tasks'
@@ -229,7 +247,6 @@ tests:
         - "testClasses"
       options:
         - "--continue"
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:classes"
@@ -240,18 +257,30 @@ tests:
         - ":subproject-js:testClasses"
         - ":full:classes"
         - ":full:testClasses"
-  - description: "Print properties explanation"
+  - description: "Detekt task works and triggers sub-tasks"
     configuration:
-      tasks: ":full:explainProperties"
-      options:
-        - "--stacktrace"
+      tasks: "detektAll"
     expectation:
-      success: ':full:explainProperties'
+      success:
+        - ":subproject-jvm:detekt"
+        - ":subproject-jvm:detektMain"
+        - ":subproject-jvm:detektTest"
+        - ":subproject-js:detekt"
+#        - ":subproject-js:detektMain"
+#        - ":subproject-js:detektTest"
+        - ":subproject-mp:detekt"
+        - ":subproject-mp:detektJvmMain"
+        - ":subproject-mp:detektJsMain"
+        - ":subproject-mp:detektJvmTest"
+        - ":subproject-mp:detektJsTest"
+        - ":full:detekt"
+        - ":full:detektJvmMain"
+        - ":full:detektJsMain"
+        - ":full:detektJvmTest"
+        - ":full:detektJsTest"
   - description: "Running :full:test should test all platforms and compile all dependencies"
     configuration:
       tasks: ":full:test"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:compileKotlin"
@@ -268,8 +297,6 @@ tests:
   - description: "All sub-projects should have the same version of the rootProject"
     configuration:
       tasks: "printVersion"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:printVersion"
@@ -288,16 +315,12 @@ tests:
   - description: "Metadata generation works"
     configuration:
       tasks:
-        - "generateMetadataFileForJavaOSSRHPublication"
         - "generateMetadataFileForJsPublication"
         - "generateMetadataFileForJvmPublication"
         - "generateMetadataFileForKotlinMultiplatformPublication"
         - "generateMetadataFileForKotlinOSSRHPublication"
-      options:
-        - "--stacktrace"
     expectation:
       success:
-        - ":full:generateMetadataFileForJavaOSSRHPublication"
         - ":full:generateMetadataFileForJsPublication"
         - ":full:generateMetadataFileForJvmPublication"
         - ":full:generateMetadataFileForKotlinMultiplatformPublication"
@@ -308,7 +331,6 @@ tests:
         - "publishProjectToMavenLocal"
         - "printMavenLocal"
       options:
-        - "--stacktrace"
         - "--continue"
     expectation:
       success:
@@ -331,6 +353,46 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom
+          trim: true
+          contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>full</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
+            - |
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-common</artifactId>
+            - |
+              <dependency>
+                <groupId>io.github.gciatto</groupId>
+                <artifactId>subproject-mp</artifactId>
+                <version>1.0.0</version>
+                <scope>runtime</scope>
+              </dependency>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/full-js/maven-metadata-local.xml
@@ -341,6 +403,43 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom
+          trim: true
+          contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>full-js</artifactId>
+            - <version>1.0.0</version>
+            - <packaging>klib</packaging>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
+            - |
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-js</artifactId>
+            - |
+              <dependency>
+                <groupId>io.github.gciatto</groupId>
+                <artifactId>subproject-mp-js</artifactId>
+                <version>1.0.0</version>
+                <scope>compile</scope>
+              </dependency>
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/full-jvm/maven-metadata-local.xml
@@ -351,6 +450,42 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom
+          trim: true
+          contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>full-jvm</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
+            - |
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+            - |
+              <dependency>
+                <groupId>io.github.gciatto</groupId>
+                <artifactId>subproject-mp-jvm</artifactId>
+                <version>1.0.0</version>
+                <scope>compile</scope>
+              </dependency>
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-js/maven-metadata-local.xml
@@ -361,6 +496,35 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom
+          trim: true
+          contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>subproject-js</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
+            - |
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-js</artifactId>
         - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/maven-metadata-local.xml
@@ -371,6 +535,35 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom
+          trim: true
+          contents:
+            - <groupId>io.github.gciatto</groupId>
+            - <artifactId>subproject-jvm</artifactId>
+            - <version>1.0.0</version>
+            - <name>Test0</name>
+            - <description>Test project for kt-mpp plugin</description>
+            - <url>https://github.com/gciatto/kt-mpp</url>
+            - |
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+            - |
+              <scm>
+                <connection>git@github.com:gciatto/kt-mpp.git</connection>
+                <developerConnection>git@github.com:gciatto/kt-mpp.git</developerConnection>
+                <url>https://github.com/gciatto/kt-mpp</url>
+              </scm>
+            - |
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-mp/maven-metadata-local.xml
@@ -402,3 +595,18 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom
         - name: build/.m2/repository/io/github/gciatto/subproject-mp-jvm/1.0.0/subproject-mp-jvm-1.0.0.pom.asc
+  - description: "NPM package is correctly generated"
+    configuration:
+      tasks:
+        - "publishJsPackageToNpmjsRegistry"
+    expectation:
+      success:
+        - ":full:publishJsPackageToNpmjsRegistry"
+      output_contains:
+        - "npm notice Publishing to https://registry.npmjs.org// with tag latest and public access (dry-run)"
+        - "+ @myOrg/test0-full@1.0.0"
+      output_matches:
+        - "npm notice name:\\s+@myOrg/test0-full"
+        - "npm notice version:\\s+1\\.0\\.0"
+        - "npm notice filename:\\s+myOrg-test0-full-1\\.0\\.0\\.tgz"
+        - "npm notice total files:\\s+11"

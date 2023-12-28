@@ -5,6 +5,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
@@ -18,7 +19,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.publishOnCentral)
-    alias(libs.plugins.multiJvmTesting)
     alias(libs.plugins.taskTree)
 }
 
@@ -47,9 +47,17 @@ repositories {
     mavenCentral()
 }
 
-multiJvm {
-    jvmVersionForCompilation.set(11)
-    maximumSupportedJvmVersion.set(latestJavaSupportedByGradle)
+val jvmVersion = libs.versions.jvm.map { JavaVersion.toVersion(it) }.getOrElse(JavaVersion.VERSION_11)
+
+java {
+    targetCompatibility = jvmVersion
+    sourceCompatibility = jvmVersion
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = jvmVersion.toString()
+    }
 }
 
 dependencies {
@@ -70,11 +78,13 @@ dependencies {
 }
 
 // Enforce Kotlin version coherence
-configurations.all {
+configurations.matching { "detekt" !in it.name }.all {
+    val configuration = this
     resolutionStrategy.eachDependency {
         if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {
             useVersion(KOTLIN_VERSION)
-            because("All Kotlin modules should use the same version, and compiler uses $KOTLIN_VERSION")
+            val artifact = "${requested.group}:${requested.name}"
+            because("Force version $version for $artifact in configuration ${configuration.name}")
         }
     }
 }
@@ -270,10 +280,10 @@ gradlePlugin {
                 doLast {
                     @Suppress("ktlint")
                     val text = "@file:Suppress(\"MaxLineLength\", \"ktlint\")\n\n" +
-                        "package ${project.group}.kt.mpp\n\n" +
-                        "object Plugins {\n" +
-                        pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
-                        "}\n"
+                            "package ${project.group}.kt.mpp\n\n" +
+                            "object Plugins {\n" +
+                            pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
+                            "}\n"
                     targetFile.writeText(text)
                 }
             }
@@ -304,6 +314,16 @@ tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
     }
 }
 
+tasks.create("uploadToMavenCentralNexus") {
+    group = "publishing"
+    description = "Quick upload relevant publication to Nexus, altogether"
+    dependsOn(
+        "uploadAllPluginMarkersToMavenCentralNexus",
+        "uploadKotlinOSSRHToMavenCentralNexus",
+        "uploadPluginMavenToMavenCentralNexus",
+    )
+}
+
 fun testDirectories(): Set<File> = buildSet {
     sourceSets.test {
         resources.srcDirs.forEach { testResourcesDir ->
@@ -324,13 +344,5 @@ for (testDir in testDirectories()) {
         destinationDir = testDir.resolve("gradle")
         tasks.getByName("processTestResources").dependsOn(this)
         tasks.withType(Cpd::class.java) { dependsOn(this@create) }
-    }
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.jetbrains.kotlin") {
-            useVersion(libs.versions.kotlin.get())
-        }
     }
 }

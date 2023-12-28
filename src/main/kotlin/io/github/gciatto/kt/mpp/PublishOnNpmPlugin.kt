@@ -4,8 +4,6 @@ import dev.petuska.npm.publish.NpmPublishPlugin
 import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.NpmPackage
 import dev.petuska.npm.publish.extension.domain.NpmRegistry
-import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
-import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 
@@ -13,50 +11,32 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     context (Project)
     private fun configureRegistry(registry: NpmRegistry) {
         registry.uri.map { log("configure publication on registry: $it") }
-        getOptionalProperty("npmToken")?.let {
-            registry.authToken.set(it)
-            log("use NPM token for publication: ${it.asPassword()}")
-        }
-    }
-
-    override fun PropertiesHelperExtension.declareProperties() {
-        addProperty(npmOrganization)
-        addProperty(npmDryRun)
-        addProperty(npmRepo)
-        addProperty(npmToken)
-        addProperty(projectHomepage)
-        addProperty(projectDescription)
-        addProperty(projectLicense)
-        addProperty(issuesUrl)
-        addProperty(issuesEmail)
-        addProperty(scmUrl)
-        addProperty(developerIdName)
-        addProperty(developerIdUrl)
-        addProperty(developerIdEmail)
-        addProperty(developerIdOrg)
-        addProperty(orgName)
-        addProperty(orgUrl)
+        registry.authToken.set(multiPlatformHelper.npmToken.getLogging("use NPM token for publication: %s"))
     }
 
     @Suppress("CyclomaticComplexMethod")
     override fun Project.applyThisPlugin() {
         val npmPublish = apply(NpmPublishPlugin::class)
         log("apply ${npmPublish::class.java.name} plugin")
-        plugins.withId("org.danilopianini.publish-on-central") {
-            configure(PublishOnCentralExtension::class) {
-                configureNpmPublishing(this)
-            }
+        if (multiPlatformHelper.jsBinaryType.let { it.isPresent && it.get() != JsBinaryType.LIBRARY }) {
+            log(
+                "publication on NPM via ${npmPublish::class.java.name} plugin will fail because " +
+                    "jsBinaryType is not set to LIBRARY",
+                LogLevel.WARN,
+            )
         }
+        configureNpmPublishing()
     }
 
     context (Project)
     private fun NpmPublishExtension.configureNpmRepositories() {
         registries { registries ->
-            val npmRepo = getOptionalProperty("npmRepo")
-            if (npmRepo.isNullOrBlank() || npmRepo == getPropertyDescriptor("npmRepo").defaultValue) {
+            val npmRepo = multiPlatformHelper.npmRepo.orNull
+            if (npmRepo === null || "npmjs.org" in npmRepo.host) {
                 registries.npmjs { configureRegistry(it) }
             } else {
-                registries.create("custom") {
+                val name = npmRepo.host.split('.').joinToString("") { it.capital() }
+                registries.create(name) {
                     it.uri.set(uri(npmRepo))
                     configureRegistry(it)
                 }
@@ -65,99 +45,57 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     }
 
     context (Project, NpmPublishExtension)
-    private fun NpmPackage.configureNpmPackages(centralExtension: PublishOnCentralExtension) {
-        project.afterEvaluate { _ ->
-            packageName.set(
-                jsPackageName.also {
-                    log("set JS package name to $it")
-                },
-            )
-        }
-        this.packageJson { pkg ->
-            pkg.homepage.set(
-                centralExtension.projectUrl.map {
-                    log("set package.json homepage to $it")
-                    it
-                },
-            )
-            pkg.description.set(
-                centralExtension.projectDescription.map {
-                    log("set package.json description to $it")
-                    it
-                },
-            )
-            pkg.license.set(
-                centralExtension.licenseName.map {
-                    log("set package.json license to $it")
-                    it
-                },
-            )
-            val developers = project.getAllDevs()
+    private fun NpmPackage.configureNpmPackages() {
+        val mpp = multiPlatformHelper
+        packageName.set(mpp.jsPackageName.getLogging("set NPM package name: %s"))
+        packageJson { pkg ->
+            pkg.homepage.set(mpp.projectHomepage.asStringLogging("set package.json homepage: %s"))
+            pkg.description.set(mpp.projectDescription.getLogging("set package.json description: %s"))
+            pkg.license.set(mpp.projectLicense.getLogging("set package.json license: %s"))
+            val developers = mpp.developers.toList()
             if (developers.isNotEmpty()) {
-                val mainDeveloper = developers.first()
+                val mainDeveloper = developers[0]
                 pkg.author.set(pkg.person(mainDeveloper))
                 log("set package.json author to $mainDeveloper")
             }
-            pkg.contributors.set(
-                developers.asSequence()
-                    .drop(1)
-                    .map { pkg.person(it) }
-                    .toCollection(mutableListOf())
-                    .also {
-                        val contributorsList = it.joinToString(prefix = "[", postfix = "]")
-                        log("add package.json contributors: $contributorsList")
-                    },
-            )
-            pkg.private.set(false)
-            pkg.bugs { bugs ->
-                getOptionalProperty("issuesUrl")?.let {
-                    bugs.url.set(it)
-                    log("set package.json bug URL to $it")
-                }
-                getOptionalProperty("issuesEmail")?.let {
-                    bugs.email.set(it)
-                    log("set package.json bug email to $it")
-                }
+            if (developers.size > 1) {
+                val contributors = developers.subList(1, developers.size)
+                pkg.contributors.set(contributors.map { pkg.person(it) })
+                val contributorsList = contributors.joinToString(prefix = "[", postfix = "]")
+                log("add package.json contributors: $contributorsList")
             }
+            pkg.private.set(false)
+            log("about to set package.json bugs")
+            pkg.bugs { bugs ->
+                bugs.url.set(mpp.issuesUrl.asStringLogging("set package.json bug URL to %s"))
+                bugs.email.set(mpp.issuesEmail.getLogging("set package.json bug email to %s"))
+            }
+            log("about to set package.json repositories")
             pkg.repository { repos ->
                 repos.type.set("git")
-                repos.url.set(
-                    centralExtension.scmConnection.map {
-                        log("set package.json repo URL to $it")
-                        it
-                    },
-                )
+                repos.url.set(mpp.scmUrl.asStringLogging("set package.json repo URL to %s"))
             }
+            log("overridden package.json: ${pkg.finalise()}")
         }
     }
 
-    private fun Project.configureNpmPublishing(centralExtension: PublishOnCentralExtension) =
+    private fun Project.configureNpmPublishing() =
         configure(NpmPublishExtension::class) {
-            getOptionalProperty("npmOrganization")?.let {
-                if (it.isNotBlank()) {
-                    organization.set(it)
-                    log("set NPM organization: $it")
-                }
-            }
+            val mpp = multiPlatformHelper
+            organization.set(mpp.npmOrganization.getLogging("set NPM organization: %s"))
             listOf(project, rootProject).map { it.file("README.md") }.firstOrNull { it.exists() }?.let {
                 readme.set(it)
                 log("include file ${it.path} into NPM publication")
             }
             syncNpmVersionWithProject()
             // bundleKotlinDependencies.set(true)
-            getBooleanProperty("npmDryRun").let {
-                if (it) {
-                    log(
-                        "dry-run mode for NPM publishing plugin: no package will actually be release on NPM!",
-                        LogLevel.WARN,
-                    )
-                }
-            }
+            dry.set(mpp.npmDryRun.getLogging("set NPM dry run: %s"))
             configureNpmRepositories()
             packages { packages ->
                 packages.all { pkg ->
-                    pkg.configureNpmPackages(centralExtension)
+                    pkg.configureNpmPackages()
                 }
             }
+            version.set(project.provider { project.npmCompliantVersion })
         }
 }

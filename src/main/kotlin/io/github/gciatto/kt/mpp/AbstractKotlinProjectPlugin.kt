@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsBinaryContainer
 import java.util.Locale
 import kotlin.jvm.optionals.asSequence
 
@@ -99,21 +100,21 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun Project.configureKotlinVersionFromCatalogIfPossible() {
-        val catalog = getOptionalProperty("versionsFromCatalog")?.takeIf { it.isNotBlank() }
+        val catalog = multiPlatformHelper.versionsFromCatalog.orNull
         val version = getVersionFromCatalog("kotlin", catalog)
         version?.requiredVersion?.let { kotlinVersion(it) }
     }
 
     protected fun Project.configureJvmVersionFromCatalogIfPossible() {
-        val catalog = getOptionalProperty("versionsFromCatalog")?.takeIf { it.isNotBlank() }
+        val catalog = multiPlatformHelper.versionsFromCatalog.orNull
         val version = getVersionFromCatalog("jvm", catalog)
         version?.requiredVersion?.let { jvmVersion(it) }
     }
 
     protected fun Project.configureNodeVersionFromCatalogIfPossible() {
-        val catalog = getOptionalProperty("versionsFromCatalog")?.takeIf { it.isNotBlank() }
+        val catalog = multiPlatformHelper.versionsFromCatalog.orNull
         val version = getVersionFromCatalog("node", catalog)
-        nodeVersion(provider { version?.requiredVersion }, getOptionalProperty("nodeVersion"))
+        nodeVersion(provider { version?.requiredVersion }, multiPlatformHelper.nodeVersion.orNull)
     }
 
     protected fun kotlinPlugin(name: String = targetName) =
@@ -121,34 +122,34 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
 
     context(Project)
     protected fun KotlinJvmOptions.configureJvmKotlinOptions(target: String) {
-        val ktCompilerArgsJvm = getProperty("ktCompilerArgsJvm").split(";").filter { it.isNotBlank() }
-        if (ktCompilerArgsJvm.isNotEmpty()) {
-            freeCompilerArgs += ktCompilerArgsJvm
-            log("add JVM-specific free compiler args for $target: ${ktCompilerArgsJvm.joinToString()}")
+        multiPlatformHelper.ktCompilerArguments.configureEach {
+            freeCompilerArgs += it
+            log("add JVM-specific free compiler arg for $target: $it")
         }
     }
 
     context(Project)
     protected fun KotlinJsOptions.configureJsKotlinOptions(target: String) {
         main = "noCall"
-        log("configure kotlin JS compiler to avoid calling main() in $target")
-        val ktCompilerArgsJs = getProperty("ktCompilerArgsJs").split(";").filter { it.isNotBlank() }
-        if (ktCompilerArgsJs.isNotEmpty()) {
-            freeCompilerArgs += ktCompilerArgsJs
-            log("add JS-specific free compiler args for $target: ${ktCompilerArgsJs.joinToString()}")
+        multiPlatformHelper.ktCompilerArguments.configureEach {
+            freeCompilerArgs += it
+            log("add JVM-specific free compiler arg for $target: $it")
+        }
+        multiPlatformHelper.ktCompilerArgumentsJs.configureEach {
+            freeCompilerArgs += it
+            log("add JS-specific free compiler arg for $target: $it")
         }
     }
 
     context(Project)
     protected fun KotlinCommonOptions.configureKotlinOptions(target: String) {
-        allWarningsAsErrors = getBooleanProperty("allWarningsAsErrors")
+        allWarningsAsErrors = multiPlatformHelper.allWarningsAsErrors.get()
         if (allWarningsAsErrors) {
             log("consider all warnings as errors when compiling Kotlin sources in $target")
         }
-        val ktCompilerArgs = getProperty("ktCompilerArgs").split(";").filter { it.isNotBlank() }
-        if (ktCompilerArgs.isNotEmpty()) {
-            freeCompilerArgs += ktCompilerArgs
-            log("add free compiler args for $target: ${ktCompilerArgs.joinToString()}")
+        multiPlatformHelper.ktCompilerArguments.configureEach {
+            freeCompilerArgs += it
+            log("add free compiler arg for $target: $it")
         }
     }
 
@@ -222,7 +223,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun Project.addMultiplatformTaskAliases(target: String) {
-        tasks.named("test").configure {
+        tasks.maybeCreate("test").let {
             it.dependsOn("${target}Test")
             log("let task ${it.path} be triggered by ${it.sibling("test")}")
         }
@@ -242,11 +243,26 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
                 Action {
                     it.useMocha {
                         log("use Mocha as JS test framework")
-                        timeout = getProperty("mochaTimeout")
+                        timeout = project.multiPlatformHelper.mochaTimeout.orNull ?: timeout
                         log("set Mocha per-test-case timeout to $timeout")
                     }
                 },
             )
+        }
+    }
+
+    context(Project)
+    protected fun KotlinJsBinaryContainer.configureAutomatically() {
+        when (multiPlatformHelper.jsBinaryType.orNull) {
+            JsBinaryType.LIBRARY -> {
+                library()
+                log("configure kotlin js to produce a library")
+            }
+            JsBinaryType.EXECUTABLE -> {
+                executable()
+                log("configure kotlin js to produce an executable")
+            }
+            else -> {}
         }
     }
 }

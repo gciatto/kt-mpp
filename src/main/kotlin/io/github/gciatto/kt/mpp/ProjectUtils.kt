@@ -14,6 +14,7 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
@@ -31,6 +32,9 @@ internal val Project.gradlePropertiesFile: File
 internal val Project.gradlePropertiesPath: String
     get() = gradlePropertiesFile.path
 
+internal val Project.multiPlatformHelper: MultiPlatformHelperExtension
+    get() = extensions.getByType(MultiPlatformHelperExtension::class.java)
+
 fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
     logger.log(logLevel, "$name: $message")
 }
@@ -39,15 +43,19 @@ fun Project.kotlinVersion(version: String) = kotlinVersion(provider { version })
 
 fun Project.kotlinVersion(provider: Provider<String>) {
     val version = provider.getOrElse(KotlinVersion.CURRENT.toString())
-    configurations.all { configuration ->
+    configurations.matching { "detekt" !in it.name }.all { configuration ->
         configuration.resolutionStrategy.eachDependency { dependency ->
             if (dependency.requested.let { it.group == "org.jetbrains.kotlin" && it.name.startsWith("kotlin") }) {
                 dependency.useVersion(version)
-                dependency.because("All Kotlin modules should use the same version, and compiler uses $version")
+                dependency.because(
+                    "All Kotlin-related dependencies should use the same version," +
+                        "and user selected version $version",
+                )
+                val artifact = "${dependency.requested.group}:${dependency.requested.name}"
+                log("force version $version for dependency $artifact in configuration ${configuration.name}")
             }
         }
     }
-    log("enforce version for Kotlin dependencies: $version")
 }
 
 private fun String.getAsFile(charset: Charset = Charsets.UTF_8) =
@@ -80,6 +88,12 @@ fun Project.jvmVersion(provider: Provider<String>) {
             jvmTarget = version.toString()
             log("set $path.jvmTarget=$jvmTarget")
         }
+    }
+    tasks.withType<JavaCompile> {
+        sourceCompatibility = version.toString()
+        log("set $path.sourceCompatibility=$sourceCompatibility")
+        targetCompatibility = version.toString()
+        log("set $path.targetCompatibility=$targetCompatibility")
     }
 }
 
@@ -158,9 +172,11 @@ fun Project.ifAllPluginsAltogether(name: Any, vararg names: Any, action: () -> U
     ifAllPluginsAltogether(listOf(name, *names), action)
 }
 
-val Project.jsPackageName: String
+internal val Project.jsPackageName: String
     get() = if (project == rootProject) {
         rootProject.name
     } else {
         "${rootProject.name}-${project.name}"
     }
+
+internal fun String.toURL(): java.net.URL = java.net.URI.create(this).toURL()

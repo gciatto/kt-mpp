@@ -15,6 +15,7 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
         configureNodeVersionFromCatalogIfPossible()
         configure(KotlinJsProjectExtension::class) {
             js {
+                binaries.configureAutomatically()
                 useCommonJs()
                 log("configure kotlin js to use CommonJS")
                 compilations.all { compilation ->
@@ -26,7 +27,8 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
                 configureNodeJs()
                 sourceSets.getByName("main") {
                     dependencies {
-                        addMainDependencies(project, target = "js", skipBom = !getBooleanProperty("useKotlinBom"))
+                        val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
+                        addMainDependencies(project, target = "js", skipBom = !useBom)
                     }
                 }
                 sourceSets.getByName("test") {
@@ -37,15 +39,5 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
             }
         }
         addPlatformSpecificTaskAliases()
-    }
-
-    override fun PropertiesHelperExtension.declareProperties() {
-        addProperty(allWarningsAsErrors)
-        addProperty(ktCompilerArgs)
-        addProperty(ktCompilerArgsJs)
-        addProperty(mochaTimeout)
-        addProperty(versionsFromCatalog)
-        addProperty(nodeVersion)
-        addProperty(useKotlinBom)
     }
 }

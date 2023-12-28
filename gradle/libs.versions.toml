@@ -4,7 +4,7 @@ dokka = "1.9.10"
 jvm = "11"
 konf = "1.1.2"
 kotest = "5.8.0"
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 ktlint = "11.6.1"
 node = "18-latest"
 publishOnCentral = "5.0.22"
@@ -36,6 +36,5 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-qa = "org.danilopianini.gradle-kotlin-qa:0.53.0"
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ktlint-idea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
-multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.5.7"
 publishOnCentral = { id = "org.danilopianini.publish-on-central", version.ref = "publishOnCentral" }
 taskTree = "com.dorongold.task-tree:2.1.1"
