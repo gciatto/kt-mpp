@@ -5,6 +5,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
@@ -18,7 +19,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.publishOnCentral)
-    alias(libs.plugins.multiJvmTesting)
     alias(libs.plugins.taskTree)
 }
 
@@ -47,9 +47,17 @@ repositories {
     mavenCentral()
 }
 
-multiJvm {
-    jvmVersionForCompilation.set(11)
-    maximumSupportedJvmVersion.set(latestJavaSupportedByGradle)
+val jvmVersion = libs.versions.jvm.map { JavaVersion.toVersion(it) }.getOrElse(JavaVersion.VERSION_11)
+
+java {
+    targetCompatibility = jvmVersion
+    sourceCompatibility = jvmVersion
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = jvmVersion.toString()
+    }
 }
 
 dependencies {
