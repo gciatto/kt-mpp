@@ -6,6 +6,7 @@ import kotlin.streams.asSequence
 
 object Root : ConfigSpec("") {
     val tests by required<List<Test>>()
+    val options by optional(emptyList<String>())
 }
 
 data class Test(

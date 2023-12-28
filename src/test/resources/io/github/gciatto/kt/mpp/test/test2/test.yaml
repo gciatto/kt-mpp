@@ -1,10 +1,10 @@
+options:
+  - "--stacktrace"
 tests:
   - description: "Multi-platform root-project retrieves dependencies correctly"
     configuration:
       tasks:
         - ":build"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':build'
@@ -12,8 +12,6 @@ tests:
     configuration:
       tasks:
         - ":tasks"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':tasks'
@@ -25,8 +23,6 @@ tests:
     configuration:
       tasks:
         - ":showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':showPublications'
@@ -38,7 +34,6 @@ tests:
         - "publishProjectToMavenLocal"
         - "printMavenLocal"
       options:
-        - "--stacktrace"
         - "--continue"
     expectation:
       success:

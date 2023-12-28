@@ -1,11 +1,10 @@
+options:
+  - "--stacktrace"
 tests:
   - description: "Projects are auto-assigned with type correctly"
     configuration:
       tasks:
         - "test"
-      options:
-        - "--stacktrace"
-        - --info
     expectation:
       success:
         - ':full:jvmTest'

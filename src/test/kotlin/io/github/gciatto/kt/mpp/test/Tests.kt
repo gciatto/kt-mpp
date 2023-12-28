@@ -32,9 +32,10 @@ class Tests : StringSpec(
                 val testConfiguration = Config {
                     addSpec(Root)
                 }.from.yaml.inputStream(it.open())
-                testConfiguration[Root.tests].map { test -> test to yamlFile.parentFile }
+                val sharedOptions = testConfiguration[Root.options]
+                testConfiguration[Root.tests].map { test -> Triple(test, yamlFile.parentFile, sharedOptions) }
             }
-            .forEach { (test, location) ->
+            .forEach { (test, location, options) ->
                 log.debug("Test to be executed: $test from $location")
                 val testFolder = folder {
                     location.copyRecursively(this.root)
@@ -44,7 +45,7 @@ class Tests : StringSpec(
                     val result = GradleRunner.create()
                         .withProjectDir(testFolder.root)
                         .withPluginClasspath()
-                        .withArguments(test.configuration.tasks + test.configuration.options)
+                        .withArguments(test.configuration.tasks + options + test.configuration.options)
 //                        .withDebug(true)
                         .run { if (test.expectation.failure.isEmpty()) build() else buildAndFail() }
                     println(result.tasks)

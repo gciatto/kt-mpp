@@ -1,10 +1,11 @@
+options:
+  - "--stacktrace"
 tests:
   - description: Projects have detektAll task with correct dependencies
     configuration:
       tasks:
         - "check"
       options:
-        - "--stacktrace"
         - "--dry-run"
     expectation:
       output_contains:
@@ -36,8 +37,6 @@ tests:
     configuration:
       tasks:
         - ":tasks"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':tasks'
@@ -136,8 +135,6 @@ tests:
       tasks:
         - ":subproject-mp:tasks"
         - ":subproject-mp:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':subproject-mp:tasks'
@@ -152,8 +149,6 @@ tests:
       tasks:
         - ":full:tasks"
         - ":full:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         -  ':full:tasks'
@@ -168,8 +163,6 @@ tests:
       tasks:
         - ":subproject-jvm:tasks"
         - ":subproject-jvm:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:tasks"
@@ -185,7 +178,6 @@ tests:
         - ":subproject-jvm:publishProjectToMavenLocal"
       options:
         - "--dry-run"
-        - "--stacktrace"
     expectation:
       output_contains:
         - ":subproject-jvm:sourcesJar SKIPPED"
@@ -194,8 +186,6 @@ tests:
       tasks:
         - ":subproject-js:tasks"
         - ":subproject-js:showPublications"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':subproject-js:tasks'
@@ -210,8 +200,6 @@ tests:
     configuration:
       tasks:
         - ":subproject-other:tasks"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ':subproject-other:tasks'
@@ -222,7 +210,6 @@ tests:
         - "testClasses"
       options:
         - "--continue"
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:classes"
@@ -236,8 +223,6 @@ tests:
   - description: "Detekt task works and triggers sub-tasks"
     configuration:
       tasks: "detektAll"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:detekt"
@@ -259,8 +244,6 @@ tests:
   - description: "Running :full:test should test all platforms and compile all dependencies"
     configuration:
       tasks: ":full:test"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:compileKotlin"
@@ -277,8 +260,6 @@ tests:
   - description: "All sub-projects should have the same version of the rootProject"
     configuration:
       tasks: "printVersion"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":subproject-jvm:printVersion"
@@ -301,8 +282,6 @@ tests:
         - "generateMetadataFileForJvmPublication"
         - "generateMetadataFileForKotlinMultiplatformPublication"
         - "generateMetadataFileForKotlinOSSRHPublication"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":full:generateMetadataFileForJsPublication"
@@ -315,7 +294,6 @@ tests:
         - "publishProjectToMavenLocal"
         - "printMavenLocal"
       options:
-        - "--stacktrace"
         - "--continue"
     expectation:
       success:
@@ -549,8 +527,6 @@ tests:
     configuration:
       tasks:
         - "publishJsPackageToNpmjsRegistry"
-      options:
-        - "--stacktrace"
     expectation:
       success:
         - ":full:publishJsPackageToNpmjsRegistry"
