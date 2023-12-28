@@ -178,3 +178,5 @@ internal val Project.jsPackageName: String
     } else {
         "${rootProject.name}-${project.name}"
     }
+
+internal fun String.toURL(): java.net.URL = java.net.URI.create(this).toURL()

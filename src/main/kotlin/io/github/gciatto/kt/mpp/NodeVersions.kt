@@ -1,3 +1,4 @@
+import io.github.gciatto.kt.mpp.toURL
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -5,12 +6,12 @@ import kotlin.streams.asSequence
 
 object NodeVersions {
     private fun getLatestVersionOfWithMajor(major: String): String {
-        val url = URL("https://nodejs.org/dist/latest-v$major.x/")
+        val url = "https://nodejs.org/dist/latest-v$major.x/".toURL()
         return findVersion(url) ?: error("Cannot retrieve last version of node $major")
     }
 
     private fun getLatestVersion(): String {
-        val url = URL("https://nodejs.org/dist/latest/")
+        val url = "https://nodejs.org/dist/latest/".toURL()
         return findVersion(url) ?: error("Cannot retrieve last version of node")
     }
 

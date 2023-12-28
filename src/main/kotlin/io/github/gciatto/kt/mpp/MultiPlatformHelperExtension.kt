@@ -110,7 +110,7 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
             if (it.isBlank()) {
                 null
             } else {
-                val url = runCatching { URL(it) }
+                val url = runCatching { it.toURL() }
                 if (url.isFailure) {
                     project.log("invalid URL: $it", LogLevel.WARN)
                 }
