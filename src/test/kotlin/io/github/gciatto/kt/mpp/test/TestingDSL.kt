@@ -1,8 +1,8 @@
 package io.github.gciatto.kt.mpp.test
 
 import com.uchuhimo.konf.ConfigSpec
-import org.gradle.internal.impldep.org.apache.commons.lang.StringUtils
 import java.io.File
+import kotlin.streams.asSequence
 
 object Root : ConfigSpec("") {
     val tests by required<List<Test>>()
@@ -39,38 +39,41 @@ enum class Permission(private val hasPermission: File.() -> Boolean) {
 data class ExistingFile(
     val name: String,
     val findRegex: List<String> = emptyList(),
-    val content: String? = null,
+    val contents: List<String> = emptyList(),
     val trim: Boolean = false,
     val permissions: List<Permission> = emptyList(),
 ) {
+    private fun Sequence<String>.trimLinesIfNecessary(): String =
+        if (trim) { map(String::trim) } else { this }.joinToString("\n")
+
+    private val File.text: String
+        get() = bufferedReader().use {
+            it.lines().asSequence().trimLinesIfNecessary()
+        }
+
+    private val actualContents: List<String> by lazy {
+        contents.map {
+            it.lineSequence().trimLinesIfNecessary()
+        }
+    }
+
     fun validate(actualFile: File): Unit = with(actualFile) {
         require(exists()) {
             "File $name does not exist."
         }
-        if (content != null) {
-            val text = readText()
-            require(text == content) {
-                """
-                Content of $name does not match expectations.
-                
-                Expected:
-                $content
-                
-                Actual:
-                $text
-                
-                Difference starts at index ${StringUtils.indexOfDifference(content, text)}:
-                ${StringUtils.difference(content, text)}
-                """.trimIndent()
+        if (actualContents.isNotEmpty()) {
+            val text = text
+            for (content in actualContents) {
+                require(content in text) {
+                    "Content of $this does not match contain the expected content:\n\t" +
+                        content.lines().joinToString("\n\t")
+                }
             }
         }
         findRegex.forEach { regexString ->
             val regex = Regex(regexString)
             requireNotNull(readLines().find { regex.matches(it) }) {
-                """
-                None of the lines in $name matches the regular expression $findRegex. File content:
-                ${readText()}
-                """.trimIndent()
+                "None of the lines in $this matches the regular expression $findRegex"
             }
         }
         permissions.forEach { it.requireOnFile(this) }

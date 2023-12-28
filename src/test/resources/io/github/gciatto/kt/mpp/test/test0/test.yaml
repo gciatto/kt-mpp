@@ -340,6 +340,39 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom
+          trim: true
+          contents:
+            - |
+              <groupId>io.github.gciatto</groupId>
+              <artifactId>full</artifactId>
+              <version>1.0.0</version>
+              <name>Test0</name>
+              <description>Test project for kt-mpp plugin</description>
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+              <scm />
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-common</artifactId>
+            - |
+              <dependency>
+                <groupId>io.github.gciatto</groupId>
+                <artifactId>subproject-mp</artifactId>
+                <version>1.0.0</version>
+                <scope>runtime</scope>
+              </dependency>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
         - name: build/.m2/repository/io/github/gciatto/full/1.0.0/full-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/full-js/maven-metadata-local.xml
@@ -350,6 +383,36 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.klib.asc
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom
+          trim: true
+          contents:
+            - |
+              <groupId>io.github.gciatto</groupId>
+              <artifactId>full-js</artifactId>
+              <version>1.0.0</version>
+              <packaging>klib</packaging>
+              <name>Test0</name>
+              <description>Test project for kt-mpp plugin</description>
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+              <scm/>
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-js</artifactId>
+            - |
+              <dependency>
+                <groupId>io.github.gciatto</groupId>
+                <artifactId>subproject-mp-js</artifactId>
+                <version>1.0.0</version>
+                <scope>compile</scope>
+              </dependency>
         - name: build/.m2/repository/io/github/gciatto/full-js/1.0.0/full-js-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/full-jvm/maven-metadata-local.xml
@@ -360,6 +423,35 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.jar.asc
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom
+          trim: true
+          contents:
+            - |
+              <groupId>io.github.gciatto</groupId>
+              <artifactId>full-jvm</artifactId>
+              <version>1.0.0</version>
+              <name>Test0</name>
+              <description>Test project for kt-mpp plugin</description>
+              <licenses>
+                <license>
+                  <name>Apache-2.0</name>
+                  <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+              </licenses>
+              <scm/>
+              <issueManagement>
+                <url>https://github.com/gciatto/kt-mpp/issues</url>
+              </issueManagement>
+            - |
+              <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+            - |
+              <dependency>
+                <groupId>io.github.gciatto</groupId>
+                <artifactId>subproject-mp-jvm</artifactId>
+                <version>1.0.0</version>
+                <scope>compile</scope>
+              </dependency>
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-js/maven-metadata-local.xml
