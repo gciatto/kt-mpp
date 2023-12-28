@@ -62,8 +62,9 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 configureJvmKotlinOptions(targetCompilationId(compilation))
             }
         }
+        val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
         dependenciesFor("jvmMain") {
-            addMainDependencies(project, "jdk8", skipBom = true)
+            addMainDependencies(project, "jdk8", skipBom = !useBom)
         }
         dependenciesFor("jvmTest") {
             addTestDependencies(project, "junit", skipAnnotations = true)
@@ -79,8 +80,9 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             }
         }
         configureNodeJs()
+        val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
         dependenciesFor("jsMain") {
-            addMainDependencies(project, "js", skipBom = true)
+            addMainDependencies(project, "js", skipBom = !useBom)
         }
         dependenciesFor("jsTest") {
             addTestDependencies(project, "js", skipAnnotations = true)
