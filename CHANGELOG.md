@@ -1,3 +1,34 @@
+## [3.0.0](https://github.com/gciatto/kt-mpp/compare/2.3.4...3.0.0) (2023-12-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* use kt 1.9.22 (#233)
+
+### Features
+
+* use kt 1.9.22 ([#233](https://github.com/gciatto/kt-mpp/issues/233)) ([fc2d9a1](https://github.com/gciatto/kt-mpp/commit/fc2d9a1ef8037290e8d042b848136399f7c195c4)), closes [#149](https://github.com/gciatto/kt-mpp/issues/149)
+
+
+### Dependency updates
+
+* **deps:** update dependency dev.petuska:npm-publish-gradle-plugin to v3.4.2 ([8be43fa](https://github.com/gciatto/kt-mpp/commit/8be43fadda0ed80268ac88f2c77e225fb3d3cdda))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.81 ([cce7868](https://github.com/gciatto/kt-mpp/commit/cce7868dde787bd933f3b48f741299f5e649c5b6))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.82 ([7174423](https://github.com/gciatto/kt-mpp/commit/7174423bf8be17fc59e73f93592def19e72fe0c6))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.83 ([f0c9739](https://github.com/gciatto/kt-mpp/commit/f0c97397c4a9d8e028efa7e3bcd1ed9936f65196))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.84 ([0e751e1](https://github.com/gciatto/kt-mpp/commit/0e751e1965c1c2fbf84ca547ca8a0b714f4c9a7b))
+* **deps:** update plugin com.gradle.enterprise to v3.16 ([6257a7b](https://github.com/gciatto/kt-mpp/commit/6257a7b10a3032e96faba740ce593499865a42d2))
+* **deps:** update plugin com.gradle.enterprise to v3.16.1 ([1e423bc](https://github.com/gciatto/kt-mpp/commit/1e423bc0fb0b890de5f6fec875c3fabe93a1814d))
+* **deps:** update plugin gitsemver to v2.0.5 ([fd3367d](https://github.com/gciatto/kt-mpp/commit/fd3367d4bf80081c3200e2f538b37b0ca6aba885))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v1.1.17 ([a7ece4d](https://github.com/gciatto/kt-mpp/commit/a7ece4d9cffdfab72ff4dede68f5dad63a5e609b))
+* **deps:** update publishoncentral to v5.0.22 ([ee396c6](https://github.com/gciatto/kt-mpp/commit/ee396c68d6d7aefae8b53922ddfa54f4eefdec9d))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v4.0.1 ([6a48cb7](https://github.com/gciatto/kt-mpp/commit/6a48cb721284ec50662efe4e679d8a88b9058c73))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.12 ([91176dd](https://github.com/gciatto/kt-mpp/commit/91176dd73b89c7ac59d39c82cebdc59680680687))
+
 ## [2.3.4](https://github.com/gciatto/kt-mpp/compare/2.3.3...2.3.4) (2023-11-29)
 
 
