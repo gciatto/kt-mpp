@@ -1,3 +1,42 @@
+## [4.0.0](https://github.com/gciatto/kt-mpp/compare/3.0.0...4.0.0) (2023-12-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* refactor code by using packages
+
+### Features
+
+* add support for shadow jars ([7b19c3f](https://github.com/gciatto/kt-mpp/commit/7b19c3fbb6ebd83628a822ac4dd6386998d423b6))
+* refactor code by using packages ([0e175c7](https://github.com/gciatto/kt-mpp/commit/0e175c7ecf3e9952d293e3e8381359523c920262))
+
+
+### Dependency updates
+
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.85 ([39c4cd6](https://github.com/gciatto/kt-mpp/commit/39c4cd603da4e85247098a55272710d1a7701414))
+* **deps:** update plugin kotlin-qa to v0.57.1 ([96ec84a](https://github.com/gciatto/kt-mpp/commit/96ec84a1c84186a97b38ddb4d79aa8f0537248b8))
+
+
+### Bug Fixes
+
+* lookup order for nodeVersion, jvmVersion, and kotlinVersion properties ([325cb36](https://github.com/gciatto/kt-mpp/commit/325cb361aef8fa97f584d37dde7488e4d116236c))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v3.6.0 ([fa3cd61](https://github.com/gciatto/kt-mpp/commit/fa3cd61cd7f10c13b58f9c251850e4effc8c94fa))
+* **deps:** update actions/checkout action to v4 ([02aedf0](https://github.com/gciatto/kt-mpp/commit/02aedf0717ab1183460e56653181954d77909175))
+* **deps:** update actions/setup-node action to v3.8.2 ([9ab0942](https://github.com/gciatto/kt-mpp/commit/9ab0942b706296d4f2080910ccc162b487c3e922))
+* **deps:** update actions/setup-node action to v4 ([9784993](https://github.com/gciatto/kt-mpp/commit/9784993764effa0a41329487fe2c4c32af22f177))
+* **deps:** update danysk/action-checkout action to v0.2.14 ([e21a7c0](https://github.com/gciatto/kt-mpp/commit/e21a7c0f0070e61e8bf39b70516a940b63b8cc24))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.12 ([2fcb5d9](https://github.com/gciatto/kt-mpp/commit/2fcb5d9d5851065d229cce1a130532b6e9ce1f6f))
+
+
+### General maintenance
+
+* improve readme ([96e3958](https://github.com/gciatto/kt-mpp/commit/96e3958a320db2baad0b9117741926fb309c75a1))
+* update readme ([8927d16](https://github.com/gciatto/kt-mpp/commit/8927d162b80998eb4cda9b17933ffdfe7aae8f9d))
+
 ## [3.0.0](https://github.com/gciatto/kt-mpp/compare/2.3.4...3.0.0) (2023-12-28)
 
 
