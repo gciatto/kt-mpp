@@ -39,6 +39,13 @@ fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
     logger.log(logLevel, "$name: $message")
 }
 
+fun Project.log(
+    message: String?,
+    vararg otherMessages: String?,
+    logLevel: LogLevel = LogLevel.INFO,
+    separator: String = "",
+) = log(listOfNotNull(message, *otherMessages).joinToString(separator), logLevel)
+
 fun Project.kotlinVersion(version: String) = kotlinVersion(provider { version })
 
 fun Project.kotlinVersion(provider: Provider<String>) {

@@ -55,6 +55,12 @@ interface MultiPlatformHelperExtension {
     val bugFinderConfigPath: Property<File>
     val bugFinderConfig: FileCollection
     val jsBinaryType: Property<JsBinaryType>
+    val fatJarPlatforms: DomainObjectSet<String>
+    val fatJarClassifier: Property<String>
+    val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>>
+    val fatJarEntryPoint: Property<String>
+    fun fatJarPlatformInclude(platform: String, vararg includes: String) =
+        includes.forEach { fatJarPlatformInclusions.add(platform to it) }
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -199,14 +205,11 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
 
     override val developers: DomainObjectCollection<Developer> = project.objects.domainObjectSet(Developer::class.java)
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    val ktCompilerArgs: Property<String> by propertyWithConvention("")
+    private val ktCompilerArgs: Property<String> by propertyWithConvention("")
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    val ktCompilerArgsJs: Property<String> by propertyWithConvention("")
+    private val ktCompilerArgsJs: Property<String> by propertyWithConvention("")
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    val ktCompilerArgsJvm: Property<String> by propertyWithConvention("")
+    private val ktCompilerArgsJvm: Property<String> by propertyWithConvention("")
 
     override val ktCompilerArguments: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
 
@@ -234,14 +237,57 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
         JsBinaryType.valueOf(it.uppercase(Locale.getDefault()))
     }
 
-    init {
+    internal val fatJarPlatformNames: Property<String> by propertyWithConvention("", ignoreBlank = false)
+
+    override val fatJarPlatforms: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
+
+    override val fatJarClassifier: Property<String> by propertyWithConvention("redist")
+
+    private val fatJarPlatformInclude: Property<String> by propertyWithConvention("")
+
+    @Suppress("UNCHECKED_CAST")
+    override val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>> =
+        project.objects.domainObjectSet(Pair::class.java) as DomainObjectSet<Pair<String, String>>
+
+    override val fatJarEntryPoint: Property<String> by propertyWithConvention()
+
+    private fun populateArgumentsFromArgs() {
         for ((string, collection) in listOf(
             ktCompilerArgs to ktCompilerArguments,
             ktCompilerArgsJvm to ktCompilerArgumentsJvm,
             ktCompilerArgsJs to ktCompilerArgumentsJs,
         )) {
-            collection.addAllLater(string.map { it.split("\\s*;\\s*") })
+            collection.addAllLater(string.separateBy(';'))
         }
+    }
+
+    private fun populateDevelopersFromProperties() {
         developers.addAllLater(project.provider { project.getAllDevs() })
+    }
+
+    internal fun populateFatJarPlatformsFromNames() {
+        fatJarPlatforms.addAllLater(fatJarPlatformNames.separateBy(';'))
+    }
+
+    private fun populateFatJarPlatformIncludesFromProperties() {
+        fun parse(input: String?) = input?.separateBy(';')
+            ?.flatMap { pair ->
+                val (key, values) = pair.separateBy(':').let { it[0] to it[1] }
+                values.separateBy(',').map { key to it }
+            } ?: emptyList()
+        fatJarPlatformInclusions.addAllLater(fatJarPlatformInclude.map { parse(it) })
+    }
+
+    private fun String.separateBy(separator: Char) =
+        split(separator).filter { it.isNotBlank() }.map { it.trim() }
+
+    private fun Provider<String>.separateBy(separator: Char) =
+        map { it.toString().separateBy(separator) }
+
+    init {
+        populateArgumentsFromArgs()
+        populateDevelopersFromProperties()
+        populateFatJarPlatformsFromNames()
+        populateFatJarPlatformIncludesFromProperties()
     }
 }

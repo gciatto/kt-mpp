@@ -232,7 +232,29 @@ tests:
         - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinOSSRHPublicationToMavenCentralRepository"
         - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinOSSRHPublicationToMavenLocal"
         - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadKotlinOSSRHToMavenCentralNexus"
-
+  - description: "Sub-project :full has shadow Jar tasks"
+    configuration:
+      tasks:
+        - "allShadowJars"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":full:shadowJar"
+        - ":full:shadowJarForMac"
+        - ":full:shadowJarForLinux"
+        - ":full:shadowJarForWin"
+        - ":full:allShadowJars"
+      file_exists:
+        - name: full/build/libs/test0-full-1.0.0-redist.jar
+        - name: full/build/libs/test0-full-1.0.0-redist-mac.jar
+        - name: full/build/libs/test0-full-1.0.0-redist-win.jar
+        - name: full/build/libs/test0-full-1.0.0-redist-linux.jar
+      output_contains:
+        - "full: configure task :full:shadowJar for assembling fat jars, with entry point org.example.MainKt, including all dependencies"
+        - "full: configure task :full:shadowJarForWin for assembling fat jars on win, with entry point org.example.MainKt, excluding dependencies for platforms [linux, mac]"
+        - "full: configure task :full:shadowJarForLinux for assembling fat jars on linux, with entry point org.example.MainKt, excluding dependencies for platforms [win, mac]"
+        - "full: configure task :full:shadowJarForMac for assembling fat jars on mac, with entry point org.example.MainKt, excluding dependencies for platforms [win]"
   - description: "Sub-project :subproject-other has no prior configuration"
     configuration:
       tasks:

@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.ktlint)
     implementation(libs.detekt)
     implementation(libs.publishOnCentral)
+    implementation(libs.shadowJar)
     testImplementation(gradleTestKit())
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)
@@ -269,6 +270,13 @@ gradlePlugin {
             descr = "multi-platform & multi-project helper plugin",
             klass = "MultiProjectHelperPlugin",
             moreTags = arrayOf(),
+        )
+
+        innerPlugin(
+            name = "fat-jar",
+            descr = "fat-jar creator plugin (currently: Shadow)",
+            klass = "FatJarPlugin",
+            moreTags = arrayOf("fat-jar", "uber-jar", "redist", "shadow"),
         )
 
         tasks.create("generatePluginsInfo") {

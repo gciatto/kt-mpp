@@ -22,6 +22,7 @@ kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref
 kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
 publishOnCentral = { module = "org.danilopianini:publish-on-central", version.ref = "publishOnCentral" }
 npmPublish = "dev.petuska:npm-publish-gradle-plugin:3.4.2"
+shadowJar = "com.github.johnrengelman:shadow:8.1.1"
 
 [bundles]
 kotlin-testing = [ "kotest-junit5-jvm", "kotest-assertions-core-jvm" ]
