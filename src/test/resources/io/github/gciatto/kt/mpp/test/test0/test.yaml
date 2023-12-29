@@ -136,9 +136,6 @@ tests:
         - "dokkaHtmlMultiModuleZip"
         # ktlint
         - "ktlintFormat"
-        - "ktlintApplyToIdea"
-        - "ktlintApplyToIdeaGlobally"
-        - "ktlintGenerateBaseline"
         - "ktlintCheck"
         # nodejs
         - "jsPackageJson"
