@@ -15,6 +15,7 @@ are available to serve the following use cases:
 * Kotlin documentation generation (via Dokka)
 * Maven artifacts publishing
 * NPM packages publishing (in case the JS platform is involved)
+* generation of fat-jars for Kotlin JVM and multiplatform projects (via Shadow)
 
 There are two supported usage modes (non mutually-exclusive):
 * selectively declare plugins on a per-(sub-)project basis
@@ -51,6 +52,8 @@ discussed in the following.
 
 - `io.github.gciatto.kt-mpp.`__`multi-project-helper`__: provides facilities to quickly apply subsets of the 
     aforementioned plugins to sub-projects, from the root project (see next section)
+
+- `io.github.gciatto.kt-mpp.`__`fat-jar`__: configures Shadow for generating fat-jars for Kotlin multiplatform/JVM (sub)-projects
 
 ## Configuring sub-projects from the root project
 
@@ -229,6 +232,24 @@ Overall, you may need to define, provide the following properties:
 
 - `versionsFromCatalog` (optional, default value: `""`): the name of the catalog from which Kotlin, JVM, and Node versions should be taken. Leave empty in case all declared catalogs should be considered, as well as if no one should.
 
+- `jsPackageName` (optional, default value: `"<rootProject.name>-<project.name>"`): the name of the NPM package to be generated for a Kotlin JS project. If missing or blank, the package name will be `<rootProject.name>-<project.name>`.
+
+- `bugFinderConfigPath` (optional, default value: `".detekt.yml"`): the path to the Detekt configuration file to be used for bug finding. If missing or blank, the default configuration will be used.
+
+- `jsBinaryType` (optional, default value: `"library"`): the type of binary to be generated for a Kotlin JS project (one of {`"executable"`, `"library"`, `"none"`).
+Publishing on NPM requires `"library"`.
+
+- `fatJarPlatformNames` (optional, default value: `""`): semi-colon-separated list of platforms for which fat-jars should be generated. If missing or blank, fat-jars will be generated for all platforms.
+E.g., for JavaFX applications, one may set this property to `"linux;win;mac;mac-aarch64"`.
+
+- `fatJarClassifier` (optional, default value: `"redist"`): the classifier to be used for fat-jars. If missing or blank, `"redist"` will be used.
+
+- `fatJarPlatformInclude` (optional, default value: `""`): map of platforms-specific dependencies to be included when generating fat-jars for multiplatform projects. 
+If missing or blank, only platform agnostic and specific dependencies will be included.
+E.g. `mac-aarch64: linux, mac; mac: linux; win: linux` will include `linux` dependencies for all platforms, `mac` dependencies for `mac-aarch64`, and `win` dependencies for `win`.
+
+- `fatJarEntryPoint` (optional, default value: `""`): the fully qualified name of the entry point of the fat-jar. If missing or blank, the fat-jar won't have any entry point.
+
 ## How to use
 
 1. Create a `gradle/libs.versions.toml` file in your project's root directory, e.g.:
@@ -254,6 +275,7 @@ Overall, you may need to define, provide the following properties:
     ktMpp-jvmOnly = { id = "io.github.gciatto.kt-mpp.jvm-only", version.ref = "ktMpp" }
     ktMpp-multiplatform = { id = "io.github.gciatto.kt-mpp.multiplatform", version.ref = "ktMpp" }
     ktMpp-multiProjectHelper = { id = "io.github.gciatto.kt-mpp.multi-project-helper", version.ref = "ktMpp" }
+    ktMpp-fatJar = { id = "io.github.gciatto.kt-mpp.fat-jar", version.ref = "ktMpp" }
     ```
    
 2. Fill your root project's `build.gradle.kts` file as follows:
