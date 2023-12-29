@@ -4,6 +4,7 @@ import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
 import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.DomainObjectSet
+import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.LogLevel
@@ -50,6 +51,8 @@ interface MultiPlatformHelperExtension {
     val useKotlinBom: Property<Boolean>
     val versionsFromCatalog: Property<String>
     val nodeVersion: Property<String>
+    val kotlinVersion: Property<String>
+    val jvmVersion: Property<String>
     val docStyle: Property<DocStyle>
     val jsPackageName: Property<String>
     val bugFinderConfigPath: Property<File>
@@ -95,12 +98,12 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
         }
     }
 
-    private inline fun <reified T> propertyWithConvention(
+    private inline fun <reified T : Any> propertyWithConvention(
         defaultValue: Provider<T>,
         noinline converter: (String) -> T?,
     ) = PropertyWithConvention(T::class.java, defaultValue, converter)
 
-    private inline fun <reified T> propertyWithConvention(
+    private inline fun <reified T : Any> propertyWithConvention(
         defaultValue: T? = null,
         noinline converter: (String) -> T?,
     ) = propertyWithConvention(project.provider<T> { defaultValue }, converter)
@@ -197,7 +200,29 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
 
     override val versionsFromCatalog: Property<String> by propertyWithConvention("libs")
 
-    override val nodeVersion: Property<String> by propertyWithConvention("latest")
+    private fun getVersionFromCatalog(name: String): Provider<String> =
+        versionsFromCatalog.flatMap { catalog ->
+            project.provider {
+                project.getVersionFromCatalog(name, catalog)?.requiredVersion
+            }
+        }
+
+    private fun versionProperty(name: String, defaultValue: String? = null) = propertyWithConvention(
+        defaultValue = getVersionFromCatalog(name).orElse("latest").let {
+            if (defaultValue != null) {
+                it.orElse(defaultValue)
+            } else {
+                it
+            }
+        },
+        converter = { it.takeIf(String::isNotBlank) },
+    )
+
+    override val nodeVersion: Property<String> by versionProperty("node", "latest")
+
+    override val jvmVersion: Property<String> by versionProperty("jvm", JavaVersion.current().toString())
+
+    override val kotlinVersion: Property<String> by versionProperty("kotlin")
 
     override val docStyle: Property<DocStyle> by propertyWithConvention(DocStyle.HTML) {
         DocStyle.valueOf(it.uppercase(Locale.getDefault()))

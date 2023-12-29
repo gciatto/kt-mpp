@@ -10,6 +10,8 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.artifacts.VersionConstraint
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
@@ -22,6 +24,7 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.nio.charset.Charset
+import kotlin.jvm.optionals.asSequence
 import kotlin.reflect.KClass
 
 internal fun kotlinPlugin(name: String) = "org.jetbrains.kotlin.$name"
@@ -187,3 +190,23 @@ internal val Project.jsPackageName: String
     }
 
 internal fun String.toURL(): java.net.URL = java.net.URI.create(this).toURL()
+
+internal fun Project.getVersionFromCatalog(name: String, catalog: String? = null): VersionConstraint? {
+    var catalogs = sequenceOf(project, rootProject)
+        .map { it.extensions.findByType(VersionCatalogsExtension::class.java) }
+        .filterNotNull()
+        .flatMap { it.asSequence() }
+        .toList()
+    if (!catalog.isNullOrBlank()) {
+        catalogs = catalogs.filter { it.name == catalog }
+    }
+    return catalogs.asSequence().flatMap { it.findVersion(name).asSequence() }.firstOrNull().also {
+        if (it == null && catalogs.isEmpty()) {
+            log(
+                message = "failed attempt to find version of `$name` in catalog" +
+                    if (catalog == null) "s" else " $catalog",
+                logLevel = LogLevel.WARN,
+            )
+        }
+    }
+}

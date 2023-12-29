@@ -11,7 +11,7 @@ tests:
       success:
         - ':tasks'
       output_contains:
-        - "test0: set nodeVersion="
+        - "test0: set nodeVersion=18"
         - "test0: set :compileJava.sourceCompatibility=11"
         - "test0: set :compileJava.targetCompatibility=11"
         - "test0: set :compileTestJava.sourceCompatibility=11"
@@ -38,6 +38,45 @@ tests:
         - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=11"
         - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=11"
         - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=11"
+  - description: "Runtime versions are set according to properties"
+    configuration:
+      tasks:
+        - "tasks"
+      options:
+        - "--info"
+        - "-PnodeVersion=20-latest"
+        - "-PjvmVersion=17"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test0: set nodeVersion=20"
+        - "test0: set :compileJava.sourceCompatibility=17"
+        - "test0: set :compileJava.targetCompatibility=17"
+        - "test0: set :compileTestJava.sourceCompatibility=17"
+        - "test0: set :compileTestJava.targetCompatibility=17"
+        - "full: set :full:compileJava.sourceCompatibility=17"
+        - "full: set :full:compileJava.targetCompatibility=17"
+        - "full: set :full:compileTestJava.sourceCompatibility=17"
+        - "full: set :full:compileTestJava.targetCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileJava.sourceCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileJava.targetCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileTestJava.sourceCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileTestJava.targetCompatibility=17"
+        - "subproject-jvm: set java.targetCompatibility=17"
+        - "subproject-jvm: set java.sourceCompatibility=17"
+        - "subproject-jvm: set :subproject-jvm:compileJava.sourceCompatibility=17"
+        - "subproject-jvm: set :subproject-jvm:compileJava.targetCompatibility=17"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.sourceCompatibility=17"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.targetCompatibility=17"
+        - "test0: set :compileKotlinJvm.jvmTarget=17"
+        - "test0: set :compileTestKotlinJvm.jvmTarget=17"
+        - "full: set :full:compileKotlinJvm.jvmTarget=17"
+        - "full: set :full:compileTestKotlinJvm.jvmTarget=17"
+        - "subproject-mp: set :subproject-mp:compileKotlinJvm.jvmTarget=17"
+        - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=17"
+        - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=17"
+        - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=17"
   - description: Projects have detektAll task with correct dependencies
     configuration:
       tasks:

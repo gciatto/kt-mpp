@@ -3,9 +3,6 @@ package io.github.gciatto.kt.mpp
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
-import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.api.artifacts.VersionConstraint
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
@@ -21,7 +18,6 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsBinaryContainer
 import java.util.Locale
-import kotlin.jvm.optionals.asSequence
 
 @Suppress("TooManyFunctions")
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
@@ -79,42 +75,16 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         // does nothing be default
     }
 
-    private fun Project.getVersionFromCatalog(name: String, catalog: String? = null): VersionConstraint? {
-        var catalogs = sequenceOf(project, rootProject)
-            .map { it.extensions.findByType(VersionCatalogsExtension::class.java) }
-            .filterNotNull()
-            .flatMap { it.asSequence() }
-            .toList()
-        if (!catalog.isNullOrBlank()) {
-            catalogs = catalogs.filter { it.name == catalog }
-        }
-        return catalogs.asSequence().flatMap { it.findVersion(name).asSequence() }.firstOrNull().also {
-            if (it == null && catalogs.isEmpty()) {
-                log(
-                    message = "failed attempt to find version of `$name` in catalog" +
-                        if (catalog == null) "s" else " $catalog",
-                    logLevel = LogLevel.WARN,
-                )
-            }
-        }
-    }
-
     protected fun Project.configureKotlinVersionFromCatalogIfPossible() {
-        val catalog = multiPlatformHelper.versionsFromCatalog.orNull
-        val version = getVersionFromCatalog("kotlin", catalog)
-        version?.requiredVersion?.let { kotlinVersion(it) }
+        kotlinVersion(multiPlatformHelper.kotlinVersion)
     }
 
     protected fun Project.configureJvmVersionFromCatalogIfPossible() {
-        val catalog = multiPlatformHelper.versionsFromCatalog.orNull
-        val version = getVersionFromCatalog("jvm", catalog)
-        version?.requiredVersion?.let { jvmVersion(it) }
+        jvmVersion(multiPlatformHelper.jvmVersion)
     }
 
     protected fun Project.configureNodeVersionFromCatalogIfPossible() {
-        val catalog = multiPlatformHelper.versionsFromCatalog.orNull
-        val version = getVersionFromCatalog("node", catalog)
-        nodeVersion(provider { version?.requiredVersion }, multiPlatformHelper.nodeVersion.orNull)
+        nodeVersion(multiPlatformHelper.nodeVersion)
     }
 
     protected fun kotlinPlugin(name: String = targetName) =
