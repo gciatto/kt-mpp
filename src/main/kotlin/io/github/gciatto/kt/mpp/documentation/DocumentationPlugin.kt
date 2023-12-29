@@ -1,5 +1,7 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.documentation
 
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.utils.log
 import org.gradle.api.Project
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.create

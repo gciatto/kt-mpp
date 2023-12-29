@@ -170,23 +170,30 @@ class PluginDescriptor(val name: String, val fullClass: String) {
     val simpleClass: String
         get() = fullClass.split(".").last()
 
-    val simpleName: String
+    private val simpleName: String
         get() = name.split(".").last()
 
-    val kotlinId: String
+    private val kotlinId: String
         get() = simpleName.split("-")
             .mapIndexed { i, s -> if (i > 0) s.capitalized() else s }
             .joinToString("")
 
-    fun generateKotlinMethod(): String =
-        "val $kotlinId = PluginDescriptor(\"$name\", $simpleClass::class)\n"
+    fun generateKotlinMethod(indent: Int = 4): String {
+        val indent = " ".repeat(indent)
+        return "${indent}val $kotlinId = PluginDescriptor(\n" +
+            "${indent.repeat(2)}\"$name\",\n" +
+            "${indent.repeat(2)}$fullClass::class,\n" +
+            "$indent)\n"
+    }
 }
 
 gradlePlugin {
     plugins {
         website.set(info.website)
         vcsUrl.set(info.vcsUrl)
+
         val pluginsClasses = mutableSetOf<PluginDescriptor>()
+
         fun innerPlugin(
             name: String,
             confName: String = name,
@@ -205,77 +212,77 @@ gradlePlugin {
         innerPlugin(
             name = "bug-finder",
             descr = "bug-finder (currently, Detekt)",
-            klass = "BugFinderPlugin",
+            klass = "verification.BugFinderPlugin",
             moreTags = arrayOf("bug-finder", "detekt"),
         )
 
         innerPlugin(
             name = "documentation",
             descr = "documentation generator (currently, Dokka)",
-            klass = "DocumentationPlugin",
+            klass = "documentation.DocumentationPlugin",
             moreTags = arrayOf("documentation", "dokka"),
         )
 
         innerPlugin(
             name = "linter",
             descr = "linter (currently, KtLint)",
-            klass = "LinterPlugin",
+            klass = "verification.LinterPlugin",
             moreTags = arrayOf("linter", "ktlint"),
         )
 
         innerPlugin(
             name = "maven-publish",
             descr = "maven publication",
-            klass = "PublishOnMavenPlugin",
+            klass = "publishing.PublishOnMavenPlugin",
             moreTags = arrayOf("maven"),
         )
 
         innerPlugin(
             name = "npm-publish",
             descr = "npm publication",
-            klass = "PublishOnNpmPlugin",
+            klass = "publishing.PublishOnNpmPlugin",
             moreTags = arrayOf("npm"),
         )
 
         innerPlugin(
             name = "versions",
             descr = "version revealer",
-            klass = "VersionsPlugin",
+            klass = "versioning.VersionsPlugin",
             moreTags = arrayOf("version"),
         )
 
         innerPlugin(
             name = "js-only",
             descr = "JS only project configuration",
-            klass = "JsOnlyPlugin",
+            klass = "kotlin.JsOnlyPlugin",
             moreTags = arrayOf("js"),
         )
 
         innerPlugin(
             name = "jvm-only",
             descr = "JVM only project configuration",
-            klass = "JvmOnlyPlugin",
+            klass = "kotlin.JvmOnlyPlugin",
             moreTags = arrayOf("jvm"),
         )
 
         innerPlugin(
             name = "multiplatform",
             descr = "multi-platform project configuration",
-            klass = "MultiplatformPlugin",
+            klass = "kotlin.MultiplatformPlugin",
             moreTags = arrayOf("multiplatform"),
         )
 
         innerPlugin(
             name = "multi-project-helper",
             descr = "multi-platform & multi-project helper plugin",
-            klass = "MultiProjectHelperPlugin",
+            klass = "helpers.MultiProjectHelperPlugin",
             moreTags = arrayOf(),
         )
 
         innerPlugin(
             name = "fat-jar",
             descr = "fat-jar creator plugin (currently: Shadow)",
-            klass = "FatJarPlugin",
+            klass = "jar.FatJarPlugin",
             moreTags = arrayOf("fat-jar", "uber-jar", "redist", "shadow"),
         )
 
@@ -290,7 +297,7 @@ gradlePlugin {
                     val text = "@file:Suppress(\"MaxLineLength\", \"ktlint\")\n\n" +
                             "package ${project.group}.kt.mpp\n\n" +
                             "object Plugins {\n" +
-                            pluginsClasses.joinToString("\n") { "    ${it.generateKotlinMethod()}" } +
+                            pluginsClasses.joinToString("\n") { it.generateKotlinMethod() } +
                             "}\n"
                     targetFile.writeText(text)
                 }

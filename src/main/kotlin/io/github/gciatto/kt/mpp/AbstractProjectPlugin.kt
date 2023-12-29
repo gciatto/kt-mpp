@@ -1,6 +1,11 @@
 package io.github.gciatto.kt.mpp
 
 import dev.petuska.npm.publish.extension.NpmPublishExtension
+import io.github.gciatto.kt.mpp.helpers.MultiPlatformHelperExtensionImpl
+import io.github.gciatto.kt.mpp.utils.forEachPlugin
+import io.github.gciatto.kt.mpp.utils.kotlinPlugin
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.npmCompliantVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task

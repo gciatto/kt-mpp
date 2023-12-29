@@ -1,5 +1,8 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.verification
 
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektPlugin
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension

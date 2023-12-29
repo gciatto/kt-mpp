@@ -1,11 +1,13 @@
 @file:Suppress("TooManyFunctions")
 
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.utils
 
 import dev.petuska.npm.publish.NpmPublishPlugin
 import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.json.PackageJson
 import dev.petuska.npm.publish.extension.domain.json.Person
+import io.github.gciatto.kt.mpp.helpers.MultiPlatformHelperExtension
+import io.github.gciatto.kt.mpp.publishing.Developer
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project

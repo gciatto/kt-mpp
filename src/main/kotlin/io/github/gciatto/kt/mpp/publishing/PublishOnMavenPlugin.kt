@@ -1,5 +1,9 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.publishing
 
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.utils.getAsEitherFileOrValue
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import org.danilopianini.gradle.mavencentral.PublishOnCentralExtension
 import org.danilopianini.gradle.mavencentral.Repository
 import org.gradle.api.Plugin

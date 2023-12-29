@@ -1,5 +1,7 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.kotlin
 
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import org.gradle.kotlin.dsl.apply

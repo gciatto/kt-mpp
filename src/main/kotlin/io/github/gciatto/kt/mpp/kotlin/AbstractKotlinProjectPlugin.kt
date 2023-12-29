@@ -1,5 +1,11 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.kotlin
 
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.utils.jvmVersion
+import io.github.gciatto.kt.mpp.utils.kotlinVersion
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
+import io.github.gciatto.kt.mpp.utils.nodeVersion
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
@@ -17,7 +23,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsBinaryContainer
-import java.util.Locale
+import java.util.*
 
 @Suppress("TooManyFunctions")
 abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
@@ -88,7 +94,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun kotlinPlugin(name: String = targetName) =
-        io.github.gciatto.kt.mpp.kotlinPlugin(name)
+        io.github.gciatto.kt.mpp.utils.kotlinPlugin(name)
 
     context(Project)
     protected fun KotlinJvmOptions.configureJvmKotlinOptions(target: String) {

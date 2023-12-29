@@ -1,6 +1,9 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.jar
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.github.gciatto.kt.mpp.helpers.MultiPlatformHelperExtension
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileSystemLocation
@@ -27,10 +30,10 @@ internal fun Project.excludedPlatformsFor(platform: String): Set<String> =
     supportedPlatforms - includedPlatformsFor(platform)
 
 private fun defaultTaskName(platform: String?): String =
-    "shadowJar" + (platform?.let { "For${it.toPascalCase()}" } ?: "")
+    "shadowJar" + platform?.let { "For${it.toPascalCase()}" }.orEmpty()
 
 private fun Project.defaultExcludedPlatforms(platform: String?): Set<String> =
-    platform?.let { excludedPlatformsFor(it) } ?: emptySet()
+    platform?.let { excludedPlatformsFor(it) }.orEmpty()
 
 fun MultiPlatformHelperExtension.javaFxFarJars() {
     fatJarPlatforms.addAll(listOf("win", "linux", "mac", "mac-aarch64"))
@@ -97,8 +100,8 @@ private fun Project.configureJarForJvmProject(
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
 ) {
     plugins.withId("org.jetbrains.kotlin.jvm") {
-        project.extensions.configure<SourceSetContainer>("sourceSets") {
-            it.getByName("main") {
+        project.extensions.configure<SourceSetContainer>("sourceSets") { sourceSets ->
+            sourceSets.getByName("main") {
                 configureJarFromFileCollection(jarTask, it.runtimeClasspath, shouldBeIncluded, toFileTree)
             }
         }
@@ -111,7 +114,7 @@ private fun Project.configureJarForMpProject(
     shouldBeIncluded: (File) -> Boolean,
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
 ) {
-    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+    plugins.withId("org.jetbrains.kotlin.multiplatform") { _ ->
         project.extensions.configure(KotlinMultiplatformExtension::class.java) {
             it.jvm().compilations.getByName("main").run {
                 for (collection in listOf(output.allOutputs, runtimeDependencyFiles)) {

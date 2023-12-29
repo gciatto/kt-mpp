@@ -1,61 +1,12 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.helpers
 
+import io.github.gciatto.kt.mpp.ProjectConfiguration
+import io.github.gciatto.kt.mpp.defaultJsProject
+import io.github.gciatto.kt.mpp.defaultJvmProject
+import io.github.gciatto.kt.mpp.defaultKtProject
+import io.github.gciatto.kt.mpp.defaultOtherProject
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
-
-enum class ProjectType {
-    KOTLIN, JVM, JS, OTHER
-}
-
-sealed interface MultiProjectExtension {
-    val defaultProjectType: ProjectType
-
-    val ktProjects: Set<Project>
-
-    val jvmProjects: Set<Project>
-
-    val jsProjects: Set<Project>
-
-    val otherProjects: Set<Project>
-
-    fun Iterable<Project>.except(names: Iterable<String>): Set<Project> =
-        filter { it.name !in names }.toSet()
-
-    fun Iterable<Project>.except(first: String, vararg others: String): Set<Project> {
-        val names = setOf(first, *others)
-        return except(names)
-    }
-}
-
-sealed interface MutableMultiProjectExtension : MultiProjectExtension {
-    override var defaultProjectType: ProjectType
-
-    override var ktProjects: Set<Project>
-
-    override var jvmProjects: Set<Project>
-
-    override var jsProjects: Set<Project>
-
-    override var otherProjects: Set<Project>
-
-    fun ktProjects(identifier: String, vararg other: String)
-
-    fun jvmProjects(identifier: String, vararg other: String)
-
-    fun jsProjects(identifier: String, vararg other: String)
-
-    fun otherProjects(identifier: String, vararg other: String)
-
-    var ktProjectTemplate: ProjectConfiguration
-
-    var jvmProjectTemplate: ProjectConfiguration
-
-    var jsProjectTemplate: ProjectConfiguration
-
-    var otherProjectTemplate: ProjectConfiguration
-
-    fun applyProjectTemplates()
-}
 
 internal open class RootMultiProjectExtension(project: Project) : MutableMultiProjectExtension {
 
@@ -182,6 +133,3 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
             }
     }
 }
-
-internal open class MultiProjectExtensionView(delegate: MultiProjectExtension) :
-    MultiProjectExtension by delegate

@@ -1,5 +1,9 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.versioning
 
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.Plugins
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.npmCompliantVersion
 import org.gradle.api.Project
 
 class VersionsPlugin : AbstractProjectPlugin() {

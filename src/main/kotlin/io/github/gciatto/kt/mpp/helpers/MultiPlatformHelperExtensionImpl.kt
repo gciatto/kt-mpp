@@ -1,6 +1,13 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.helpers
 
-import io.github.gciatto.kt.mpp.Developer.Companion.getAllDevs
+import io.github.gciatto.kt.mpp.kotlin.JsBinaryType
+import io.github.gciatto.kt.mpp.publishing.Developer
+import io.github.gciatto.kt.mpp.publishing.Developer.Companion.getAllDevs
+import io.github.gciatto.kt.mpp.utils.getVersionFromCatalog
+import io.github.gciatto.kt.mpp.utils.jsPackageName
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
+import io.github.gciatto.kt.mpp.utils.toURL
 import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.DomainObjectSet
@@ -17,61 +24,6 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
-interface MultiPlatformHelperExtension {
-    val disableJavadocTask: Property<Boolean>
-    val allWarningsAsErrors: Property<Boolean>
-    val developers: DomainObjectCollection<Developer>
-    val issuesEmail: Property<String>
-    val issuesUrl: Property<URL>
-    val ktCompilerArguments: DomainObjectSet<String>
-    val ktCompilerArgumentsJs: DomainObjectSet<String>
-    val ktCompilerArgumentsJvm: DomainObjectSet<String>
-    val ktTargetJsDisable: Property<Boolean>
-    val ktTargetJvmDisable: Property<Boolean>
-    val repoOwner: Property<String>
-    val mavenCentralPassword: Property<String>
-    val mavenCentralUsername: Property<String>
-    val otherMavenRepo: Property<URL>
-    val otherMavenPassword: Property<String>
-    val otherMavenUsername: Property<String>
-    val mochaTimeout: Property<String>
-    val npmDryRun: Property<Boolean>
-    val npmOrganization: Property<String>
-    val npmRepo: Property<URL>
-    val npmToken: Property<String>
-    val projectDescription: Property<String>
-    val projectHomepage: Property<URL>
-    val projectLicense: Property<String>
-    val projectLicenseUrl: Property<URL>
-    val projectLongName: Property<String>
-    val scmConnection: Property<String>
-    val scmUrl: Property<URL>
-    val signingKey: Property<String>
-    val signingPassword: Property<String>
-    val useKotlinBom: Property<Boolean>
-    val versionsFromCatalog: Property<String>
-    val nodeVersion: Property<String>
-    val kotlinVersion: Property<String>
-    val jvmVersion: Property<String>
-    val docStyle: Property<DocStyle>
-    val jsPackageName: Property<String>
-    val bugFinderConfigPath: Property<File>
-    val bugFinderConfig: FileCollection
-    val jsBinaryType: Property<JsBinaryType>
-    val fatJarPlatforms: DomainObjectSet<String>
-    val fatJarClassifier: Property<String>
-    val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>>
-    val fatJarEntryPoint: Property<String>
-    fun fatJarPlatformInclude(platform: String, vararg includes: String) =
-        includes.forEach { fatJarPlatformInclusions.add(platform to it) }
-}
-
-@Suppress("UNCHECKED_CAST")
-internal fun <T> MultiPlatformHelperExtension.getProvider(property: KProperty<*>): Provider<T> =
-    this::class.memberProperties.find { it.name == property.name }
-        .let { it as KProperty1<MultiPlatformHelperExtension, Provider<T>> }
-        .get(this)
-
 @Suppress("LeakingThis")
 internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPlatformHelperExtension {
 
@@ -82,6 +34,12 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
         private val defaultValue: Provider<T>,
         private val converter: (String) -> T?,
     ) {
+        @Suppress("UNCHECKED_CAST")
+        private fun <T> MultiPlatformHelperExtension.getProvider(property: KProperty<*>): Provider<T> =
+            this::class.memberProperties.find { it.name == property.name }
+                .let { it as KProperty1<MultiPlatformHelperExtension, Provider<T>> }
+                .get(this)
+
         operator fun getValue(self: MultiPlatformHelperExtensionImpl, property: KProperty<*>): Property<T> {
             var lazyValue = self.project.provider {
                 if (property.name in self.project.properties) {
@@ -299,7 +257,7 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
             ?.flatMap { pair ->
                 val (key, values) = pair.separateBy(':').let { it[0] to it[1] }
                 values.separateBy(',').map { key to it }
-            } ?: emptyList()
+            }.orEmpty()
         fatJarPlatformInclusions.addAllLater(fatJarPlatformInclude.map { parse(it) })
     }
 

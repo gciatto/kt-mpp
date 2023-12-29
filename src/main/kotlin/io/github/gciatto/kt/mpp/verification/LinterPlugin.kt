@@ -1,5 +1,6 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.verification
 
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
 import org.gradle.api.Project
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.KtlintIdeaPlugin

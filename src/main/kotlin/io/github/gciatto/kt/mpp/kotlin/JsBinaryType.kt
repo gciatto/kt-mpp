@@ -1,4 +1,4 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.kotlin
 
 enum class JsBinaryType {
     NONE,

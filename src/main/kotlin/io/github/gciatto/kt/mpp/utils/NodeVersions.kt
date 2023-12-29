@@ -1,4 +1,5 @@
-import io.github.gciatto.kt.mpp.toURL
+package io.github.gciatto.kt.mpp.utils
+
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL

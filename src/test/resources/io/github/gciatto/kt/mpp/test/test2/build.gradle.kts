@@ -1,6 +1,4 @@
-import io.github.gciatto.kt.mpp.ProjectType
-import io.github.gciatto.kt.mpp.log
-import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import io.github.gciatto.kt.mpp.utils.log
 import org.gradle.api.publish.maven.tasks.PublishToMavenLocal
 import org.gradle.kotlin.dsl.withType
 import org.gradle.api.logging.LogLevel

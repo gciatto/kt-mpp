@@ -1,9 +1,15 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.publishing
 
 import dev.petuska.npm.publish.NpmPublishPlugin
 import dev.petuska.npm.publish.extension.NpmPublishExtension
 import dev.petuska.npm.publish.extension.domain.NpmPackage
 import dev.petuska.npm.publish.extension.domain.NpmRegistry
+import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.kotlin.JsBinaryType
+import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
+import io.github.gciatto.kt.mpp.utils.npmCompliantVersion
+import io.github.gciatto.kt.mpp.utils.person
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 

@@ -1,6 +1,6 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.publishing
 
-import io.github.gciatto.kt.mpp.Organization.Companion.getOrg
+import io.github.gciatto.kt.mpp.publishing.Organization.Companion.getOrg
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPomDeveloperSpec
 

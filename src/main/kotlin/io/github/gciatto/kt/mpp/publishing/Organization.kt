@@ -1,4 +1,4 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.publishing
 
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPomDeveloper

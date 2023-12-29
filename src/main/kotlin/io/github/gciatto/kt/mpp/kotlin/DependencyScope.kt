@@ -1,4 +1,4 @@
-package io.github.gciatto.kt.mpp
+package io.github.gciatto.kt.mpp.kotlin
 
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
