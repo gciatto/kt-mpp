@@ -150,13 +150,11 @@ Versions may also be assigned explicitly into (sub-)projects `build.gradle.kts` 
 
 ## Relevant Gradle properties
 
-Consider use tasks 
-- `:explainProperties` to get details about the properties acutally needed by a (sub-)project
-- `:generateGradlePropertiesFile` automatically generate a `gradle.properties` file for the current (sub-)project
-
 Overall, you may need to define, provide the following properties:
 
 - `allWarningsAsErrors` (optional, default value: `true`): if true, the Kotlin compiler will consider all warnings as errors.
+
+- `bugFinderConfigPath` (optional, default value: `".detekt.yml"`): the path to the Detekt configuration file to be used for bug finding. If missing or blank, the default configuration will be used.
 
 - `developer<ID>Email` (optional): the email of developer `<ID>` (useful for Maven/NPM publications).
 
@@ -170,9 +168,25 @@ Overall, you may need to define, provide the following properties:
 
 - `docStyle` (optional, default value: `"html"`): the Dokka style to be used for Maven publications (one of {`"html"`, `"gfm"`, `"javadoc"`, `"jekyll"`}).
 
+- `fatJarClassifier` (optional, default value: `"redist"`): the classifier to be used for fat-jars. If missing or blank, `"redist"` will be used.
+
+- `fatJarEntryPoint` (optional, default value: `""`): the fully qualified name of the entry point of the fat-jar. If missing or blank, the fat-jar won't have any entry point.
+
+- `fatJarPlatformInclude` (optional, default value: `""`): map of platforms-specific dependencies to be included when generating fat-jars for multiplatform projects.
+  If missing or blank, only platform agnostic and specific dependencies will be included.
+  E.g. `mac-aarch64: linux, mac; mac: linux; win: linux` will include `linux` dependencies for all platforms, `mac` dependencies for `mac-aarch64`, and `win` dependencies for `win`.
+
+- `fatJarPlatformNames` (optional, default value: `""`): semi-colon-separated list of platforms for which fat-jars should be generated. If missing or blank, fat-jars will be generated for all platforms.
+  E.g., for JavaFX applications, one may set this property to `"linux;win;mac;mac-aarch64"`.
+
 - `issuesEmail` (optional): issue tracking email (useful for Maven/NPM publications).
 
 - `issuesUrl` (optional): issue tracking web page URL (useful for Maven/NPM publications).
+
+- `jsBinaryType` (optional, default value: `"library"`): the type of binary to be generated for a Kotlin JS project (one of {`"executable"`, `"library"`, `"none"`).
+  Publishing on NPM requires `"library"`.
+
+- `jsPackageName` (optional, default value: `"<rootProject.name>-<project.name>"`): the name of the NPM package to be generated for a Kotlin JS project. If missing or blank, the package name will be `<rootProject.name>-<project.name>`.
 
 - `ktCompilerArgsJs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JS sources.
 
@@ -189,8 +203,6 @@ Overall, you may need to define, provide the following properties:
 - `mavenCentralUsername` (optional): the username of the user willing to release Maven publications on Maven Central.
 
 - `mochaTimeout` (mandatory, default value: `"180s"`): the amount of time to be .
-
-- `nodeVersion` (optional, default value: `""`): the version of NodeJS to use for running Kotlin JS scripts.
 
 - `npmDryRun` (optional, default value: false): if true, release of NPM packages will simply be simulated (i.e., no actual release).
 
@@ -232,23 +244,31 @@ Overall, you may need to define, provide the following properties:
 
 - `versionsFromCatalog` (optional, default value: `""`): the name of the catalog from which Kotlin, JVM, and Node versions should be taken. Leave empty in case all declared catalogs should be considered, as well as if no one should.
 
-- `jsPackageName` (optional, default value: `"<rootProject.name>-<project.name>"`): the name of the NPM package to be generated for a Kotlin JS project. If missing or blank, the package name will be `<rootProject.name>-<project.name>`.
+### Version properties
 
-- `bugFinderConfigPath` (optional, default value: `".detekt.yml"`): the path to the Detekt configuration file to be used for bug finding. If missing or blank, the default configuration will be used.
+- `nodeVersion` (optional, default value: `"latest"`): the version of NodeJS to use for running Kotlin JS scripts.
+    + syntax of the form `<major>-latest` is admissible (e.g., `18-latest`),
+    in this case, the latest version of NodeJS with the given major version will be selected among the ones available at
+    https://nodejs.org/dist/
 
-- `jsBinaryType` (optional, default value: `"library"`): the type of binary to be generated for a Kotlin JS project (one of {`"executable"`, `"library"`, `"none"`).
-Publishing on NPM requires `"library"`.
+- `kotlinVersion` (optional, default value: `""`): the version of Kotlin to use for compiling Kotlin sources.
 
-- `fatJarPlatformNames` (optional, default value: `""`): semi-colon-separated list of platforms for which fat-jars should be generated. If missing or blank, fat-jars will be generated for all platforms.
-E.g., for JavaFX applications, one may set this property to `"linux;win;mac;mac-aarch64"`.
+- `jvmVersion` (optional, default value: `JavaVersion.current().toString()`): the version of the JVM to use for compiling Kotlin or Java sources.
 
-- `fatJarClassifier` (optional, default value: `"redist"`): the classifier to be used for fat-jars. If missing or blank, `"redist"` will be used.
-
-- `fatJarPlatformInclude` (optional, default value: `""`): map of platforms-specific dependencies to be included when generating fat-jars for multiplatform projects. 
-If missing or blank, only platform agnostic and specific dependencies will be included.
-E.g. `mac-aarch64: linux, mac; mac: linux; win: linux` will include `linux` dependencies for all platforms, `mac` dependencies for `mac-aarch64`, and `win` dependencies for `win`.
-
-- `fatJarEntryPoint` (optional, default value: `""`): the fully qualified name of the entry point of the fat-jar. If missing or blank, the fat-jar won't have any entry point.
+All such properties can be specified in many ways:
+- via the `gradle.properties` file of the root project
+- via the `gradle.properties` file of a (sub-)project
+- via the command line, e.g., `./gradlew -P<PROPERTY_NAME>=<PROPERTY_VALUE> <TASK>`
+- via the catalog file in the root project's directory, e.g., `gradle/libs.versions.toml`
+  * the name of the catalog file can be changed via the `versionsFromCatalog` property
+- via the root- or sub-project's `build.gradle.kts` file:
+    ```kotlin
+    multiPlatformHelper {
+          nodeVersion.set("16.0.0")
+          kotlinVersion.set("1.5.0")
+          jvmVersion.set("11")
+    }
+    ```
 
 ## How to use
 
