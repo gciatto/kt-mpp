@@ -9,7 +9,7 @@ import org.gradle.api.Project
 class VersionsPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val versioning = "versioning"
-        project.afterEvaluate {
+        project.rootProject.afterEvaluate {
             group = rootProject.group
             log("copy group from rootProject: $group")
             version = rootProject.version
