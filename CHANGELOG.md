@@ -1,3 +1,11 @@
+## [4.0.3](https://github.com/gciatto/kt-mpp/compare/4.0.2...4.0.3) (2023-12-31)
+
+
+### Bug Fixes
+
+* apply rootProject's version to subprojects in afterEvaluate ([97ae177](https://github.com/gciatto/kt-mpp/commit/97ae17720c255a312d8df376e221b4097d9b1716))
+* javaFxFarJars -> javaFxFatJars ([78a8d55](https://github.com/gciatto/kt-mpp/commit/78a8d55c4101738d2606da96ed02311f64f465d1))
+
 ## [4.0.2](https://github.com/gciatto/kt-mpp/compare/4.0.1...4.0.2) (2023-12-31)
 
 
