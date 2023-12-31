@@ -1,3 +1,15 @@
+## [4.0.2](https://github.com/gciatto/kt-mpp/compare/4.0.1...4.0.2) (2023-12-31)
+
+
+### Dependency updates
+
+* **deps:** update ktlint to v12 ([c54becb](https://github.com/gciatto/kt-mpp/commit/c54becb5ed21fcf6ef94e07054e51a547be60397))
+
+
+### Bug Fixes
+
+* remove automatic import of ktlint-idea plugin ([7a9032b](https://github.com/gciatto/kt-mpp/commit/7a9032ba79db84bfa574500296dfa36e1582f544))
+
 ## [4.0.1](https://github.com/gciatto/kt-mpp/compare/4.0.0...4.0.1) (2023-12-31)
 
 
