@@ -35,7 +35,7 @@ private fun defaultTaskName(platform: String?): String =
 private fun Project.defaultExcludedPlatforms(platform: String?): Set<String> =
     platform?.let { excludedPlatformsFor(it) }.orEmpty()
 
-fun MultiPlatformHelperExtension.javaFxFarJars() {
+fun MultiPlatformHelperExtension.javaFxFatJars() {
     fatJarPlatforms.addAll(listOf("win", "linux", "mac", "mac-aarch64"))
     fatJarPlatformInclude("mac", "linux")
     fatJarPlatformInclude("mac-aarch64", "linux")
