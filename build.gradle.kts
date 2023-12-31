@@ -112,7 +112,7 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     disableTrackStateOnWindows<JacocoReport>()
 }
 
-tasks.withType<Test>().configureEach {
+tasks.withType<Test> {
     useJUnitPlatform()
     dependsOn(tasks.generateJacocoTestKitProperties)
     testLogging {
@@ -178,6 +178,7 @@ class PluginDescriptor(val name: String, val fullClass: String) {
             .mapIndexed { i, s -> if (i > 0) s.capitalized() else s }
             .joinToString("")
 
+    @Suppress("NAME_SHADOWING")
     fun generateKotlinMethod(indent: Int = 4): String {
         val indent = " ".repeat(indent)
         return "${indent}val $kotlinId = PluginDescriptor(\n" +

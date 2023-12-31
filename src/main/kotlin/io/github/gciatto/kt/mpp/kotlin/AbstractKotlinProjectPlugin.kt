@@ -98,7 +98,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
 
     context(Project)
     protected fun KotlinJvmOptions.configureJvmKotlinOptions(target: String) {
-        multiPlatformHelper.ktCompilerArguments.configureEach {
+        multiPlatformHelper.ktCompilerArguments.all {
             freeCompilerArgs += it
             log("add JVM-specific free compiler arg for $target: $it")
         }
@@ -107,11 +107,11 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     context(Project)
     protected fun KotlinJsOptions.configureJsKotlinOptions(target: String) {
         main = "noCall"
-        multiPlatformHelper.ktCompilerArguments.configureEach {
+        multiPlatformHelper.ktCompilerArguments.all {
             freeCompilerArgs += it
             log("add JVM-specific free compiler arg for $target: $it")
         }
-        multiPlatformHelper.ktCompilerArgumentsJs.configureEach {
+        multiPlatformHelper.ktCompilerArgumentsJs.all {
             freeCompilerArgs += it
             log("add JS-specific free compiler arg for $target: $it")
         }
@@ -123,7 +123,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         if (allWarningsAsErrors) {
             log("consider all warnings as errors when compiling Kotlin sources in $target")
         }
-        multiPlatformHelper.ktCompilerArguments.configureEach {
+        multiPlatformHelper.ktCompilerArguments.all {
             freeCompilerArgs += it
             log("add free compiler arg for $target: $it")
         }

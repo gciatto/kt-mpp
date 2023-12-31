@@ -88,7 +88,7 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
     }
 
     private fun Project.makeAssembleTaskDependOnJarTask(task: Jar) {
-        tasks.matching { it.name == "assemble" }.configureEach { assemble ->
+        tasks.matching { it.name == "assemble" }.all { assemble ->
             assemble.dependsOn(task)
             log("make ${assemble.path} task dependant on ${task.path}")
         }

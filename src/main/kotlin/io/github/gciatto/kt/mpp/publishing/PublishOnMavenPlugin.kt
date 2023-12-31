@@ -96,7 +96,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         publications.withType(MavenPublication::class.java) { pub ->
             pub.pom { pom ->
                 pom.developers { devs ->
-                    multiPlatformHelper.developers.configureEach {
+                    multiPlatformHelper.developers.all {
                         it.applyTo(devs)
                         log("add POM developer for publication ${pub.name}: $it")
                     }
@@ -131,7 +131,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 val logMsg = "use %s style for javadoc JAR when publishing"
                 docStyle.set(multiPlatformHelper.docStyle.getLogging(logMsg))
                 configure(PublishingExtension::class) {
-                    publications.withType(MavenPublication::class.java).matching { "OSSRH" !in it.name }.configureEach {
+                    publications.withType(MavenPublication::class.java).matching { "OSSRH" !in it.name }.all {
                         it.artifact(tasks.named("javadocJar"))
                         log("add javadoc JAR to publication ${it.name}")
                     }
