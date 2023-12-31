@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/gciatto/kt-mpp/compare/4.0.0...4.0.1) (2023-12-31)
+
+
+### Bug Fixes
+
+* loading of kt compiler args from properties ([33e2b62](https://github.com/gciatto/kt-mpp/commit/33e2b6253dc50824b36bbf6f01ad8dae21861438))
+
 ## [4.0.0](https://github.com/gciatto/kt-mpp/compare/3.0.0...4.0.0) (2023-12-29)
 
 
