@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/gciatto/kt-mpp/compare/4.0.3...4.0.4) (2023-12-31)
+
+
+### Bug Fixes
+
+* propagate version in rootProjects' afterEvaluate ([a258370](https://github.com/gciatto/kt-mpp/commit/a2583705ef5a7fb2f3e0f83f7bcffe2c0153b4e4))
+
 ## [4.0.3](https://github.com/gciatto/kt-mpp/compare/4.0.2...4.0.3) (2023-12-31)
 
 
