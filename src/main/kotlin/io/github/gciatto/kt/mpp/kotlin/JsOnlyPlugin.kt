@@ -13,6 +13,9 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
+        multiPlatformHelper.initializeVersionsRelatedProperties(jvm = false)
+        multiPlatformHelper.initializeKotlinRelatedProperties()
+        multiPlatformHelper.initializeJsRelatedProperties()
         configureKotlinVersionFromCatalogIfPossible()
         configureNodeVersionFromCatalogIfPossible()
         configure(KotlinJsProjectExtension::class) {

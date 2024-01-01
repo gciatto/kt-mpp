@@ -24,6 +24,7 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val npmPublish = apply(NpmPublishPlugin::class)
         log("apply ${npmPublish::class.java.name} plugin")
+        multiPlatformHelper.initializeNpmRelatedProperties()
         if (multiPlatformHelper.jsBinaryType.let { it.isPresent && it.get() != JsBinaryType.LIBRARY }) {
             log(
                 "publication on NPM via ${npmPublish::class.java.name} plugin will fail because " +

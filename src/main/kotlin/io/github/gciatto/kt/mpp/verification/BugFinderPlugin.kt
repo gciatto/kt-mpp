@@ -22,6 +22,7 @@ class BugFinderPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         val detekt = apply(DetektPlugin::class)
         log("apply ${detekt::class.java.name} as bug finder")
+        multiPlatformHelper.initializeBugFinderRelatedProperties()
         configure(DetektExtension::class) {
             multiPlatformHelper.bugFinderConfig.let {
                 if (!it.isEmpty) {

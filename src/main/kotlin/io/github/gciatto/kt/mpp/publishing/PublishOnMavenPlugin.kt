@@ -145,6 +145,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
         fun configurePlugin(plugin: Plugin<*>) {
             apply(plugin = "org.danilopianini.publish-on-central")
             log("apply org.danilopianini.publish-on-central plugin")
+            multiPlatformHelper.initializeMavenRelatedProperties()
             configurePublishOnCentralExtension()
             configureMavenRepositories()
             configurePublications()

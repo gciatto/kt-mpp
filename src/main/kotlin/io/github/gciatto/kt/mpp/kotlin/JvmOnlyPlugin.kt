@@ -16,6 +16,9 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         log("apply ${kotlinPlugin()} plugin")
         apply(plugin = "java-library")
         log("apply java-library plugin")
+        multiPlatformHelper.initializeVersionsRelatedProperties(node = false)
+        multiPlatformHelper.initializeKotlinRelatedProperties()
+        multiPlatformHelper.initializeJvmRelatedProperties()
         configureKotlinVersionFromCatalogIfPossible()
         configureJvmVersionFromCatalogIfPossible()
         tasks.withType(KotlinCompile::class.java) { task ->

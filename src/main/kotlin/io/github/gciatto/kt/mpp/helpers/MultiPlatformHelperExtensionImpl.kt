@@ -6,7 +6,6 @@ import io.github.gciatto.kt.mpp.publishing.Developer.Companion.getAllDevs
 import io.github.gciatto.kt.mpp.utils.getVersionFromCatalog
 import io.github.gciatto.kt.mpp.utils.jsPackageName
 import io.github.gciatto.kt.mpp.utils.log
-import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import io.github.gciatto.kt.mpp.utils.toURL
 import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
@@ -14,149 +13,114 @@ import org.gradle.api.DomainObjectSet
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
-import org.gradle.api.logging.LogLevel
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import java.io.File
 import java.net.URL
-import java.util.Locale
-import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty1
-import kotlin.reflect.full.memberProperties
+import java.util.*
+import kotlin.reflect.KProperty0
 
 @Suppress("LeakingThis")
-internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPlatformHelperExtension {
+internal open class MultiPlatformHelperExtensionImpl(private val project: Project) : MultiPlatformHelperExtension {
 
-    private val project: Project = project.rootProject
-
-    private class PropertyWithConvention<T>(
-        private val klass: Class<T>,
-        private val defaultValue: Provider<T>,
-        private val converter: (String) -> T?,
-    ) {
-        @Suppress("UNCHECKED_CAST")
-        private fun <T> MultiPlatformHelperExtension.getProvider(property: KProperty<*>): Provider<T> =
-            this::class.memberProperties.find { it.name == property.name }
-                .let { it as KProperty1<MultiPlatformHelperExtension, Provider<T>> }
-                .get(this)
-
-        operator fun getValue(self: MultiPlatformHelperExtensionImpl, property: KProperty<*>): Property<T> {
-            var lazyValue = self.project.provider {
-                if (property.name in self.project.properties) {
-                    converter(self.project.property(property.name).toString())
-                } else {
-                    null
-                }
-            }
-            if (self.project.let { it != it.rootProject }) {
-                lazyValue = lazyValue.orElse(self.project.rootProject.multiPlatformHelper.getProvider(property))
-            }
-            lazyValue = lazyValue.orElse(defaultValue)
-            return self.project.objects.property(klass).convention(lazyValue)
-        }
+    companion object {
+        private val DEFAULT_KOTLIN_VERSION = KotlinVersion.CURRENT.toString()
+        private val DEFAULT_JVM_VERSION = JavaVersion.current().toString()
+        private const val DEFAULT_NODE_VERSION = "latest"
     }
 
-    private inline fun <reified T : Any> propertyWithConvention(
-        defaultValue: Provider<T>,
-        noinline converter: (String) -> T?,
-    ) = PropertyWithConvention(T::class.java, defaultValue, converter)
+    private val objects: ObjectFactory
+        get() = project.objects
 
-    private inline fun <reified T : Any> propertyWithConvention(
-        defaultValue: T? = null,
-        noinline converter: (String) -> T?,
-    ) = propertyWithConvention(project.provider<T> { defaultValue }, converter)
+    private inline fun <reified T : Any> propertyWithConvention(defaultValue: T?) =
+        objects.property(T::class.java).let {
+            if (defaultValue != null) {
+                it.convention(defaultValue)
+            } else {
+                it
+            }
+        }
+
+    private inline fun <reified T : Any> propertyWithLazyConvention(crossinline defaultValue: () -> T?) =
+        objects.property(T::class.java).convention(project.provider { defaultValue() })
 
     private fun booleanPropertyWithConvention(defaultValue: Boolean = false) =
-        propertyWithConvention(defaultValue) { it.toBooleanStrict() }
+        propertyWithConvention(defaultValue)
 
     private fun propertyWithConvention(defaultValue: String? = null, ignoreBlank: Boolean = true) =
-        propertyWithConvention(defaultValue) { if (it.isBlank() && ignoreBlank) null else it }
+        if (ignoreBlank) {
+            propertyWithConvention<String>(defaultValue?.takeIf(String::isNotBlank))
+        } else {
+            propertyWithConvention<String>(defaultValue)
+        }
 
     private fun urlPropertyWithConvention(defaultValue: URL? = null) =
-        propertyWithConvention<URL>(defaultValue) {
-            if (it.isBlank()) {
-                null
-            } else {
-                val url = runCatching { it.toURL() }
-                if (url.isFailure) {
-                    project.log("invalid URL: $it", LogLevel.WARN)
-                }
-                url.getOrNull()
-            }
+        propertyWithConvention<URL>(defaultValue)
+
+    private fun filePropertyWithConvention(vararg files: File): RegularFileProperty =
+        objects.fileProperty().let { property ->
+            files.firstOrNull { it.exists() && it.isFile }?.let { property.convention { it } } ?: property
         }
 
-    private fun filePropertyWithConvention(defaultValue: File? = null) =
-        propertyWithConvention<File>(defaultValue) {
-            if (it.isBlank()) {
-                null
-            } else {
-                val file = runCatching { File(it) }
-                if (file.isFailure) {
-                    project.log("invalid file: $it", LogLevel.WARN)
-                } else if (file.isSuccess && !file.getOrThrow().exists()) {
-                    project.log("file does not exist: $it", LogLevel.WARN)
-                }
-                file.getOrNull()
-            }
-        }
+    override val disableJavadocTask: Property<Boolean> = booleanPropertyWithConvention(true)
 
-    override val disableJavadocTask: Property<Boolean> by booleanPropertyWithConvention(true)
+    override val allWarningsAsErrors: Property<Boolean> = booleanPropertyWithConvention(false)
 
-    override val allWarningsAsErrors: Property<Boolean> by booleanPropertyWithConvention(false)
+    override val issuesEmail: Property<String> = propertyWithConvention()
 
-    override val issuesEmail: Property<String> by propertyWithConvention()
+    override val issuesUrl: Property<URL> = urlPropertyWithConvention()
 
-    override val issuesUrl: Property<URL> by urlPropertyWithConvention()
+    override val ktTargetJsDisable: Property<Boolean> = booleanPropertyWithConvention(false)
 
-    override val ktTargetJsDisable: Property<Boolean> by booleanPropertyWithConvention(false)
+    override val ktTargetJvmDisable: Property<Boolean> = booleanPropertyWithConvention(false)
 
-    override val ktTargetJvmDisable: Property<Boolean> by booleanPropertyWithConvention(false)
+    override val repoOwner: Property<String> = propertyWithConvention()
 
-    override val repoOwner: Property<String> by propertyWithConvention()
+    override val mavenCentralPassword: Property<String> = propertyWithConvention()
 
-    override val mavenCentralPassword: Property<String> by propertyWithConvention()
+    override val mavenCentralUsername: Property<String> = propertyWithConvention()
 
-    override val mavenCentralUsername: Property<String> by propertyWithConvention()
+    override val otherMavenRepo: Property<URL> = urlPropertyWithConvention()
 
-    override val otherMavenRepo: Property<URL> by urlPropertyWithConvention()
+    override val otherMavenPassword: Property<String> = propertyWithConvention()
 
-    override val otherMavenPassword: Property<String> by propertyWithConvention()
+    override val otherMavenUsername: Property<String> = propertyWithConvention()
 
-    override val otherMavenUsername: Property<String> by propertyWithConvention()
+    override val mochaTimeout: Property<String> = propertyWithConvention("10m")
 
-    override val mochaTimeout: Property<String> by propertyWithConvention("10m")
+    override val npmDryRun: Property<Boolean> = booleanPropertyWithConvention(false)
 
-    override val npmDryRun: Property<Boolean> by booleanPropertyWithConvention(false)
+    override val npmOrganization: Property<String> = propertyWithConvention()
 
-    override val npmOrganization: Property<String> by propertyWithConvention()
+    override val npmRepo: Property<URL> = urlPropertyWithConvention()
 
-    override val npmRepo: Property<URL> by urlPropertyWithConvention()
+    override val npmToken: Property<String> = propertyWithConvention()
 
-    override val npmToken: Property<String> by propertyWithConvention()
+    override val projectDescription: Property<String> = propertyWithLazyConvention {
+        project.description
+    }
 
-    override val projectDescription: Property<String> by propertyWithConvention(
-        project.provider<String> { project.description },
-    ) { it }
+    override val projectHomepage: Property<URL> = urlPropertyWithConvention()
 
-    override val projectHomepage: Property<URL> by urlPropertyWithConvention()
+    override val projectLicense: Property<String> = propertyWithConvention()
 
-    override val projectLicense: Property<String> by propertyWithConvention()
+    override val projectLicenseUrl: Property<URL> = urlPropertyWithConvention()
 
-    override val projectLicenseUrl: Property<URL> by urlPropertyWithConvention()
+    override val projectLongName: Property<String> = propertyWithConvention()
 
-    override val projectLongName: Property<String> by propertyWithConvention()
+    override val scmConnection: Property<String> = propertyWithConvention()
 
-    override val scmConnection: Property<String> by propertyWithConvention()
+    override val scmUrl: Property<URL> = urlPropertyWithConvention()
 
-    override val scmUrl: Property<URL> by urlPropertyWithConvention()
+    override val signingKey: Property<String> = propertyWithConvention()
 
-    override val signingKey: Property<String> by propertyWithConvention()
+    override val signingPassword: Property<String> = propertyWithConvention()
 
-    override val signingPassword: Property<String> by propertyWithConvention()
+    override val useKotlinBom: Property<Boolean> = booleanPropertyWithConvention()
 
-    override val useKotlinBom: Property<Boolean> by booleanPropertyWithConvention()
-
-    override val versionsFromCatalog: Property<String> by propertyWithConvention("libs")
+    override val versionsFromCatalog: Property<String> = propertyWithConvention("libs")
 
     private fun getVersionFromCatalog(name: String): Provider<String> =
         versionsFromCatalog.flatMap { catalog ->
@@ -165,112 +129,207 @@ internal open class MultiPlatformHelperExtensionImpl(project: Project) : MultiPl
             }
         }
 
-    private fun versionProperty(name: String, defaultValue: String? = null) = propertyWithConvention(
-        defaultValue = getVersionFromCatalog(name).orElse("latest").let {
+    private fun versionProvider(name: String, defaultValue: String? = null): Provider<String> =
+        getVersionFromCatalog(name).let {
             if (defaultValue != null) {
                 it.orElse(defaultValue)
             } else {
                 it
             }
-        },
-        converter = { it.takeIf(String::isNotBlank) },
-    )
+        }
 
-    override val nodeVersion: Property<String> by versionProperty("node", "latest")
+    override val nodeVersion: Property<String> = propertyWithConvention(DEFAULT_NODE_VERSION)
 
-    override val jvmVersion: Property<String> by versionProperty("jvm", JavaVersion.current().toString())
+    override val jvmVersion: Property<String> = propertyWithConvention(DEFAULT_JVM_VERSION)
 
-    override val kotlinVersion: Property<String> by versionProperty("kotlin")
+    override val kotlinVersion: Property<String> = propertyWithConvention(DEFAULT_KOTLIN_VERSION)
 
-    override val docStyle: Property<DocStyle> by propertyWithConvention(DocStyle.HTML) {
-        DocStyle.valueOf(it.uppercase(Locale.getDefault()))
-    }
+    override val docStyle: Property<DocStyle> = propertyWithConvention(DocStyle.HTML)
 
     override val developers: DomainObjectCollection<Developer> = project.objects.domainObjectSet(Developer::class.java)
 
-    private val ktCompilerArgs: Property<String> by propertyWithConvention("")
+    override val ktCompilerArgs: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
 
-    private val ktCompilerArgsJs: Property<String> by propertyWithConvention("")
+    override val ktCompilerArgsJs: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
 
-    private val ktCompilerArgsJvm: Property<String> by propertyWithConvention("")
+    override val ktCompilerArgsJvm: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
 
-    override val ktCompilerArguments: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
+    override val jsPackageName: Property<String> = propertyWithLazyConvention {
+        project.jsPackageName
+    }
 
-    override val ktCompilerArgumentsJs: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
-
-    override val ktCompilerArgumentsJvm: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
-
-    override val jsPackageName: Property<String> by propertyWithConvention(
-        defaultValue = project.provider { project.jsPackageName },
-        converter = { it },
-    )
-
-    override val bugFinderConfigPath: Property<File> by filePropertyWithConvention(
-        project.rootProject.file(".detekt.yml"),
+    override val bugFinderConfigPath = filePropertyWithConvention(
+        project.file(".detekt.yml"),
+        project.rootProject.project.file(".detekt.yml"),
     )
 
     override val bugFinderConfig: FileCollection
         get() = project.objects.fileCollection().also { collection ->
-            bugFinderConfigPath.orNull?.takeIf { it.exists() }?.let {
+            bugFinderConfigPath.orNull?.takeIf { it.asFile.exists() }?.let {
                 collection.from(it)
             }
         }
 
-    override val jsBinaryType: Property<JsBinaryType> by propertyWithConvention(JsBinaryType.LIBRARY) {
-        JsBinaryType.valueOf(it.uppercase(Locale.getDefault()))
-    }
+    override val jsBinaryType: Property<JsBinaryType> = propertyWithConvention(JsBinaryType.LIBRARY)
 
-    internal val fatJarPlatformNames: Property<String> by propertyWithConvention("", ignoreBlank = false)
+    override val fatJarPlatforms: DomainObjectSet<String> = objects.domainObjectSet(String::class.java)
 
-    override val fatJarPlatforms: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
-
-    override val fatJarClassifier: Property<String> by propertyWithConvention("redist")
-
-    private val fatJarPlatformInclude: Property<String> by propertyWithConvention("")
+    override val fatJarClassifier: Property<String> = propertyWithConvention("redist")
 
     @Suppress("UNCHECKED_CAST")
     override val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>> =
         project.objects.domainObjectSet(Pair::class.java) as DomainObjectSet<Pair<String, String>>
 
-    override val fatJarEntryPoint: Property<String> by propertyWithConvention()
+    override val fatJarEntryPoint: Property<String> = propertyWithConvention()
 
-    private fun populateArgumentsFromArgs() {
-        for ((string, collection) in listOf(
-            ktCompilerArgs to ktCompilerArguments,
-            ktCompilerArgsJvm to ktCompilerArgumentsJvm,
-            ktCompilerArgsJs to ktCompilerArgumentsJs,
-        )) {
-            collection.addAllLater(string.separateBy(';'))
+    override fun populateArgumentsFromProperties() {
+        for (property in listOf(::ktCompilerArgs, ::ktCompilerArgsJvm, ::ktCompilerArgsJs)) {
+            project.findProperty(property.name)?.let { value ->
+                property.get().addAll(value.toString().separateBy(';'))
+            }
         }
     }
 
-    private fun populateDevelopersFromProperties() {
-        developers.addAllLater(project.provider { project.getAllDevs() })
+    override fun populateDevelopersFromProperties() {
+        developers.addAll(project.getAllDevs())
     }
 
-    internal fun populateFatJarPlatformsFromNames() {
-        fatJarPlatforms.addAllLater(fatJarPlatformNames.separateBy(';'))
+    override fun populateFatJarPlatformsFromNames() {
+        fatJarPlatforms.addAll(
+            project.findProperty(::fatJarPlatforms.name)?.toString()?.separateBy(';').orEmpty(),
+        )
     }
 
-    private fun populateFatJarPlatformIncludesFromProperties() {
+    override fun populateFatJarPlatformIncludesFromProperties() {
         fun parse(input: String?) = input?.separateBy(';')
             ?.flatMap { pair ->
                 val (key, values) = pair.separateBy(':').let { it[0] to it[1] }
                 values.separateBy(',').map { key to it }
             }.orEmpty()
-        fatJarPlatformInclusions.addAllLater(fatJarPlatformInclude.map { parse(it) })
+        fatJarPlatformInclusions.addAll(
+            parse(project.findProperty(::fatJarPlatformInclusions.name)?.toString()),
+        )
     }
 
     private fun String.separateBy(separator: Char) =
         split(separator).filter { it.isNotBlank() }.map { it.trim() }
 
-    private fun Provider<String>.separateBy(separator: Char) =
-        map { it.toString().separateBy(separator) }
+    context(KProperty0<*>)
+    private fun <T> T?.returnLogging(): T? =
+        this.also {
+            if (it == null) {
+                project.log("gradle property '$name' is unset or blank")
+            } else {
+                project.log("infer $name from homonymous gradle property of value '$it'")
+            }
+        }
 
-    init {
-        populateArgumentsFromArgs()
-        populateDevelopersFromProperties()
+    private fun <T> KProperty0<Property<T>>.populateFromProperty(converter: (String) -> T?): T? =
+        project.findProperty(name)
+            ?.let { converter(it.toString()) }
+            ?.let {
+                get().set(it)
+                it
+            }
+            .returnLogging()
+
+    private fun KProperty0<RegularFileProperty>.populateFromProperty(): File? =
+        project.findProperty(name)
+            ?.let { project.file(it.toString()) }
+            ?.let {
+                get().set(it)
+                it
+            }
+            .returnLogging()
+
+    private fun KProperty0<Property<URL>>.populateFromProperty() =
+        populateFromProperty { runCatching { it.toURL() }.takeIf(Result<*>::isSuccess)?.getOrNull() }
+
+    private fun KProperty0<Property<String>>.populateFromProperty(ignoreBlank: Boolean = true) =
+        populateFromProperty {
+            if (ignoreBlank) {
+                it.takeIf(String::isNotBlank)
+            } else {
+                it
+            }
+        }
+
+    private fun KProperty0<Property<Boolean>>.populateFromProperty() = populateFromProperty { it.toBooleanStrict() }
+
+    override fun initializeVersionsRelatedProperties(jvm: Boolean, node: Boolean) {
+        ::versionsFromCatalog.populateFromProperty()
+        ::kotlinVersion.populateFromProperty()
+            ?: kotlinVersion.set(versionProvider("kotlin", DEFAULT_KOTLIN_VERSION))
+        if (jvm) {
+            ::jvmVersion.populateFromProperty()
+                ?: jvmVersion.set(versionProvider("jvm", DEFAULT_KOTLIN_VERSION))
+        }
+        if (node) {
+            ::nodeVersion.populateFromProperty()
+                ?: nodeVersion.set(versionProvider("node", DEFAULT_NODE_VERSION))
+        }
+    }
+
+    override fun initializeKotlinRelatedProperties() {
+        ::allWarningsAsErrors.populateFromProperty()
+        ::ktTargetJsDisable.populateFromProperty()
+        ::ktTargetJvmDisable.populateFromProperty()
+        ::useKotlinBom.populateFromProperty()
+        populateArgumentsFromProperties()
+    }
+
+    override fun initializeJsRelatedProperties() {
+        ::mochaTimeout.populateFromProperty()
+        ::jsBinaryType.populateFromProperty { str ->
+            str.takeIf(String::isNotBlank)?.let { JsBinaryType.valueOf(it.uppercase(Locale.getDefault())) }
+        }
+    }
+
+    override fun initializeJvmRelatedProperties() {
+        ::disableJavadocTask.populateFromProperty()
+    }
+
+    override fun initializeFatJarRelatedProperties() {
+        ::fatJarEntryPoint.populateFromProperty()
+        ::fatJarClassifier.populateFromProperty()
         populateFatJarPlatformsFromNames()
         populateFatJarPlatformIncludesFromProperties()
+    }
+
+    override fun initializeBugFinderRelatedProperties() {
+        ::bugFinderConfigPath.populateFromProperty()
+    }
+
+    override fun initializeMavenRelatedProperties() {
+        ::issuesEmail.populateFromProperty()
+        ::issuesUrl.populateFromProperty()
+        ::repoOwner.populateFromProperty()
+        ::mavenCentralPassword.populateFromProperty()
+        ::mavenCentralUsername.populateFromProperty()
+        ::otherMavenRepo.populateFromProperty()
+        ::otherMavenPassword.populateFromProperty()
+        ::otherMavenUsername.populateFromProperty()
+        ::projectDescription.populateFromProperty()
+        ::projectHomepage.populateFromProperty()
+        ::projectLicense.populateFromProperty()
+        ::projectLicenseUrl.populateFromProperty()
+        ::projectLongName.populateFromProperty()
+        ::scmConnection.populateFromProperty()
+        ::scmUrl.populateFromProperty()
+        ::signingKey.populateFromProperty()
+        ::signingPassword.populateFromProperty()
+        ::docStyle.populateFromProperty { str ->
+            str.takeIf(String::isNotBlank)?.let { DocStyle.valueOf(it.uppercase(Locale.getDefault())) }
+        }
+        populateDevelopersFromProperties()
+    }
+
+    override fun initializeNpmRelatedProperties() {
+        ::jsPackageName.populateFromProperty()
+        ::npmDryRun.populateFromProperty()
+        ::npmOrganization.populateFromProperty()
+        ::npmRepo.populateFromProperty()
+        ::npmToken.populateFromProperty()
+        populateDevelopersFromProperties()
     }
 }

@@ -6,8 +6,8 @@ import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
-import java.io.File
 import java.net.URL
 
 interface MultiPlatformHelperExtension {
@@ -16,9 +16,9 @@ interface MultiPlatformHelperExtension {
     val developers: DomainObjectCollection<Developer>
     val issuesEmail: Property<String>
     val issuesUrl: Property<URL>
-    val ktCompilerArguments: DomainObjectSet<String>
-    val ktCompilerArgumentsJs: DomainObjectSet<String>
-    val ktCompilerArgumentsJvm: DomainObjectSet<String>
+    val ktCompilerArgs: DomainObjectSet<String>
+    val ktCompilerArgsJs: DomainObjectSet<String>
+    val ktCompilerArgsJvm: DomainObjectSet<String>
     val ktTargetJsDisable: Property<Boolean>
     val ktTargetJvmDisable: Property<Boolean>
     val repoOwner: Property<String>
@@ -48,7 +48,7 @@ interface MultiPlatformHelperExtension {
     val jvmVersion: Property<String>
     val docStyle: Property<DocStyle>
     val jsPackageName: Property<String>
-    val bugFinderConfigPath: Property<File>
+    val bugFinderConfigPath: RegularFileProperty
     val bugFinderConfig: FileCollection
     val jsBinaryType: Property<JsBinaryType>
     val fatJarPlatforms: DomainObjectSet<String>
@@ -57,4 +57,17 @@ interface MultiPlatformHelperExtension {
     val fatJarEntryPoint: Property<String>
     fun fatJarPlatformInclude(platform: String, vararg includes: String) =
         includes.forEach { fatJarPlatformInclusions.add(platform to it) }
+
+    fun populateArgumentsFromProperties()
+    fun populateDevelopersFromProperties()
+    fun populateFatJarPlatformsFromNames()
+    fun populateFatJarPlatformIncludesFromProperties()
+    fun initializeVersionsRelatedProperties(jvm: Boolean = true, node: Boolean = true)
+    fun initializeKotlinRelatedProperties()
+    fun initializeJsRelatedProperties()
+    fun initializeJvmRelatedProperties()
+    fun initializeFatJarRelatedProperties()
+    fun initializeBugFinderRelatedProperties()
+    fun initializeMavenRelatedProperties()
+    fun initializeNpmRelatedProperties()
 }

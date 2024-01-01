@@ -11,6 +11,7 @@ class FatJarPlugin : AbstractProjectPlugin() {
     override fun Project.applyThisPlugin() {
         apply<ShadowPlugin>()
         log("apply ${ShadowPlugin::class.java.name} plugin")
+        multiPlatformHelper.initializeFatJarRelatedProperties()
         shadowJarTask()
         multiPlatformHelper.fatJarPlatforms.all {
             shadowJarTask(platform = it)

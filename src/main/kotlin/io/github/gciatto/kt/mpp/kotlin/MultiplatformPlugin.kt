@@ -17,6 +17,8 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
+        multiPlatformHelper.initializeVersionsRelatedProperties()
+        multiPlatformHelper.initializeKotlinRelatedProperties()
         configureKotlinVersionFromCatalogIfPossible()
         configureJvmVersionFromCatalogIfPossible()
         configureNodeVersionFromCatalogIfPossible()
@@ -57,6 +59,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
 
     context(Project, KotlinMultiplatformExtension)
     private fun KotlinJvmTarget.configureJvm() {
+        multiPlatformHelper.initializeJvmRelatedProperties()
         withJava()
         log("configure Kotlin JVM target to accept Java sources")
         compilations.all { compilation ->
@@ -76,6 +79,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
 
     context(Project, KotlinMultiplatformExtension)
     private fun KotlinJsTargetDsl.configureJs() {
+        multiPlatformHelper.initializeJsRelatedProperties()
         binaries.configureAutomatically()
         compilations.all { compilation ->
             compilation.kotlinOptions {
