@@ -1,3 +1,15 @@
+## [4.1.0](https://github.com/gciatto/kt-mpp/compare/4.0.4...4.1.0) (2024-01-02)
+
+
+### Features
+
+* fix properties inheritance among projects ([ce33d53](https://github.com/gciatto/kt-mpp/commit/ce33d53e9a5ac69193e5eb42653f0efed7b90e35))
+
+
+### General maintenance
+
+* test properties override ([b3e2390](https://github.com/gciatto/kt-mpp/commit/b3e2390efac3bfcb08db91a623025160b1171a7b))
+
 ## [4.0.4](https://github.com/gciatto/kt-mpp/compare/4.0.3...4.0.4) (2023-12-31)
 
 
