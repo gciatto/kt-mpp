@@ -1,3 +1,33 @@
+## [4.1.1](https://github.com/gciatto/kt-mpp/compare/4.1.0...4.1.1) (2024-02-02)
+
+
+### Dependency updates
+
+* **core-deps:** update dependency gradle to v8.6 ([2ee3caa](https://github.com/gciatto/kt-mpp/commit/2ee3caa8496742f44a0fd33a2a20ea9d042756bc))
+* **deps:** update dependency io.gitlab.arturbosch.detekt:detekt-gradle-plugin to v1.23.5 ([f0dc687](https://github.com/gciatto/kt-mpp/commit/f0dc687463b18b1112fca433c59f6c72bb2c803f))
+* **deps:** update dependency org.danilopianini:publish-on-central to v5.0.23 ([aac234b](https://github.com/gciatto/kt-mpp/commit/aac234b1a7d8a000249b239e1eb736e5a64f73d0))
+* **deps:** update ktlint to v12.1.0 ([9959fc3](https://github.com/gciatto/kt-mpp/commit/9959fc3064c0829978333a362154c76ced9316b7))
+* **deps:** update node.js to 20.11 ([7a8c5a8](https://github.com/gciatto/kt-mpp/commit/7a8c5a8762e1d4068b23d9fbc6ad20a7ed1612f6))
+* **deps:** update plugin com.gradle.enterprise to v3.16.2 ([c9e2b65](https://github.com/gciatto/kt-mpp/commit/c9e2b65eb4a01075a689602ff0a49baaba59ba9b))
+* **deps:** update plugin gitsemver to v3 ([558610a](https://github.com/gciatto/kt-mpp/commit/558610a366c3c22771f34f50407e043a36cda6ce))
+* **deps:** update plugin gitsemver to v3.1.0 ([c79cd2b](https://github.com/gciatto/kt-mpp/commit/c79cd2b3992e280e1e7c33473f29688cc78e4d0c))
+* **deps:** update plugin kotlin-qa to v0.58.0 ([efc2ce3](https://github.com/gciatto/kt-mpp/commit/efc2ce34ceb7b31c55c1e8edd9de51611d0ecd15))
+* **deps:** update plugin kotlin-qa to v0.59.0 ([a89c4aa](https://github.com/gciatto/kt-mpp/commit/a89c4aada5747a3419c5c7c6453900ac55a7c604))
+* **deps:** update plugin kotlin-qa to v0.59.1 ([fdeab9c](https://github.com/gciatto/kt-mpp/commit/fdeab9c0a545a9cdf66673b029b0677cf3a80c14))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2 ([52b1436](https://github.com/gciatto/kt-mpp/commit/52b143602c56f85a3f9e115dd91f91bc5fd5d458))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v0.8.0 ([70addf0](https://github.com/gciatto/kt-mpp/commit/70addf03b5cefd5efa45b52a623052ea5271f35f))
+
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.13 ([9d7ea0c](https://github.com/gciatto/kt-mpp/commit/9d7ea0c728332dc46e7283174c266e637cd857eb))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.14 ([d1090a4](https://github.com/gciatto/kt-mpp/commit/d1090a444fcc5e5ebd962e2a389cb044c9a3edfa))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.15 ([5daf40e](https://github.com/gciatto/kt-mpp/commit/5daf40e6b13687be0c1f1a7e7e37eb449622cfb6))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.16 ([3b67a35](https://github.com/gciatto/kt-mpp/commit/3b67a3567b9d5e6197da11884135a16ea532db65))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.17 ([949ea73](https://github.com/gciatto/kt-mpp/commit/949ea73da1c7472f81ffcd9c176c734a5d7e448b))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.19 ([f0da314](https://github.com/gciatto/kt-mpp/commit/f0da314c56e08987f4d7547bd8099a4f42bba763))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.2.20 ([42979f7](https://github.com/gciatto/kt-mpp/commit/42979f750f23b86fc2f073149b399119e07d3594))
+
 ## [4.1.0](https://github.com/gciatto/kt-mpp/compare/4.0.4...4.1.0) (2024-01-02)
 
 
