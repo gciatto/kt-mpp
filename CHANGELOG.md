@@ -1,3 +1,27 @@
+## [4.1.2](https://github.com/gciatto/kt-mpp/compare/4.1.1...4.1.2) (2024-03-04)
+
+
+### Dependency updates
+
+* **core-deps:** update dokka to v1.9.20 ([a56026b](https://github.com/gciatto/kt-mpp/commit/a56026b79463b55ce264f821d01e97d5f2a33822))
+* **deps:** update plugin gitsemver to v3.1.1 ([e2ee95d](https://github.com/gciatto/kt-mpp/commit/e2ee95d4c618d8c9d02f83eb2e82693879d2b2c6))
+* **deps:** update plugin gitsemver to v3.1.2 ([e2dc4e2](https://github.com/gciatto/kt-mpp/commit/e2dc4e2ab294f592284bf75e8c118008990ac66e))
+* **deps:** update plugin kotlin-qa to v0.60.0 ([c78be0c](https://github.com/gciatto/kt-mpp/commit/c78be0c1353fd0e8370f40397734b9d0132003c6))
+* **deps:** update plugin kotlin-qa to v0.60.1 ([23037af](https://github.com/gciatto/kt-mpp/commit/23037af048f177fafbd8485789709730c7bdbd22))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.0.1 ([179bc9b](https://github.com/gciatto/kt-mpp/commit/179bc9b918851fcd16516bea21c1e9e2499ae487))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v4.0.2 ([f29e5dd](https://github.com/gciatto/kt-mpp/commit/f29e5dde5f4bbfccf2c3fe72897fcdc8c765d9da))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.0 ([a973b47](https://github.com/gciatto/kt-mpp/commit/a973b47b0becef182264a185e8c0bf2b9e071062))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.1 ([2ef225f](https://github.com/gciatto/kt-mpp/commit/2ef225f9cb879c82220556fecf8407043a85e436))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.2 ([a02f20f](https://github.com/gciatto/kt-mpp/commit/a02f20f111533bab117637829a29617de2840bff))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.3 ([faa7fb5](https://github.com/gciatto/kt-mpp/commit/faa7fb542d4c4535d5da6aa4d2db8b849516deae))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.4 ([3c6ca5f](https://github.com/gciatto/kt-mpp/commit/3c6ca5f663bdbb4b709ef581a76ba8e7d4ba1a85))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.5 ([fc410eb](https://github.com/gciatto/kt-mpp/commit/fc410ebcf13d9af1fa983fe12bb7ec983cbd036a))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v2.4.6 ([a4f021b](https://github.com/gciatto/kt-mpp/commit/a4f021ba898acf806be8715265f0cd41912a2140))
+
 ## [4.1.1](https://github.com/gciatto/kt-mpp/compare/4.1.0...4.1.1) (2024-02-02)
 
 
