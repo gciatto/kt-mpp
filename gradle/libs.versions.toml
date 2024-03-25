@@ -1,5 +1,5 @@
 [versions]
-detekt = "1.23.5"
+detekt = "1.23.6"
 dokka = "1.9.20"
 jvm = "11"
 konf = "1.1.2"
