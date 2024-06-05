@@ -10,7 +10,7 @@ node = "18-latest"
 publishOnCentral = "5.1.2"
 
 [libraries]
-classgraph = "io.github.classgraph:classgraph:4.8.172"
+classgraph = "io.github.classgraph:classgraph:4.8.173"
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
