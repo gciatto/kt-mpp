@@ -8,16 +8,17 @@ import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import io.github.gciatto.kt.mpp.utils.nodeVersion
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.kotlin.dsl.DependencyHandlerScope
-import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
+import org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
@@ -97,35 +98,39 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         io.github.gciatto.kt.mpp.utils.kotlinPlugin(name)
 
     context(Project)
-    protected fun KotlinJvmOptions.configureJvmKotlinOptions(target: String) {
+    protected fun KotlinJvmCompilerOptions.configureJvmKotlinOptions() {
         multiPlatformHelper.ktCompilerArgs.all {
-            freeCompilerArgs += it
-            log("add JVM-specific free compiler arg for $target: $it")
+            freeCompilerArgs.add(it)
+            log("add JVM-specific free compiler arg for Kotlin compiler: $it")
         }
     }
 
     context(Project)
-    protected fun KotlinJsOptions.configureJsKotlinOptions(target: String) {
-        main = "noCall"
+    protected fun KotlinJsCompilerOptions.configureJsKotlinOptions() {
+        main.set(JsMainFunctionExecutionMode.NO_CALL)
         multiPlatformHelper.ktCompilerArgs.all {
-            freeCompilerArgs += it
-            log("add JVM-specific free compiler arg for $target: $it")
+            freeCompilerArgs.add(it)
+            log("add JVM-specific free compiler arg for Kotlin compiler: $it")
         }
         multiPlatformHelper.ktCompilerArgsJs.all {
-            freeCompilerArgs += it
-            log("add JS-specific free compiler arg for $target: $it")
+            freeCompilerArgs.add(it)
+            log("add JS-specific free compiler arg for Kotlin compiler: $it")
         }
     }
 
     context(Project)
-    protected fun KotlinCommonOptions.configureKotlinOptions(target: String) {
-        allWarningsAsErrors = multiPlatformHelper.allWarningsAsErrors.get()
-        if (allWarningsAsErrors) {
-            log("consider all warnings as errors when compiling Kotlin sources in $target")
-        }
+    protected fun KotlinCommonCompilerOptions.configureKotlinOptions() {
+        allWarningsAsErrors.set(
+            multiPlatformHelper.allWarningsAsErrors.map {
+                if (it) {
+                    log("consider all warnings as errors when compiling Kotlin sources")
+                }
+                it
+            },
+        )
         multiPlatformHelper.ktCompilerArgs.all {
-            freeCompilerArgs += it
-            log("add free compiler arg for $target: $it")
+            freeCompilerArgs.add(it)
+            log("add free compiler arg for Kotlin compiler")
         }
     }
 
@@ -208,7 +213,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun KotlinTarget.targetCompilationId(compilation: KotlinCompilation<*>): String =
         "${name}${compilation.compilationName.capital()}"
 
-    protected fun targetCompilationId(task: KotlinCompile<*>): String =
+    protected fun targetCompilationId(task: Task): String =
         task.name.replace("compile", "")
 
     context (Project, KotlinJsTargetDsl)

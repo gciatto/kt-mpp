@@ -2,57 +2,43 @@ package io.github.gciatto.kt.mpp.utils
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.URL
-import kotlin.streams.asSequence
 
 object NodeVersions {
-    private fun getLatestVersionOfWithMajor(major: String): String {
-        val url = "https://nodejs.org/dist/latest-v$major.x/".toURL()
-        return findVersion(url) ?: error("Cannot retrieve last version of node $major")
-    }
+    private const val NODE_DIST_URL = "https://nodejs.org/dist"
 
-    private fun getLatestVersion(): String {
-        val url = "https://nodejs.org/dist/latest/".toURL()
-        return findVersion(url) ?: error("Cannot retrieve last version of node")
-    }
-
-    private val FILE_REGEX = "\"node-v(\\d+).(\\d+).(\\d+).*?\"".toRegex()
-
-    private val MAJOR_REGEX = "\\d+".toRegex()
-
-    private val FULL_VERSION_REGEX = "\\d+.\\d+.\\d+".toRegex()
-
-    private val LATEST_VERSION_REGEX = "(?:v?)(\\d+)-latest|latest-(?:v?)(\\d+)".toRegex(RegexOption.IGNORE_CASE)
-
-    private fun findVersion(url: URL): String? {
-        BufferedReader(InputStreamReader(url.openStream())).use { reader ->
-            return reader.lines().asSequence()
-                .map { FILE_REGEX.find(it) }
-                .filterNotNull()
-                .filter { it.groups.size >= 3 }
-                .map { it.groupValues.subList(1, 4).joinToString(".") }
-                .firstOrNull()
-        }
+    private val VERSIONS: Set<StableVersion> by lazy {
+        val reader = BufferedReader(InputStreamReader(NODE_DIST_URL.toURL().openStream()))
+        StableVersion.parseAll(reader).toSet()
     }
 
     private val VERSIONS_CACHE = mutableMapOf<String, String>()
 
-    fun latest(major: String = "latest"): String =
-        VERSIONS_CACHE.computeIfAbsent(major) {
-            when {
-                it.equals("latest", ignoreCase = true) -> getLatestVersion()
-                MAJOR_REGEX.matches(it) -> getLatestVersionOfWithMajor(it)
-                else -> error("Major number expected, provided: $it")
-            }
-        }
+    private val MAJOR_REGEX = "^(\\d+)(?:\\.[a-zA-Z])?$".toRegex()
+    private val MAJOR_MINOR_REGEX = "^(\\d+)\\.(\\d+)(?:\\.[a-zA-Z])?$".toRegex()
+    private val FULL_VERSION_REGEX = "^(\\d+)\\.(\\d+)\\.(\\d+)$".toRegex()
+    private val LATEST_VERSION_REGEX = "^v?(\\d+)-latest|latest-v?(\\d+)$".toRegex(RegexOption.IGNORE_CASE)
 
-    fun toFullVersion(version: String): String = when {
-        version.equals("latest", ignoreCase = true) -> latest()
-        FULL_VERSION_REGEX.matches(version) -> version
-        else -> {
-            val match = LATEST_VERSION_REGEX.matchEntire(version) ?: error("Invalid version string: $version")
-            val major = match.groupValues.let { it.subList(1, it.size) }.first { !it.isEmpty() }
-            latest(major)
+    @Suppress("NAME_SHADOWING")
+    private fun findLatestVersion(version: String): StableVersion? {
+        val version = version.trim()
+        if (version.equals("latest", ignoreCase = true)) {
+            return VERSIONS.max()
+        }
+        val match = MAJOR_REGEX.matchEntire(version)
+            ?: LATEST_VERSION_REGEX.matchEntire(version)
+            ?: MAJOR_MINOR_REGEX.matchEntire(version)
+            ?: FULL_VERSION_REGEX.matchEntire(version)
+            ?: return null
+        val numbers = match.groupValues.drop(1).mapNotNull { it.toIntOrNull() }
+        val minVersion = StableVersion.of(numbers)
+        val upperBound = minVersion.nextMajor()
+        return VERSIONS.filter { it >= minVersion && it < upperBound }.maxOrNull().also {
+            println(it)
         }
     }
+
+    fun latest(version: String = "latest"): String =
+        VERSIONS_CACHE.computeIfAbsent(version) {
+            findLatestVersion(it)?.toVersionString() ?: error("No such node version: $version")
+        }
 }

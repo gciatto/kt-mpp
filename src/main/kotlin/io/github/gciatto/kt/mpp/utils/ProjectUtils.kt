@@ -8,6 +8,7 @@ import dev.petuska.npm.publish.extension.domain.json.PackageJson
 import dev.petuska.npm.publish.extension.domain.json.Person
 import io.github.gciatto.kt.mpp.helpers.MultiPlatformHelperExtension
 import io.github.gciatto.kt.mpp.publishing.Developer
+import io.github.gciatto.kt.mpp.utils.JvmVersions.toJvmTarget
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -23,7 +24,7 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.io.File
 import java.nio.charset.Charset
 import kotlin.jvm.optionals.asSequence
@@ -95,9 +96,9 @@ fun Project.jvmVersion(provider: Provider<String>) {
             log("set java.sourceCompatibility=$sourceCompatibility")
         }
     }
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = version.toString()
+    tasks.withType<KotlinJvmCompile> {
+        compilerOptions {
+            jvmTarget.set(version.toJvmTarget())
             log("set $path.jvmTarget=$jvmTarget")
         }
     }
@@ -120,9 +121,9 @@ fun Project.nodeVersion(default: Provider<String>, override: Any? = null) {
         configure<NodeJsRootExtension> {
             val requestedVersion = override?.toString()?.takeIf { it.isNotBlank() }
                 ?: default.takeIf { it.isPresent }?.get()
-                ?: nodeVersion
-            nodeVersion = NodeVersions.toFullVersion(requestedVersion)
-            log("set nodeVersion=$nodeVersion")
+                ?: version
+            version = NodeVersions.latest(requestedVersion)
+            log("set nodeVersion=$version")
         }
     }
 }

@@ -6,7 +6,8 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
     override val relevantPublications: Set<String> = setOf("kotlinOSSRH", "javaOSSRH")
@@ -21,10 +22,10 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         multiPlatformHelper.initializeJvmRelatedProperties()
         configureKotlinVersionFromCatalogIfPossible()
         configureJvmVersionFromCatalogIfPossible()
-        tasks.withType(KotlinCompile::class.java) { task ->
-            task.kotlinOptions {
-                configureKotlinOptions(targetCompilationId(task))
-                configureJvmKotlinOptions(targetCompilationId(task))
+        tasks.withType<KotlinJvmCompile> {
+            compilerOptions {
+                configureKotlinOptions()
+                configureJvmKotlinOptions()
             }
         }
         tasks.getByName("javadoc") {

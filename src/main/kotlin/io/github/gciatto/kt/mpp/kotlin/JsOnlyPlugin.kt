@@ -5,11 +5,13 @@ import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 
 class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
     override val relevantPublications: Set<String> = setOf("kotlinOSSRH")
 
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     override fun Project.applyThisPlugin() {
         apply(plugin = kotlinPlugin())
         log("apply ${kotlinPlugin()} plugin")
@@ -23,20 +25,18 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("js") {
                 binaries.configureAutomatically()
                 useCommonJs()
                 log("configure kotlin js to use CommonJS")
-                compilations.all { compilation ->
-                    compilation.kotlinOptions {
-                        configureKotlinOptions(targetCompilationId(compilation))
-                        configureJsKotlinOptions(targetCompilationId(compilation))
-                    }
+                compilerOptions {
+                    configureKotlinOptions()
+                    configureJsKotlinOptions()
                 }
                 configureNodeJs()
-                sourceSets.getByName("main") {
+                this@configure.sourceSets.getByName("main") {
                     dependencies {
                         val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
                         addMainDependencies(project, target = "js", skipBom = !useBom)
                     }
                 }
-                sourceSets.getByName("test") {
+                this@configure.sourceSets.getByName("test") {
                     dependencies {
                         addTestDependencies(project, target = "js", skipAnnotations = true)
                     }

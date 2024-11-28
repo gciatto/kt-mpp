@@ -5,7 +5,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
@@ -54,12 +54,6 @@ java {
     sourceCompatibility = jvmVersion
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = jvmVersion.toString()
-    }
-}
-
 dependencies {
     api(gradleApi())
     api(gradleKotlinDsl())
@@ -92,11 +86,10 @@ configurations.matching { "detekt" !in it.name }.all {
 
 kotlin {
     target {
-        compilations.all {
-            kotlinOptions {
-                allWarningsAsErrors = true
-                freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-receivers")
-            }
+        compilerOptions {
+            allWarningsAsErrors = true
+            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-receivers")
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 }

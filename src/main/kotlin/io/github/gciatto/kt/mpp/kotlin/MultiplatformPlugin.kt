@@ -5,11 +5,13 @@ import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import org.gradle.kotlin.dsl.apply
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     override val relevantPublications: Set<String> =
         setOf("jvm", "js", "kotlinMultiplatform")
@@ -42,17 +44,14 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             dependenciesFor("commonTest") {
                 addTestDependencies(project, "common", skipAnnotations = false)
             }
-            targets.all { target ->
-                target.compilations.all { compilation ->
-                    compilation.kotlinOptions {
-                        configureKotlinOptions(target.targetCompilationId(compilation))
-                    }
-                }
+            compilerOptions {
+                configureKotlinOptions()
             }
         }
     }
 
-    private fun KotlinMultiplatformExtension.dependenciesFor(
+    context(Project, KotlinMultiplatformExtension)
+    private fun dependenciesFor(
         sourceSet: String,
         action: KotlinDependencyHandler.() -> Unit,
     ) = sourceSets.getByName(sourceSet).dependencies(action)
@@ -62,10 +61,8 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         multiPlatformHelper.initializeJvmRelatedProperties()
         withJava()
         log("configure Kotlin JVM target to accept Java sources")
-        compilations.all { compilation ->
-            compilation.kotlinOptions {
-                configureJvmKotlinOptions(targetCompilationId(compilation))
-            }
+        compilerOptions {
+            configureJvmKotlinOptions()
         }
         val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
         dependenciesFor("jvmMain") {
@@ -81,10 +78,8 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     private fun KotlinJsTargetDsl.configureJs() {
         multiPlatformHelper.initializeJsRelatedProperties()
         binaries.configureAutomatically()
-        compilations.all { compilation ->
-            compilation.kotlinOptions {
-                configureJsKotlinOptions(targetCompilationId(compilation))
-            }
+        compilerOptions {
+            configureJsKotlinOptions()
         }
         configureNodeJs()
         val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
