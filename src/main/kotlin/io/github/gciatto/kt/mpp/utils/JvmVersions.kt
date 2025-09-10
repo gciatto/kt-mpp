@@ -5,11 +5,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 @Suppress("MemberVisibilityCanBePrivate")
 object JvmVersions {
-    fun String.toJavaVersion(): JavaVersion =
-        JavaVersion.toVersion(this)
+    fun String.toJavaVersion(): JavaVersion = JavaVersion.toVersion(this)
 
-    fun Number.toJavaVersion(): JavaVersion =
-        JavaVersion.toVersion(toString())
+    fun Number.toJavaVersion(): JavaVersion = JavaVersion.toVersion(toString())
 
     fun JavaVersion.toJvmTarget(): JvmTarget {
         val major = ordinal + 1

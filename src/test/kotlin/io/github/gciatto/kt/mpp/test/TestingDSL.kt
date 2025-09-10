@@ -15,7 +15,10 @@ data class Test(
     val expectation: Expectation,
 )
 
-data class Configuration(val tasks: List<String>, val options: List<String> = emptyList())
+data class Configuration(
+    val tasks: List<String>,
+    val options: List<String> = emptyList(),
+)
 
 @Suppress("ConstructorParameterNaming")
 data class Expectation(
@@ -29,12 +32,18 @@ data class Expectation(
     val output_doesnt_contain: List<String> = emptyList(),
 )
 
-enum class Permission(private val hasPermission: File.() -> Boolean) {
-    R(File::canRead), W(File::canWrite), X(File::canExecute);
+enum class Permission(
+    private val hasPermission: File.() -> Boolean,
+) {
+    R(File::canRead),
+    W(File::canWrite),
+    X(File::canExecute),
+    ;
 
-    fun requireOnFile(file: File) = require(file.hasPermission()) {
-        "File ${file.absolutePath} must have permission $name, but it does not."
-    }
+    fun requireOnFile(file: File) =
+        require(file.hasPermission()) {
+            "File ${file.absolutePath} must have permission $name, but it does not."
+        }
 }
 
 data class ExistingFile(
@@ -45,12 +54,17 @@ data class ExistingFile(
     val permissions: List<Permission> = emptyList(),
 ) {
     private fun Sequence<String>.trimLinesIfNecessary(): String =
-        if (trim) { map(String::trim) } else { this }.joinToString("\n")
+        if (trim) {
+            map(String::trim)
+        } else {
+            this
+        }.joinToString("\n")
 
     private val File.text: String
-        get() = bufferedReader().use {
-            it.lines().asSequence().trimLinesIfNecessary()
-        }
+        get() =
+            bufferedReader().use {
+                it.lines().asSequence().trimLinesIfNecessary()
+            }
 
     private val actualContents: List<String> by lazy {
         contents.map {
@@ -58,25 +72,26 @@ data class ExistingFile(
         }
     }
 
-    fun validate(actualFile: File): Unit = with(actualFile) {
-        require(exists()) {
-            "File $name does not exist."
-        }
-        if (actualContents.isNotEmpty()) {
-            val text = text
-            for (content in actualContents) {
-                require(content in text) {
-                    "Content of $this does not match contain the expected content:\n\t" +
-                        content.lines().joinToString("\n\t")
+    fun validate(actualFile: File): Unit =
+        with(actualFile) {
+            require(exists()) {
+                "File $name does not exist."
+            }
+            if (actualContents.isNotEmpty()) {
+                val text = text
+                for (content in actualContents) {
+                    require(content in text) {
+                        "Content of $this does not match contain the expected content:\n\t" +
+                            content.lines().joinToString("\n\t")
+                    }
                 }
             }
-        }
-        findRegex.forEach { regexString ->
-            val regex = Regex(regexString)
-            requireNotNull(readLines().find { regex.matches(it) }) {
-                "None of the lines in $this matches the regular expression $findRegex"
+            findRegex.forEach { regexString ->
+                val regex = Regex(regexString)
+                requireNotNull(readLines().find { regex.matches(it) }) {
+                    "None of the lines in $this matches the regular expression $findRegex"
+                }
             }
+            permissions.forEach { it.requireOnFile(this) }
         }
-        permissions.forEach { it.requireOnFile(this) }
-    }
 }

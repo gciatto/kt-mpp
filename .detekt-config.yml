@@ -6,4 +6,8 @@ comments:
   UndocumentedPublicProperty:
     active: false
 
-style: {}
+style:
+  MagicNumber:
+    active: false
+  ReturnCount:
+    active: false

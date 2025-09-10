@@ -19,12 +19,13 @@ import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import java.io.File
 import java.net.URL
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty0
 
 @Suppress("LeakingThis")
-internal open class MultiPlatformHelperExtensionImpl(private val project: Project) : MultiPlatformHelperExtension {
-
+internal open class MultiPlatformHelperExtensionImpl(
+    private val project: Project,
+) : MultiPlatformHelperExtension {
     companion object {
         private val DEFAULT_KOTLIN_VERSION = KotlinVersion.CURRENT.toString()
         private val DEFAULT_JVM_VERSION = JavaVersion.current().toString()
@@ -46,18 +47,18 @@ internal open class MultiPlatformHelperExtensionImpl(private val project: Projec
     private inline fun <reified T : Any> propertyWithLazyConvention(crossinline defaultValue: () -> T?) =
         objects.property(T::class.java).convention(project.provider { defaultValue() })
 
-    private fun booleanPropertyWithConvention(defaultValue: Boolean = false) =
-        propertyWithConvention(defaultValue)
+    private fun booleanPropertyWithConvention(defaultValue: Boolean = false) = propertyWithConvention(defaultValue)
 
-    private fun propertyWithConvention(defaultValue: String? = null, ignoreBlank: Boolean = true) =
-        if (ignoreBlank) {
-            propertyWithConvention<String>(defaultValue?.takeIf(String::isNotBlank))
-        } else {
-            propertyWithConvention<String>(defaultValue)
-        }
+    private fun propertyWithConvention(
+        defaultValue: String? = null,
+        ignoreBlank: Boolean = true,
+    ) = if (ignoreBlank) {
+        propertyWithConvention<String>(defaultValue?.takeIf(String::isNotBlank))
+    } else {
+        propertyWithConvention<String>(defaultValue)
+    }
 
-    private fun urlPropertyWithConvention(defaultValue: URL? = null) =
-        propertyWithConvention<URL>(defaultValue)
+    private fun urlPropertyWithConvention(defaultValue: URL? = null) = propertyWithConvention<URL>(defaultValue)
 
     private fun filePropertyWithConvention(vararg files: File): RegularFileProperty =
         objects.fileProperty().let { property ->
@@ -98,9 +99,10 @@ internal open class MultiPlatformHelperExtensionImpl(private val project: Projec
 
     override val npmToken: Property<String> = propertyWithConvention()
 
-    override val projectDescription: Property<String> = propertyWithLazyConvention {
-        project.description
-    }
+    override val projectDescription: Property<String> =
+        propertyWithLazyConvention {
+            project.description
+        }
 
     override val projectHomepage: Property<URL> = urlPropertyWithConvention()
 
@@ -129,7 +131,10 @@ internal open class MultiPlatformHelperExtensionImpl(private val project: Projec
             }
         }
 
-    private fun versionProvider(name: String, defaultValue: String? = null): Provider<String> =
+    private fun versionProvider(
+        name: String,
+        defaultValue: String? = null,
+    ): Provider<String> =
         getVersionFromCatalog(name).let {
             if (defaultValue != null) {
                 it.orElse(defaultValue)
@@ -154,21 +159,24 @@ internal open class MultiPlatformHelperExtensionImpl(private val project: Projec
 
     override val ktCompilerArgsJvm: DomainObjectSet<String> = project.objects.domainObjectSet(String::class.java)
 
-    override val jsPackageName: Property<String> = propertyWithLazyConvention {
-        project.jsPackageName
-    }
+    override val jsPackageName: Property<String> =
+        propertyWithLazyConvention {
+            project.jsPackageName
+        }
 
-    override val bugFinderConfigPath = filePropertyWithConvention(
-        project.file(".detekt.yml"),
-        project.rootProject.project.file(".detekt.yml"),
-    )
+    override val bugFinderConfigPath =
+        filePropertyWithConvention(
+            project.file(".detekt.yml"),
+            project.rootProject.project.file(".detekt.yml"),
+        )
 
     override val bugFinderConfig: FileCollection
-        get() = project.objects.fileCollection().also { collection ->
-            bugFinderConfigPath.orNull?.takeIf { it.asFile.exists() }?.let {
-                collection.from(it)
+        get() =
+            project.objects.fileCollection().also { collection ->
+                bugFinderConfigPath.orNull?.takeIf { it.asFile.exists() }?.let {
+                    collection.from(it)
+                }
             }
-        }
 
     override val jsBinaryType: Property<JsBinaryType> = propertyWithConvention(JsBinaryType.LIBRARY)
 
@@ -196,51 +204,56 @@ internal open class MultiPlatformHelperExtensionImpl(private val project: Projec
 
     override fun populateFatJarPlatformsFromNames() {
         fatJarPlatforms.addAll(
-            project.findProperty(::fatJarPlatforms.name)?.toString()?.separateBy(';').orEmpty(),
+            project
+                .findProperty(::fatJarPlatforms.name)
+                ?.toString()
+                ?.separateBy(';')
+                .orEmpty(),
         )
     }
 
     override fun populateFatJarPlatformIncludesFromProperties() {
-        fun parse(input: String?) = input?.separateBy(';')
-            ?.flatMap { pair ->
-                val (key, values) = pair.separateBy(':').let { it[0] to it[1] }
-                values.separateBy(',').map { key to it }
-            }.orEmpty()
+        fun parse(input: String?) =
+            input
+                ?.separateBy(';')
+                ?.flatMap { pair ->
+                    val (key, values) = pair.separateBy(':').let { it[0] to it[1] }
+                    values.separateBy(',').map { key to it }
+                }.orEmpty()
         fatJarPlatformInclusions.addAll(
             parse(project.findProperty(::fatJarPlatformInclusions.name)?.toString()),
         )
     }
 
-    private fun String.separateBy(separator: Char) =
-        split(separator).filter { it.isNotBlank() }.map { it.trim() }
+    private fun String.separateBy(separator: Char) = split(separator).filter { it.isNotBlank() }.map { it.trim() }
 
-    context(KProperty0<*>)
+    context(x: KProperty0<*>)
     private fun <T> T?.returnLogging(): T? =
         this.also {
             if (it == null) {
-                project.log("gradle property '$name' is unset or blank")
+                project.log("gradle property '${x.name}' is unset or blank")
             } else {
-                project.log("infer $name from homonymous gradle property of value '$it'")
+                project.log("infer ${x.name} from homonymous gradle property of value '$it'")
             }
         }
 
     private fun <T> KProperty0<Property<T>>.populateFromProperty(converter: (String) -> T?): T? =
-        project.findProperty(name)
+        project
+            .findProperty(name)
             ?.let { converter(it.toString()) }
             ?.let {
                 get().set(it)
                 it
-            }
-            .returnLogging()
+            }.returnLogging()
 
     private fun KProperty0<RegularFileProperty>.populateFromProperty(): File? =
-        project.findProperty(name)
+        project
+            .findProperty(name)
             ?.let { project.file(it.toString()) }
             ?.let {
                 get().set(it)
                 it
-            }
-            .returnLogging()
+            }.returnLogging()
 
     private fun KProperty0<Property<URL>>.populateFromProperty() =
         populateFromProperty { runCatching { it.toURL() }.takeIf(Result<*>::isSuccess)?.getOrNull() }
@@ -256,7 +269,10 @@ internal open class MultiPlatformHelperExtensionImpl(private val project: Projec
 
     private fun KProperty0<Property<Boolean>>.populateFromProperty() = populateFromProperty { it.toBooleanStrict() }
 
-    override fun initializeVersionsRelatedProperties(jvm: Boolean, node: Boolean) {
+    override fun initializeVersionsRelatedProperties(
+        jvm: Boolean,
+        node: Boolean,
+    ) {
         ::versionsFromCatalog.populateFromProperty()
         ::kotlinVersion.populateFromProperty()
             ?: kotlinVersion.set(versionProvider("kotlin", DEFAULT_KOTLIN_VERSION))

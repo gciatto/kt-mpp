@@ -41,7 +41,10 @@ internal val Project.gradlePropertiesPath: String
 internal val Project.multiPlatformHelper: MultiPlatformHelperExtension
     get() = extensions.getByType(MultiPlatformHelperExtension::class.java)
 
-fun Project.log(message: String, logLevel: LogLevel = LogLevel.INFO) {
+fun Project.log(
+    message: String,
+    logLevel: LogLevel = LogLevel.INFO,
+) {
     logger.log(logLevel, "$name: $message")
 }
 
@@ -71,10 +74,12 @@ fun Project.kotlinVersion(provider: Provider<String>) {
     }
 }
 
-private fun String.getAsFile(charset: Charset = Charsets.UTF_8) =
-    File(this).readText(charset)
+private fun String.getAsFile(charset: Charset = Charsets.UTF_8) = File(this).readText(charset)
 
-fun String.getAsEitherFileOrValue(project: Project, charset: Charset = Charsets.UTF_8): String =
+fun String.getAsEitherFileOrValue(
+    project: Project,
+    charset: Charset = Charsets.UTF_8,
+): String =
     if (startsWith("file:")) {
         replace("\$rootProject", project.rootProject.projectDir.absolutePath)
             .replace("\$project", project.projectDir.absolutePath)
@@ -99,7 +104,7 @@ fun Project.jvmVersion(provider: Provider<String>) {
     tasks.withType<KotlinJvmCompile> {
         compilerOptions {
             jvmTarget.set(version.toJvmTarget())
-            log("set $path.jvmTarget=$jvmTarget")
+            log("set $path.jvmTarget=$version")
         }
     }
     tasks.withType<JavaCompile> {
@@ -113,15 +118,22 @@ fun Project.jvmVersion(provider: Provider<String>) {
 val Project.npmCompliantVersion: String
     get() = version.toString().split("+")[0]
 
-fun Project.nodeVersion(default: String, override: Any? = null) =
-    nodeVersion(provider { default }, override)
+fun Project.nodeVersion(
+    default: String,
+    override: Any? = null,
+) = nodeVersion(provider { default }, override)
 
-fun Project.nodeVersion(default: Provider<String>, override: Any? = null) {
+@Suppress("DEPRECATION_ERROR")
+fun Project.nodeVersion(
+    default: Provider<String>,
+    override: Any? = null,
+) {
     plugins.withType<NodeJsRootPlugin> {
         configure<NodeJsRootExtension> {
-            val requestedVersion = override?.toString()?.takeIf { it.isNotBlank() }
-                ?: default.takeIf { it.isPresent }?.get()
-                ?: version
+            val requestedVersion =
+                override?.toString()?.takeIf { it.isNotBlank() }
+                    ?: default.takeIf { it.isPresent }?.get()
+                    ?: version
             version = NodeVersions.latest(requestedVersion)
             log("set nodeVersion=$version")
         }
@@ -151,7 +163,10 @@ val Provider<MinimalExternalModuleDependency>.version: String
     get() = this.get().versionConstraint.requiredVersion
 
 @Suppress("UNCHECKED_CAST")
-fun Project.withPlugin(plugin: Any, action: (Plugin<*>) -> Unit) {
+fun Project.withPlugin(
+    plugin: Any,
+    action: (Plugin<*>) -> Unit,
+) {
     with(project.plugins) {
         when (plugin) {
             is String -> withId(plugin, action)
@@ -163,17 +178,27 @@ fun Project.withPlugin(plugin: Any, action: (Plugin<*>) -> Unit) {
     }
 }
 
-fun Project.forEachPlugin(plugins: Iterable<Any>, action: (Plugin<*>) -> Unit) {
+fun Project.forEachPlugin(
+    plugins: Iterable<Any>,
+    action: (Plugin<*>) -> Unit,
+) {
     for (plugin in plugins) {
         withPlugin(plugin, action)
     }
 }
 
-fun Project.forEachPlugin(name: Any, vararg names: Any, action: (Plugin<*>) -> Unit) {
+fun Project.forEachPlugin(
+    name: Any,
+    vararg names: Any,
+    action: (Plugin<*>) -> Unit,
+) {
     forEachPlugin(listOf(name, *names), action)
 }
 
-fun Project.ifAllPluginsAltogether(plugins: List<Any>, action: () -> Unit) {
+fun Project.ifAllPluginsAltogether(
+    plugins: List<Any>,
+    action: () -> Unit,
+) {
     var outerAction: (Plugin<*>) -> Unit = { action() }
     for (plugin in plugins.subList(1, plugins.size).asReversed()) {
         outerAction = { withPlugin(plugin, outerAction) }
@@ -181,33 +206,46 @@ fun Project.ifAllPluginsAltogether(plugins: List<Any>, action: () -> Unit) {
     withPlugin(plugins.first(), outerAction)
 }
 
-fun Project.ifAllPluginsAltogether(name: Any, vararg names: Any, action: () -> Unit) {
+fun Project.ifAllPluginsAltogether(
+    name: Any,
+    vararg names: Any,
+    action: () -> Unit,
+) {
     ifAllPluginsAltogether(listOf(name, *names), action)
 }
 
 internal val Project.jsPackageName: String
-    get() = if (project == rootProject) {
-        rootProject.name
-    } else {
-        "${rootProject.name}-${project.name}"
-    }
+    get() =
+        if (project == rootProject) {
+            rootProject.name
+        } else {
+            "${rootProject.name}-${project.name}"
+        }
 
-internal fun String.toURL(): java.net.URL = java.net.URI.create(this).toURL()
+internal fun String.toURL(): java.net.URL =
+    java.net.URI
+        .create(this)
+        .toURL()
 
-internal fun Project.getVersionFromCatalog(name: String, catalog: String? = null): VersionConstraint? {
-    var catalogs = sequenceOf(project, rootProject)
-        .map { it.extensions.findByType(VersionCatalogsExtension::class.java) }
-        .filterNotNull()
-        .flatMap { it.asSequence() }
-        .toList()
+internal fun Project.getVersionFromCatalog(
+    name: String,
+    catalog: String? = null,
+): VersionConstraint? {
+    var catalogs =
+        sequenceOf(project, rootProject)
+            .map { it.extensions.findByType(VersionCatalogsExtension::class.java) }
+            .filterNotNull()
+            .flatMap { it.asSequence() }
+            .toList()
     if (!catalog.isNullOrBlank()) {
         catalogs = catalogs.filter { it.name == catalog }
     }
     return catalogs.asSequence().flatMap { it.findVersion(name).asSequence() }.firstOrNull().also {
         if (it == null && catalogs.isEmpty()) {
             log(
-                message = "failed attempt to find version of `$name` in catalog" +
-                    if (catalog == null) "s" else " $catalog",
+                message =
+                    "failed attempt to find version of `$name` in catalog" +
+                        if (catalog == null) "s" else " $catalog",
                 logLevel = LogLevel.WARN,
             )
         }

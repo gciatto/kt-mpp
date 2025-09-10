@@ -19,7 +19,6 @@ import kotlin.reflect.KClass
 
 @Suppress("TooManyFunctions")
 abstract class AbstractProjectPlugin : Plugin<Project> {
-
     companion object {
         @JvmStatic
         protected val SUPPORTED_KOTLIN_TARGETS = setOf("jvm", "js", "multiplatform")
@@ -39,31 +38,35 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         target.applyThisPlugin()
     }
 
-    context(Project)
+    context(p: Project)
     protected fun <T : Any> Provider<T>.getLogging(template: String): Provider<T> =
         map {
-            log(template.format(it))
+            p.log(template.format(it))
             it
         }
 
-    context(Project)
+    context(p: Project)
     protected fun <T : Any> Provider<T>.asStringLogging(template: String): Provider<String> =
         map {
-            log(template.format(it))
+            p.log(template.format(it))
             it.toString()
         }
 
-    protected fun <T : Plugin<Project>> Project.apply(klass: KClass<T>): T =
-        plugins.apply(klass.java)
+    protected fun <T : Plugin<Project>> Project.apply(klass: KClass<T>): T = plugins.apply(klass.java)
 
-    protected fun <T : Any> Project.configure(klass: KClass<T>, action: T.() -> Unit) {
+    protected fun <T : Any> Project.configure(
+        klass: KClass<T>,
+        action: T.() -> Unit,
+    ) {
         extensions.getByType(klass.java).run(action)
     }
 
     protected fun Task.sibling(name: String) =
-        path.split(":").let {
-            it.subList(0, it.lastIndex) + name
-        }.joinToString(":")
+        path
+            .split(":")
+            .let {
+                it.subList(0, it.lastIndex) + name
+            }.joinToString(":")
 
     protected val Project.isRootProject
         get() = this == rootProject
@@ -76,12 +79,12 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
 
     protected fun <T : Any> ExtensionContainer.getByType(klass: KClass<T>): T = getByType(klass.java)
 
-    context(Project)
+    context(p: Project)
     protected fun NpmPublishExtension.syncNpmVersionWithProject() {
         version.set(
-            provider {
-                project.npmCompliantVersion.also {
-                    log("set NPM publication version to $it")
+            p.provider {
+                p.project.npmCompliantVersion.also {
+                    p.log("set NPM publication version to $it")
                 }
             },
         )
@@ -94,13 +97,18 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         }
     }
 
-    context(Project)
+    context(p: Project)
     protected fun MavenPublication.addJarTask(task: Jar) {
         artifact(task)
-        log("add task ${task.path} to publication $name, as javadoc artifact")
+        p.log("add task ${task.path} to publication $name, as javadoc artifact")
     }
 
-    protected fun Project.createJarTask(name: String, classifier: String, group: String, action: Jar.() -> Unit): Jar =
+    protected fun Project.createJarTask(
+        name: String,
+        classifier: String,
+        group: String,
+        action: Jar.() -> Unit,
+    ): Jar =
         tasks.maybeCreate(name, Jar::class.java).also {
             it.group = group
             it.archiveClassifier.set(classifier)
@@ -110,16 +118,18 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         }
 
     @Suppress("MagicNumber")
-    protected fun String?.asField() = when {
-        this == null -> "null"
-        else -> "'${replace("'", "\\'")}'"
-    }
+    protected fun String?.asField() =
+        when {
+            this == null -> "null"
+            else -> "'${replace("'", "\\'")}'"
+        }
 
     @Suppress("MagicNumber")
-    protected fun String?.asPassword() = when {
-        this == null -> "null"
-        else -> (1..kotlin.math.min(length, 8)).map { '*' }.joinToString("")
-    }
+    protected fun String?.asPassword() =
+        when {
+            this == null -> "null"
+            else -> (1..kotlin.math.min(length, 8)).map { '*' }.joinToString("")
+        }
 
     protected fun String.capital(): String =
         replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -128,11 +138,18 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         forEachKotlinPlugin(SUPPORTED_KOTLIN_TARGETS, action)
     }
 
-    protected fun Project.forEachKotlinPlugin(names: Iterable<String>, action: (Plugin<*>) -> Unit) {
+    protected fun Project.forEachKotlinPlugin(
+        names: Iterable<String>,
+        action: (Plugin<*>) -> Unit,
+    ) {
         forEachPlugin(names.map { kotlinPlugin(it) }, action)
     }
 
-    protected fun Project.forEachKotlinPlugin(name: String, vararg names: String, action: (Plugin<*>) -> Unit) {
+    protected fun Project.forEachKotlinPlugin(
+        name: String,
+        vararg names: String,
+        action: (Plugin<*>) -> Unit,
+    ) {
         forEachKotlinPlugin(listOf(name, *names), action)
     }
 }

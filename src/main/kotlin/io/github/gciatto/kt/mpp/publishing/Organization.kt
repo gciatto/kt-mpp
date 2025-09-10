@@ -3,15 +3,16 @@ package io.github.gciatto.kt.mpp.publishing
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPomDeveloper
 
-data class Organization(val name: String, val url: String?) {
-
+data class Organization(
+    val name: String,
+    val url: String?,
+) {
     fun applyTo(developer: MavenPomDeveloper) {
         developer.organization.set(name)
         url?.let { developer.organizationUrl.set(it) }
     }
 
-    override fun toString(): String =
-        name + url?.let { " ($it)" }.orEmpty()
+    override fun toString(): String = name + url?.let { " ($it)" }.orEmpty()
 
     companion object {
         fun Project.getOrg(key: String): Organization {

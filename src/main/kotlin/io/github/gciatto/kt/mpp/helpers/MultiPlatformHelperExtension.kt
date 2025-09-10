@@ -55,19 +55,36 @@ interface MultiPlatformHelperExtension {
     val fatJarClassifier: Property<String>
     val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>>
     val fatJarEntryPoint: Property<String>
-    fun fatJarPlatformInclude(platform: String, vararg includes: String) =
-        includes.forEach { fatJarPlatformInclusions.add(platform to it) }
+
+    fun fatJarPlatformInclude(
+        platform: String,
+        vararg includes: String,
+    ) = includes.forEach { fatJarPlatformInclusions.add(platform to it) }
 
     fun populateArgumentsFromProperties()
+
     fun populateDevelopersFromProperties()
+
     fun populateFatJarPlatformsFromNames()
+
     fun populateFatJarPlatformIncludesFromProperties()
-    fun initializeVersionsRelatedProperties(jvm: Boolean = true, node: Boolean = true)
+
+    fun initializeVersionsRelatedProperties(
+        jvm: Boolean = true,
+        node: Boolean = true,
+    )
+
     fun initializeKotlinRelatedProperties()
+
     fun initializeJsRelatedProperties()
+
     fun initializeJvmRelatedProperties()
+
     fun initializeFatJarRelatedProperties()
+
     fun initializeBugFinderRelatedProperties()
+
     fun initializeMavenRelatedProperties()
+
     fun initializeNpmRelatedProperties()
 }
