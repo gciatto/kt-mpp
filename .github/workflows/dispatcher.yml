@@ -25,5 +25,5 @@ jobs:
   ci-cd:
     needs:
       - dispatcher
-    uses: ./.github/workflows/test-extensively.yml
+    uses: ./.github/workflows/build-and-deploy.yml
     secrets: inherit
