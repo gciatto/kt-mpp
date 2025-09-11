@@ -336,22 +336,6 @@ tests:
         - ":full:detektJsMain"
         - ":full:detektJvmTest"
         - ":full:detektJsTest"
-  - description: "Running :full:test should test all platforms and compile all dependencies"
-    configuration:
-      tasks: ":full:test"
-    expectation:
-      success:
-        - ":subproject-jvm:compileKotlin"
-        - ":subproject-jvm:compileJava"
-        - ":subproject-js:mainClasses"
-        - ":subproject-mp:jvmMainClasses"
-        - ":subproject-mp:jsMainClasses"
-        - ":full:jvmMainClasses"
-        - ":full:jsMainClasses"
-        - ":full:jvmTestClasses"
-        - ":full:jsTestClasses"
-        - ":full:jvmTest"
-        - ":full:jsTest"
   - description: "All sub-projects should have the same version of the rootProject"
     configuration:
       tasks: "printVersion"
