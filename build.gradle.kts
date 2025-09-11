@@ -61,7 +61,7 @@ java {
 dependencies {
     api(gradleApi())
     api(gradleKotlinDsl())
-    api(kotlin("stdlib-jdk8:2.2.10"))
+    api(kotlin("stdlib-jdk8"))
     implementation(libs.kotlin.bom)
     implementation(libs.kotlin.gradlePlugin)
     implementation(libs.dokka)
