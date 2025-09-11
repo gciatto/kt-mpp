@@ -11,7 +11,7 @@ tests:
       success:
         - ':tasks'
       output_contains:
-        - "test0: set nodeVersion=18"
+        - "test0: set nodeVersion=22"
         - "test0: set :compileJava.sourceCompatibility=11"
         - "test0: set :compileJava.targetCompatibility=11"
         - "test0: set :compileTestJava.sourceCompatibility=11"
