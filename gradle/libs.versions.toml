@@ -6,7 +6,7 @@ konf = "1.1.2"
 kotest = "6.0.2"
 kotlin = "2.2.10"
 ktlint = "13.1.0"
-node = "18.20.5"
+node = "22-latest"
 publishOnCentral = "7.0.4"
 
 [libraries]
