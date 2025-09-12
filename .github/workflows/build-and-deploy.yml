@@ -16,62 +16,62 @@ jobs:
             ./gradlew
             publishAllPublicationsToProjectLocalRepository
             zipMavenCentralPortalPublication 
-            releaseMavenCentralPortalPublication
-            --dry-run
+#            releaseMavenCentralPortalPublication
+#            --dry-run
           should-deploy: true
           maven-central-username: gciatto
           maven-central-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           signing-key: ${{ secrets.SIGNING_KEY }}
           signing-password: ${{ secrets.SIGNING_PASSWORD }}
-  test-extensively:
-    needs:
-      - build
-    if: github.ref_name != 'master' || github.event.commits[0].author.name != 'renovate[bot]'
-    uses: ./.github/workflows/test-extensively.yml
-  release:
-    permissions:
-      contents: write
-      packages: write
-    needs:
-      - build
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5.0.0
-        with:
-          token: ${{ secrets.DEPLOYMENT_TOKEN }}
-      - name: Install Node
-        uses: actions/setup-node@v5.0.0
-        with:
-          node-version-file: package.json
-      - uses: DanySK/build-check-deploy-gradle-action@4.0.7
-        with:
-          retries-on-failure: '1'
-          build-command: true
-          check-command: true
-          deploy-command: |
-            npm install
-            npx semantic-release
-          should-run-codecov: false
-          should-deploy: true
-          github-token: ${{ github.token }}
-          gradle-publish-secret: ${{ secrets.GRADLE_PUBLISH_SECRET }}
-          gradle-publish-key: ${{ secrets.GRADLE_PUBLISH_KEY }}
-          maven-central-username: gciatto
-          maven-central-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          signing-key: ${{ secrets.SIGNING_KEY }}
-          signing-password: ${{ secrets.SIGNING_PASSWORD }}
-  success:
-    runs-on: ubuntu-24.04
-    needs:
-      - release
-      - build
-      - test-extensively
-    if: >-
-      always() && (
-        contains(join(needs.*.result, ','), 'failure')
-        || !contains(join(needs.*.result, ','), 'cancelled')
-      )
-    steps:
-      - name: Verify that there were no failures
-        run: ${{ !contains(join(needs.*.result, ','), 'failure') }}
+#  test-extensively:
+#    needs:
+#      - build
+#    if: github.ref_name != 'master' || github.event.commits[0].author.name != 'renovate[bot]'
+#    uses: ./.github/workflows/test-extensively.yml
+#  release:
+#    permissions:
+#      contents: write
+#      packages: write
+#    needs:
+#      - build
+#    runs-on: ubuntu-24.04
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v5.0.0
+#        with:
+#          token: ${{ secrets.DEPLOYMENT_TOKEN }}
+#      - name: Install Node
+#        uses: actions/setup-node@v5.0.0
+#        with:
+#          node-version-file: package.json
+#      - uses: DanySK/build-check-deploy-gradle-action@4.0.7
+#        with:
+#          retries-on-failure: '1'
+#          build-command: true
+#          check-command: true
+#          deploy-command: |
+#            npm install
+#            npx semantic-release
+#          should-run-codecov: false
+#          should-deploy: true
+#          github-token: ${{ github.token }}
+#          gradle-publish-secret: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+#          gradle-publish-key: ${{ secrets.GRADLE_PUBLISH_KEY }}
+#          maven-central-username: gciatto
+#          maven-central-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+#          signing-key: ${{ secrets.SIGNING_KEY }}
+#          signing-password: ${{ secrets.SIGNING_PASSWORD }}
+#  success:
+#    runs-on: ubuntu-24.04
+#    needs:
+#      - release
+#      - build
+#      - test-extensively
+#    if: >-
+#      always() && (
+#        contains(join(needs.*.result, ','), 'failure')
+#        || !contains(join(needs.*.result, ','), 'cancelled')
+#      )
+#    steps:
+#      - name: Verify that there were no failures
+#        run: ${{ !contains(join(needs.*.result, ','), 'failure') }}

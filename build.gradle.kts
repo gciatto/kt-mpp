@@ -141,6 +141,7 @@ signing {
  * Publication on Maven Central and the Plugin portal
  */
 publishOnCentral {
+    configureMavenCentral.set(false)
     projectLongName.set(info.longName)
     projectDescription.set(description ?: TODO("Missing description"))
     projectUrl.set(info.website)
