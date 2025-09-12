@@ -8,8 +8,9 @@ import io.github.gciatto.kt.mpp.defaultOtherProject
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 
-internal open class RootMultiProjectExtension(project: Project) : MutableMultiProjectExtension {
-
+internal open class RootMultiProjectExtension(
+    project: Project,
+) : MutableMultiProjectExtension {
     private val rootProject: Project = project.rootProject
 
     override var defaultProjectType: ProjectType = ProjectType.KOTLIN
@@ -55,34 +56,56 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
             otherProjectsCache = value
         }
 
-    override fun ktProjects(identifier: String, vararg other: String) {
+    override fun ktProjects(
+        identifier: String,
+        vararg other: String,
+    ) {
         ktProjects = selectProjectsByNameOrPath(identifier, *other)
     }
 
-    override fun jvmProjects(identifier: String, vararg other: String) {
+    override fun jvmProjects(
+        identifier: String,
+        vararg other: String,
+    ) {
         jvmProjects = selectProjectsByNameOrPath(identifier, *other)
     }
 
-    override fun jsProjects(identifier: String, vararg other: String) {
+    override fun jsProjects(
+        identifier: String,
+        vararg other: String,
+    ) {
         jsProjects = selectProjectsByNameOrPath(identifier, *other)
     }
 
-    override fun otherProjects(identifier: String, vararg other: String) {
+    override fun otherProjects(
+        identifier: String,
+        vararg other: String,
+    ) {
         otherProjects = selectProjectsByNameOrPath(identifier, *other)
     }
 
     private fun selectOtherProjects(): Set<Project> =
         selectProjects(ProjectType.OTHER, ktProjectsCache, jvmProjectsCache, jsProjectsCache)
 
-    private fun selectProjects(default: ProjectType, vararg skippable: Set<Project>?) =
-        if (defaultProjectType == default) {
-            val toSkip = skippable.asSequence().filterNotNull().flatMap { it.asSequence() }.toSet()
-            rootProject.allProjects.filter { it !in toSkip }.toSet()
-        } else {
-            emptySet()
-        }
+    private fun selectProjects(
+        default: ProjectType,
+        vararg skippable: Set<Project>?,
+    ) = if (defaultProjectType == default) {
+        val toSkip =
+            skippable
+                .asSequence()
+                .filterNotNull()
+                .flatMap { it.asSequence() }
+                .toSet()
+        rootProject.allProjects.filter { it !in toSkip }.toSet()
+    } else {
+        emptySet()
+    }
 
-    private fun selectProjectsByNameOrPath(identifier: String, vararg others: String): Set<Project> =
+    private fun selectProjectsByNameOrPath(
+        identifier: String,
+        vararg others: String,
+    ): Set<Project> =
         sequenceOf(identifier, *others)
             .map { selectProjectByNameOrPath(it) ?: error("No such a project: $it") }
             .toSet()
@@ -125,11 +148,12 @@ internal open class RootMultiProjectExtension(project: Project) : MutableMultiPr
 
     companion object {
         private val Project.allProjects: Sequence<Project>
-            get() = sequence {
-                yield(this@allProjects)
-                for (subproject in subprojects) {
-                    yieldAll(subproject.allProjects)
+            get() =
+                sequence {
+                    yield(this@allProjects)
+                    for (subproject in subprojects) {
+                        yieldAll(subproject.allProjects)
+                    }
                 }
-            }
     }
 }

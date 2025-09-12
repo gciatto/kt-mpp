@@ -24,7 +24,10 @@ private val Project.supportedPlatforms: Set<String>
     get() = multiPlatformHelper.fatJarPlatforms.toSet()
 
 internal fun Project.includedPlatformsFor(platform: String): Set<String> =
-    multiPlatformHelper.fatJarPlatformInclusions.filter { it.first == platform }.map { it.second }.toSet() + platform
+    multiPlatformHelper.fatJarPlatformInclusions
+        .filter { it.first == platform }
+        .map { it.second }
+        .toSet() + platform
 
 internal fun Project.excludedPlatformsFor(platform: String): Set<String> =
     supportedPlatforms - includedPlatformsFor(platform)
@@ -59,6 +62,7 @@ fun Project.shadowJarTask(
 ): ShadowJar {
     val entryPoint = entryPoint.orElse(multiPlatformHelper.fatJarEntryPoint)
     val classifier = classifier.orElse(multiPlatformHelper.fatJarClassifier)
+
     fun setOfFileSystemLocationsToFileTree(locations: Set<FileSystemLocation>): FileTree =
         locations.map { it.asFile }.map { if (it.isDirectory) fileTree(it) else zipTree(it) }.reduce(FileTree::plus)
 
@@ -92,7 +96,12 @@ private fun Project.configureJarFromFileCollection(
     fileCollection: FileCollection,
     shouldBeIncluded: (File) -> Boolean,
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
-) = fileCollection.filter { it.exists() }.filter(shouldBeIncluded).elements.map(toFileTree).let { jarTask.from(it) }
+) = fileCollection
+    .filter { it.exists() }
+    .filter(shouldBeIncluded)
+    .elements
+    .map(toFileTree)
+    .let { jarTask.from(it) }
 
 private fun Project.configureJarForJvmProject(
     jarTask: ShadowJar,

@@ -11,5 +11,11 @@ kotlin {
                 api(project(":subproject-mp"))
             }
         }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(project(":subproject-js"))
+            }
+        }
     }
 }

@@ -14,10 +14,10 @@ import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 
 class PublishOnNpmPlugin : AbstractProjectPlugin() {
-    context (Project)
+    context (p: Project)
     private fun configureRegistry(registry: NpmRegistry) {
-        registry.uri.map { log("configure publication on registry: $it") }
-        registry.authToken.set(multiPlatformHelper.npmToken.getLogging("use NPM token for publication: %s"))
+        registry.uri.map { p.log("configure publication on registry: $it") }
+        registry.authToken.set(p.multiPlatformHelper.npmToken.getLogging("use NPM token for publication: %s"))
     }
 
     @Suppress("CyclomaticComplexMethod")
@@ -35,27 +35,27 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
         configureNpmPublishing()
     }
 
-    context (Project)
+    context (p: Project)
     private fun NpmPublishExtension.configureNpmRepositories() {
         registries { registries ->
-            val npmRepo = multiPlatformHelper.npmRepo.orNull
+            val npmRepo = p.multiPlatformHelper.npmRepo.orNull
             if (npmRepo === null || "npmjs.org" in npmRepo.host) {
                 registries.npmjs { configureRegistry(it) }
             } else {
                 val name = npmRepo.host.split('.').joinToString("") { it.capital() }
                 registries.create(name) {
-                    it.uri.set(uri(npmRepo))
+                    it.uri.set(p.uri(npmRepo))
                     configureRegistry(it)
                 }
             }
         }
     }
 
-    context (Project, NpmPublishExtension)
+    context (p: Project, n: NpmPublishExtension)
     private fun NpmPackage.configureNpmPackages() {
-        val mpp = multiPlatformHelper
-        packageName.set(mpp.jsPackageName.getLogging("set NPM package name: %s"))
-        packageJson { pkg ->
+        val mpp = p.multiPlatformHelper
+        this.packageName.set(mpp.jsPackageName.getLogging("set NPM package name: %s"))
+        this.packageJson { pkg ->
             pkg.homepage.set(mpp.projectHomepage.asStringLogging("set package.json homepage: %s"))
             pkg.description.set(mpp.projectDescription.getLogging("set package.json description: %s"))
             pkg.license.set(mpp.projectLicense.getLogging("set package.json license: %s"))
@@ -63,26 +63,26 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
             if (developers.isNotEmpty()) {
                 val mainDeveloper = developers[0]
                 pkg.author.set(pkg.person(mainDeveloper))
-                log("set package.json author to $mainDeveloper")
+                p.log("set package.json author to $mainDeveloper")
             }
             if (developers.size > 1) {
                 val contributors = developers.subList(1, developers.size)
                 pkg.contributors.set(contributors.map { pkg.person(it) })
                 val contributorsList = contributors.joinToString(prefix = "[", postfix = "]")
-                log("add package.json contributors: $contributorsList")
+                p.log("add package.json contributors: $contributorsList")
             }
             pkg.private.set(false)
-            log("about to set package.json bugs")
+            p.log("about to set package.json bugs")
             pkg.bugs { bugs ->
                 bugs.url.set(mpp.issuesUrl.asStringLogging("set package.json bug URL to %s"))
                 bugs.email.set(mpp.issuesEmail.getLogging("set package.json bug email to %s"))
             }
-            log("about to set package.json repositories")
+            p.log("about to set package.json repositories")
             pkg.repository { repos ->
                 repos.type.set("git")
                 repos.url.set(mpp.scmUrl.asStringLogging("set package.json repo URL to %s"))
             }
-            log("overridden package.json: ${pkg.finalise()}")
+            p.log("overridden package.json: ${pkg.finalise()}")
         }
     }
 

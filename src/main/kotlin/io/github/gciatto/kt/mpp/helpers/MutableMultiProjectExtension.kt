@@ -14,13 +14,25 @@ interface MutableMultiProjectExtension : MultiProjectExtension {
 
     override var otherProjects: Set<Project>
 
-    fun ktProjects(identifier: String, vararg other: String)
+    fun ktProjects(
+        identifier: String,
+        vararg other: String,
+    )
 
-    fun jvmProjects(identifier: String, vararg other: String)
+    fun jvmProjects(
+        identifier: String,
+        vararg other: String,
+    )
 
-    fun jsProjects(identifier: String, vararg other: String)
+    fun jsProjects(
+        identifier: String,
+        vararg other: String,
+    )
 
-    fun otherProjects(identifier: String, vararg other: String)
+    fun otherProjects(
+        identifier: String,
+        vararg other: String,
+    )
 
     var ktProjectTemplate: ProjectConfiguration
 

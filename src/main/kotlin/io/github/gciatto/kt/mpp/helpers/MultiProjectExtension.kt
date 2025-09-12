@@ -13,10 +13,12 @@ interface MultiProjectExtension {
 
     val otherProjects: Set<Project>
 
-    fun Iterable<Project>.except(names: Iterable<String>): Set<Project> =
-        filter { it.name !in names }.toSet()
+    fun Iterable<Project>.except(names: Iterable<String>): Set<Project> = filter { it.name !in names }.toSet()
 
-    fun Iterable<Project>.except(first: String, vararg others: String): Set<Project> {
+    fun Iterable<Project>.except(
+        first: String,
+        vararg others: String,
+    ): Set<Project> {
         val names = setOf(first, *others)
         return except(names)
     }

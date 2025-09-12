@@ -24,11 +24,12 @@ object NodeVersions {
         if (version.equals("latest", ignoreCase = true)) {
             return VERSIONS.max()
         }
-        val match = MAJOR_REGEX.matchEntire(version)
-            ?: LATEST_VERSION_REGEX.matchEntire(version)
-            ?: MAJOR_MINOR_REGEX.matchEntire(version)
-            ?: FULL_VERSION_REGEX.matchEntire(version)
-            ?: return null
+        val match =
+            MAJOR_REGEX.matchEntire(version)
+                ?: LATEST_VERSION_REGEX.matchEntire(version)
+                ?: MAJOR_MINOR_REGEX.matchEntire(version)
+                ?: FULL_VERSION_REGEX.matchEntire(version)
+                ?: return null
         val numbers = match.groupValues.drop(1).mapNotNull { it.toIntOrNull() }
         val minVersion = StableVersion.of(numbers)
         val upperBound = minVersion.nextMajor()

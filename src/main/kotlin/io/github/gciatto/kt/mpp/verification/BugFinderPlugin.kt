@@ -15,9 +15,10 @@ class BugFinderPlugin : AbstractProjectPlugin() {
     }
 
     private val Project.detektTasks: DomainObjectCollection<Detekt>
-        get() = tasks.withType(Detekt::class.java).matching {
-            it.name.matches(PATTERN_DETEKT_TASK_NAME)
-        }
+        get() =
+            tasks.withType(Detekt::class.java).matching {
+                it.name.matches(PATTERN_DETEKT_TASK_NAME)
+            }
 
     override fun Project.applyThisPlugin() {
         val detekt = apply(DetektPlugin::class)

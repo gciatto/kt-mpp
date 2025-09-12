@@ -27,6 +27,7 @@ plugins {
  */
 group = "io.github.gciatto"
 description = "Kotlin multi-platform and multi-project configurations plugin for Gradle"
+
 inner class ProjectInfo {
     val longName = "Advanced Kotlin multi-platform plugin for Gradle Plugins"
     val website = "https://github.com/gciatto/$name"
@@ -47,7 +48,10 @@ repositories {
     mavenCentral()
 }
 
-val jvmVersion = libs.versions.jvm.map { JavaVersion.toVersion(it) }.getOrElse(JavaVersion.VERSION_11)
+val jvmVersion =
+    libs.versions.jvm
+        .map { JavaVersion.toVersion(it) }
+        .getOrElse(JavaVersion.VERSION_11)
 
 java {
     targetCompatibility = jvmVersion
@@ -60,12 +64,12 @@ dependencies {
     api(kotlin("stdlib-jdk8"))
     implementation(libs.kotlin.bom)
     implementation(libs.kotlin.gradlePlugin)
-    implementation(libs.npmPublish)
     implementation(libs.dokka)
     implementation(libs.ktlint)
     implementation(libs.detekt)
     implementation(libs.publishOnCentral)
     implementation(libs.shadowJar)
+    implementation(libs.npmPublish)
     testImplementation(gradleTestKit())
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)
@@ -88,7 +92,7 @@ kotlin {
     target {
         compilerOptions {
             allWarningsAsErrors = true
-            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-receivers")
+            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-parameters")
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
@@ -112,7 +116,10 @@ tasks.withType<Test> {
         showStandardStreams = true
         showCauses = true
         showStackTraces = true
-        events(*org.gradle.api.tasks.testing.logging.TestLogEvent.values())
+        events(
+            *org.gradle.api.tasks.testing.logging.TestLogEvent
+                .values(),
+        )
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
 }
@@ -159,7 +166,10 @@ publishOnCentral {
     }
 }
 
-class PluginDescriptor(val name: String, val fullClass: String) {
+class PluginDescriptor(
+    val name: String,
+    val fullClass: String,
+) {
     val simpleClass: String
         get() = fullClass.split(".").last()
 
@@ -167,9 +177,11 @@ class PluginDescriptor(val name: String, val fullClass: String) {
         get() = name.split(".").last()
 
     private val kotlinId: String
-        get() = simpleName.split("-")
-            .mapIndexed { i, s -> if (i > 0) s.capitalized() else s }
-            .joinToString("")
+        get() =
+            simpleName
+                .split("-")
+                .mapIndexed { i, s -> if (i > 0) s.capitalized() else s }
+                .joinToString("")
 
     @Suppress("NAME_SHADOWING")
     fun generateKotlinMethod(indent: Int = 4): String {
@@ -306,7 +318,8 @@ gradlePlugin {
     }
 }
 
-tasks.withType(Detekt::class.java)
+tasks
+    .withType(Detekt::class.java)
     .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
     .all {
         val detektTask = this
@@ -333,17 +346,18 @@ tasks.create("uploadToMavenCentralNexus") {
     )
 }
 
-fun testDirectories(): Set<File> = buildSet {
-    sourceSets.test {
-        resources.srcDirs.forEach { testResourcesDir ->
-            fileTree(testResourcesDir) { include("**/test.yaml") }.asFileTree.visit {
-                if (!isDirectory) {
-                    add(file.parentFile)
+fun testDirectories(): Set<File> =
+    buildSet {
+        sourceSets.test {
+            resources.srcDirs.forEach { testResourcesDir ->
+                fileTree(testResourcesDir) { include("**/test.yaml") }.asFileTree.visit {
+                    if (!isDirectory) {
+                        add(file.parentFile)
+                    }
                 }
             }
         }
     }
-}
 
 for (testDir in testDirectories()) {
     tasks.create<Copy>("copyLibsTo${testDir.name.capitalized()}") {

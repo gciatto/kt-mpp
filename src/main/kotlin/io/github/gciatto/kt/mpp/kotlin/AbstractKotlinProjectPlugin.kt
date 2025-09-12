@@ -24,21 +24,23 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsBinaryContainer
-import java.util.*
+import java.util.Locale
 
 @Suppress("TooManyFunctions")
-abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProjectPlugin() {
-
+abstract class AbstractKotlinProjectPlugin(
+    targetName: String,
+) : AbstractProjectPlugin() {
     companion object {
         private const val PUBLICATION_TASK_NAME_PATTERN = "([A-Z]\\w+?)(?:Publication)?To([A-Z]\\w+)"
         private val pubTaskNamePattern = "^(publish|upload)$PUBLICATION_TASK_NAME_PATTERN$".toRegex()
     }
 
-    private val targetName: String = targetName.lowercase(Locale.getDefault()).also {
-        require(it in SUPPORTED_KOTLIN_TARGETS) {
-            "Unsupported target: $it. Supported targets are: ${SUPPORTED_KOTLIN_TARGETS.joinToString()}"
+    private val targetName: String =
+        targetName.lowercase(Locale.getDefault()).also {
+            require(it in SUPPORTED_KOTLIN_TARGETS) {
+                "Unsupported target: $it. Supported targets are: ${SUPPORTED_KOTLIN_TARGETS.joinToString()}"
+            }
         }
-    }
 
     final override fun apply(target: Project) {
         super.apply(target)
@@ -51,25 +53,25 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
 
     protected abstract val relevantPublications: Set<String>
 
-    private fun String.declined() =
-        capital().let { it + if (it.endsWith("h")) "es" else "s" }
+    private fun String.declined() = capital().let { it + if (it.endsWith("h")) "es" else "s" }
 
-    context (Project)
+    context (p: Project)
     private fun PublishingExtension.customizePublishing() {
         publications.withType(MavenPublication::class.java).matching { it.name in relevantPublications }.all { pub ->
-            log("configuring relevant publication ${pub.name}")
-            tasks.withType(AbstractPublishToMaven::class.java).all { task ->
+            p.log("configuring relevant publication ${pub.name}")
+            p.tasks.withType(AbstractPublishToMaven::class.java).all { task ->
                 pubTaskNamePattern.matchEntire(task.name)?.let {
                     if (it.groupValues[2].equals(pub.name, ignoreCase = true)) {
-                        val umbrellaTask = tasks.maybeCreate("${it.groupValues[1]}ProjectTo${it.groupValues[3]}")
+                        val umbrellaTask = p.tasks.maybeCreate("${it.groupValues[1]}ProjectTo${it.groupValues[3]}")
                         umbrellaTask.group = "Publishing"
-                        val description = "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
-                            "via tasks: ${task.name}"
+                        val description =
+                            "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
+                                "via tasks: ${task.name}"
                         umbrellaTask.description = umbrellaTask.description
                             ?.let { desc -> desc + ", ${task.name}" }
                             ?: description
                         umbrellaTask.dependsOn(task)
-                        log("let task ${umbrellaTask.path} depend on ${task.path}")
+                        p.log("let task ${umbrellaTask.path} depend on ${task.path}")
                     }
                 }
             }
@@ -77,7 +79,7 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         fixPublishing()
     }
 
-    context (Project)
+    context (_: Project)
     protected open fun PublishingExtension.fixPublishing() {
         // does nothing be default
     }
@@ -95,51 +97,57 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     }
 
     protected fun kotlinPlugin(name: String = targetName) =
-        io.github.gciatto.kt.mpp.utils.kotlinPlugin(name)
+        io.github.gciatto.kt.mpp.utils
+            .kotlinPlugin(name)
 
-    context(Project)
+    context(p: Project)
     protected fun KotlinJvmCompilerOptions.configureJvmKotlinOptions() {
-        multiPlatformHelper.ktCompilerArgs.all {
+        p.multiPlatformHelper.ktCompilerArgs.all {
             freeCompilerArgs.add(it)
-            log("add JVM-specific free compiler arg for Kotlin compiler: $it")
+            p.log("add JVM-specific free compiler arg for Kotlin compiler: $it")
         }
     }
 
-    context(Project)
+    context(p: Project)
     protected fun KotlinJsCompilerOptions.configureJsKotlinOptions() {
         main.set(JsMainFunctionExecutionMode.NO_CALL)
-        multiPlatformHelper.ktCompilerArgs.all {
+        p.multiPlatformHelper.ktCompilerArgs.all {
             freeCompilerArgs.add(it)
-            log("add JVM-specific free compiler arg for Kotlin compiler: $it")
+            p.log("add JVM-specific free compiler arg for Kotlin compiler: $it")
         }
-        multiPlatformHelper.ktCompilerArgsJs.all {
+        p.multiPlatformHelper.ktCompilerArgsJs.all {
             freeCompilerArgs.add(it)
-            log("add JS-specific free compiler arg for Kotlin compiler: $it")
+            p.log("add JS-specific free compiler arg for Kotlin compiler: $it")
         }
     }
 
-    context(Project)
+    context(p: Project)
     protected fun KotlinCommonCompilerOptions.configureKotlinOptions() {
         allWarningsAsErrors.set(
-            multiPlatformHelper.allWarningsAsErrors.map {
+            p.multiPlatformHelper.allWarningsAsErrors.map {
                 if (it) {
-                    log("consider all warnings as errors when compiling Kotlin sources")
+                    p.log("consider all warnings as errors when compiling Kotlin sources")
                 }
                 it
             },
         )
-        multiPlatformHelper.ktCompilerArgs.all {
+        p.multiPlatformHelper.ktCompilerArgs.all {
             freeCompilerArgs.add(it)
-            log("add free compiler arg for Kotlin compiler")
+            p.log("add free compiler arg for Kotlin compiler")
         }
     }
 
-    private fun Any.toDependencyNotation(): String = when (this) {
-        is Dependency -> listOfNotNull(group, name, version).joinToString(":")
-        else -> toString()
-    }
+    private fun Any.toDependencyNotation(): String =
+        when (this) {
+            is Dependency -> listOfNotNull(group, name, version).joinToString(":")
+            else -> toString()
+        }
 
-    private fun DependencyScope.addMainDependencies(project: Project, target: String, skipBom: Boolean) {
+    private fun DependencyScope.addMainDependencies(
+        project: Project,
+        target: String,
+        skipBom: Boolean,
+    ) {
         val kotlinStdlib = kotlin("stdlib-$target")
         api(kotlinStdlib)
         project.log("add api dependency to ${kotlinStdlib.toDependencyNotation()}")
@@ -162,7 +170,11 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
         skipBom: Boolean = false,
     ) = DependencyScope.of(this).addMainDependencies(project, target, skipBom)
 
-    private fun DependencyScope.addTestDependencies(project: Project, target: String, skipAnnotations: Boolean) {
+    private fun DependencyScope.addTestDependencies(
+        project: Project,
+        target: String,
+        skipAnnotations: Boolean,
+    ) {
         val testLib = kotlin("test-$target")
         test(testLib)
         project.log("add test dependency to ${testLib.toDependencyNotation()}")
@@ -213,35 +225,34 @@ abstract class AbstractKotlinProjectPlugin(targetName: String) : AbstractProject
     protected fun KotlinTarget.targetCompilationId(compilation: KotlinCompilation<*>): String =
         "${name}${compilation.compilationName.capital()}"
 
-    protected fun targetCompilationId(task: Task): String =
-        task.name.replace("compile", "")
+    protected fun targetCompilationId(task: Task): String = task.name.replace("compile", "")
 
-    context (Project, KotlinJsTargetDsl)
+    context (p: Project, jsTarget: KotlinJsTargetDsl)
     protected fun configureNodeJs() {
-        nodejs {
-            log("configure kotlin JS to target NodeJS")
+        jsTarget.nodejs {
+            p.log("configure kotlin JS to target NodeJS")
             testTask(
                 Action {
                     it.useMocha {
-                        log("use Mocha as JS test framework")
-                        timeout = project.multiPlatformHelper.mochaTimeout.orNull ?: timeout
-                        log("set Mocha per-test-case timeout to $timeout")
+                        p.log("use Mocha as JS test framework")
+                        timeout = p.project.multiPlatformHelper.mochaTimeout.orNull ?: timeout
+                        p.log("set Mocha per-test-case timeout to $timeout")
                     }
                 },
             )
         }
     }
 
-    context(Project)
+    context(p: Project)
     protected fun KotlinJsBinaryContainer.configureAutomatically() {
-        when (multiPlatformHelper.jsBinaryType.orNull) {
+        when (p.multiPlatformHelper.jsBinaryType.orNull) {
             JsBinaryType.LIBRARY -> {
                 library()
-                log("configure kotlin js to produce a library")
+                p.log("configure kotlin js to produce a library")
             }
             JsBinaryType.EXECUTABLE -> {
                 executable()
-                log("configure kotlin js to produce an executable")
+                p.log("configure kotlin js to produce an executable")
             }
             else -> {}
         }

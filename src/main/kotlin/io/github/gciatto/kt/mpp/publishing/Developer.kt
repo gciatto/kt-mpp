@@ -4,13 +4,18 @@ import io.github.gciatto.kt.mpp.publishing.Organization.Companion.getOrg
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPomDeveloperSpec
 
-data class Developer(val name: String, val url: String?, val email: String?, val org: Organization?) {
-
-    fun toPerson() = mutableMapOf<String, Any?>(
-        "name" to name,
-        "url" to url,
-        "email" to email,
-    )
+data class Developer(
+    val name: String,
+    val url: String?,
+    val email: String?,
+    val org: Organization?,
+) {
+    fun toPerson() =
+        mutableMapOf<String, Any?>(
+            "name" to name,
+            "url" to url,
+            "email" to email,
+        )
 
     override fun toString(): String =
         name + email?.let { " <$email>" }.orEmpty() +
@@ -37,7 +42,8 @@ data class Developer(val name: String, val url: String?, val email: String?, val
         }
 
         fun Project.getAllDevs(): Set<Developer> =
-            properties.keys.asSequence()
+            properties.keys
+                .asSequence()
                 .filter { it.startsWith("developer") && it.endsWith("Name") }
                 .map { it.replace("Name", "") }
                 .distinct()

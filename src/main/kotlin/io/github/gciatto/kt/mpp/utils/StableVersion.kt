@@ -3,7 +3,11 @@ package io.github.gciatto.kt.mpp.utils
 import java.io.Reader
 import java.io.StringReader
 
-data class StableVersion(val major: Int, val minor: Int, val patch: Int) : Comparable<StableVersion> {
+data class StableVersion(
+    val major: Int,
+    val minor: Int,
+    val patch: Int,
+) : Comparable<StableVersion> {
     override fun compareTo(other: StableVersion): Int =
         if (major == other.major) {
             if (minor == other.minor) {
@@ -27,12 +31,13 @@ data class StableVersion(val major: Int, val minor: Int, val patch: Int) : Compa
     companion object {
         val REGEX = Regex("(\\d+)\\.(\\d+)\\.(\\d+)")
 
-        private fun anyToInt(obj: Any): Int = when (obj) {
-            is Int -> obj
-            is Number -> obj.toInt()
-            is String -> obj.toInt()
-            else -> error("Cannot convert $obj to Int")
-        }
+        private fun anyToInt(obj: Any): Int =
+            when (obj) {
+                is Int -> obj
+                is Number -> obj.toInt()
+                is String -> obj.toInt()
+                else -> error("Cannot convert $obj to Int")
+            }
 
         @JvmStatic
         fun of(numbers: Iterable<Any>): StableVersion {
@@ -57,15 +62,16 @@ data class StableVersion(val major: Int, val minor: Int, val patch: Int) : Compa
         fun parse(version: String): StableVersion = parseOrNull(version) ?: error("Invalid version: $version")
 
         @JvmStatic
-        fun parseAll(reader: Reader): Sequence<StableVersion> = sequence {
-            reader.useLines { lines ->
-                for (line in lines) {
-                    for (match in REGEX.findAll(line)) {
-                        yield(of(match.groupValues.drop(1)))
+        fun parseAll(reader: Reader): Sequence<StableVersion> =
+            sequence {
+                reader.useLines { lines ->
+                    for (line in lines) {
+                        for (match in REGEX.findAll(line)) {
+                            yield(of(match.groupValues.drop(1)))
+                        }
                     }
                 }
             }
-        }
 
         @JvmStatic
         fun parseAll(string: String): Sequence<StableVersion> = parseAll(StringReader(string))

@@ -1,4 +1,5 @@
 package io.github.gciatto.kt.mpp.helpers
 
-internal open class MultiProjectExtensionView(delegate: MultiProjectExtension) :
-    MultiProjectExtension by delegate
+internal open class MultiProjectExtensionView(
+    delegate: MultiProjectExtension,
+) : MultiProjectExtension by delegate
