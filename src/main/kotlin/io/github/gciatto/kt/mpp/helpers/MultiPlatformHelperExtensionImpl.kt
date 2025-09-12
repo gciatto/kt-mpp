@@ -7,7 +7,6 @@ import io.github.gciatto.kt.mpp.utils.getVersionFromCatalog
 import io.github.gciatto.kt.mpp.utils.jsPackageName
 import io.github.gciatto.kt.mpp.utils.log
 import io.github.gciatto.kt.mpp.utils.toURL
-import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.JavaVersion
@@ -149,7 +148,7 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override val kotlinVersion: Property<String> = propertyWithConvention(DEFAULT_KOTLIN_VERSION)
 
-    override val docStyle: Property<DocStyle> = propertyWithConvention(DocStyle.HTML)
+    // override val docStyle: Property<DocStyle> = propertyWithConvention(DocStyle.HTML)
 
     override val developers: DomainObjectCollection<Developer> = project.objects.domainObjectSet(Developer::class.java)
 
@@ -334,9 +333,9 @@ internal open class MultiPlatformHelperExtensionImpl(
         ::scmUrl.populateFromProperty()
         ::signingKey.populateFromProperty()
         ::signingPassword.populateFromProperty()
-        ::docStyle.populateFromProperty { str ->
-            str.takeIf(String::isNotBlank)?.let { DocStyle.valueOf(it.uppercase(Locale.getDefault())) }
-        }
+        // ::docStyle.populateFromProperty { str ->
+        //    str.takeIf(String::isNotBlank)?.let { DocStyle.valueOf(it.uppercase(Locale.getDefault())) }
+        // }
         populateDevelopersFromProperties()
     }
 

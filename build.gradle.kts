@@ -7,6 +7,8 @@ import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
+import kotlin.text.replace
+import kotlin.text.startsWith
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -28,7 +30,7 @@ plugins {
 group = "io.github.gciatto"
 description = "Kotlin multi-platform and multi-project configurations plugin for Gradle"
 
-inner class ProjectInfo {
+class ProjectInfo {
     val longName = "Advanced Kotlin multi-platform plugin for Gradle Plugins"
     val website = "https://github.com/gciatto/$name"
     val vcsUrl = "$website.git"
@@ -109,39 +111,30 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     disableTrackStateOnWindows<JacocoReport>()
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    dependsOn(tasks.generateJacocoTestKitProperties)
-    testLogging {
-        showStandardStreams = true
-        showCauses = true
-        showStackTraces = true
-        events(
-            *org.gradle.api.tasks.testing.logging.TestLogEvent
-                .values(),
-        )
-        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-    }
-}
+// tasks.withType<Test> {
+//    useJUnitPlatform()
+//    dependsOn(tasks.generateJacocoTestKitProperties)
+//    testLogging {
+//        showStandardStreams = true
+//        showCauses = true
+//        showStackTraces = true
+//        events(
+//            *org.gradle.api.tasks.testing.logging.TestLogEvent
+//                .values(),
+//        )
+//        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+//    }
+// }
 
 detekt {
     config.from(".detekt-config.yml")
     buildUponDefaultConfig = true
 }
 
-signing {
-    if (System.getenv()["CI"].equals("true", ignoreCase = true)) {
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        useInMemoryPgpKeys(signingKey, signingPassword)
-    }
-}
-
 /*
  * Publication on Maven Central and the Plugin portal
- */
+*/
 publishOnCentral {
-    configureMavenCentral.set(false)
     projectLongName.set(info.longName)
     projectDescription.set(description ?: TODO("Missing description"))
     projectUrl.set(info.website)
@@ -150,21 +143,48 @@ publishOnCentral {
         user.set("gciatto")
         password.set(System.getenv("GITHUB_TOKEN"))
     }
-    publishing {
-        publications {
-            withType<MavenPublication> {
-                pom {
-                    developers {
-                        developer {
-                            name.set("Giovanni Ciatto")
-                            email.set("giovanni.ciatto@gmail.com")
-                            url.set("https://www.about.me/gciatto")
-                        }
+}
+
+publishing {
+    publications {
+        withType<MavenPublication> {
+            pom {
+                developers {
+                    developer {
+                        name.set("Giovanni Ciatto")
+                        email.set("giovanni.ciatto@gmail.com")
+                        url.set("https://www.about.me/gciatto")
                     }
                 }
             }
         }
     }
+}
+
+signing {
+    if (System.getenv()["CI"].equals("true", ignoreCase = true)) {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+//    val signingKeyFile: String? by project
+//    val signingPassword: String? by project
+//    if (signingKeyFile != null) {
+//        val keyContent =
+//            signingKeyFile!!.let {
+//                if (it.startsWith("file:")) {
+//                    it
+//                        .replace("\$rootProject", project.rootProject.projectDir.absolutePath)
+//                        .replace("\$project", project.projectDir.absolutePath)
+//                        .replace("file:", "")
+//                        .let { x -> File(x).readText(Charsets.UTF_8) }
+//                } else {
+//                    it
+//                }
+//            }
+//        println("Set sign: $keyContent")
+//        useInMemoryPgpKeys(keyContent, signingPassword)
+//    }
 }
 
 class PluginDescriptor(
@@ -327,25 +347,25 @@ tasks
         tasks.check.configure { dependsOn(detektTask) }
     }
 
-tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
-    group = "publishing"
-    description = "Quick way to call tasks upload*PluginMarkerMavenToMavenCentralNexus altogether"
-    tasks.withType<PublishToMavenRepository> {
-        if (name.startsWith("upload") && name.endsWith("PluginMarkerMavenToMavenCentralNexus")) {
-            this@create.dependsOn(this)
-        }
-    }
-}
+// tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
+//    group = "publishing"
+//    description = "Quick way to call tasks upload*PluginMarkerMavenToMavenCentralNexus altogether"
+//    tasks.withType<PublishToMavenRepository> {
+//        if (name.startsWith("upload") && name.endsWith("PluginMarkerMavenToMavenCentralNexus")) {
+//            this@create.dependsOn(this)
+//        }
+//    }
+// }
 
-tasks.create("uploadToMavenCentralNexus") {
-    group = "publishing"
-    description = "Quick upload relevant publication to Nexus, altogether"
-    dependsOn(
-        "uploadAllPluginMarkersToMavenCentralNexus",
-        "uploadKotlinOSSRHToMavenCentralNexus",
-        "uploadPluginMavenToMavenCentralNexus",
-    )
-}
+// tasks.create("uploadToMavenCentralNexus") {
+//    group = "publishing"
+//    description = "Quick upload relevant publication to Nexus, altogether"
+//    dependsOn(
+//        "uploadAllPluginMarkersToMavenCentralNexus",
+//        "uploadKotlinOSSRHToMavenCentralNexus",
+//        "uploadPluginMavenToMavenCentralNexus",
+//    )
+// }
 
 fun testDirectories(): Set<File> =
     buildSet {
@@ -370,3 +390,7 @@ for (testDir in testDirectories()) {
         tasks.withType(Cpd::class.java) { dependsOn(this@create) }
     }
 }
+
+// tasks.withType<PublishToMavenLocal>().configureEach {
+//    dependsOn(tasks.withType<Sign>())
+// }

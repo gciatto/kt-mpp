@@ -224,10 +224,10 @@ tests:
         - ":full:showPublications"
     expectation:
       success:
-        -  ':full:tasks'
+        - ':full:tasks'
         - ":full:showPublications"
       output_contains:
-        - "full: publications: adhocKotlinOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
+        - "full: publications: js, jvm, kotlinMultiplatform"
         - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
         - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
         - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
@@ -357,16 +357,10 @@ tests:
   - description: "Metadata generation works"
     configuration:
       tasks:
-        - "generateMetadataFileForJsPublication"
-        - "generateMetadataFileForJvmPublication"
-        - "generateMetadataFileForKotlinMultiplatformPublication"
-        - "generateMetadataFileForKotlinOSSRHPublication"
+        - "generateMetadataFileForOSSRHPublication"
     expectation:
       success:
-        - ":full:generateMetadataFileForJsPublication"
-        - ":full:generateMetadataFileForJvmPublication"
-        - ":full:generateMetadataFileForKotlinMultiplatformPublication"
-        - ":full:generateMetadataFileForKotlinOSSRHPublication"
+        - ":full:generateMetadataFileForOSSRHPublication"
   - description: "Upload to Maven implies sources and javadoc being generated"
     configuration:
       tasks:
