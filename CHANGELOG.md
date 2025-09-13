@@ -1,3 +1,9 @@
+## [5.0.1](https://github.com/gciatto/kt-mpp/compare/5.0.0...5.0.1) (2025-09-13)
+
+### Dependency updates
+
+* **core-deps:** update dependency org.jetbrains.kotlin.jvm to v2.2.20 ([5764e29](https://github.com/gciatto/kt-mpp/commit/5764e296685c7f18c9af96ab527c92f3541dba76))
+
 ## [5.0.0](https://github.com/gciatto/kt-mpp/compare/4.1.4...5.0.0) (2025-09-12)
 
 ### ⚠ BREAKING CHANGES
