@@ -4,6 +4,7 @@ import io.github.gciatto.kt.mpp.AbstractProjectPlugin
 import io.github.gciatto.kt.mpp.utils.jvmVersion
 import io.github.gciatto.kt.mpp.utils.kotlinVersion
 import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.maybeRegister
 import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import io.github.gciatto.kt.mpp.utils.nodeVersion
 import org.gradle.api.Action
@@ -30,10 +31,10 @@ import java.util.Locale
 abstract class AbstractKotlinProjectPlugin(
     targetName: String,
 ) : AbstractProjectPlugin() {
-    companion object {
-        private const val PUBLICATION_TASK_NAME_PATTERN = "([A-Z]\\w+?)(?:Publication)?To([A-Z]\\w+)"
-        private val pubTaskNamePattern = "^(publish|upload)$PUBLICATION_TASK_NAME_PATTERN$".toRegex()
-    }
+//    companion object {
+//        private const val PUBLICATION_TASK_NAME_PATTERN = "([A-Z]\\w+?)(?:Publication)?To([A-Z]\\w+)"
+//        private val pubTaskNamePattern = "^(publish|upload)$PUBLICATION_TASK_NAME_PATTERN$".toRegex()
+//    }
 
     private val targetName: String =
         targetName.lowercase(Locale.getDefault()).also {
@@ -44,45 +45,53 @@ abstract class AbstractKotlinProjectPlugin(
 
     final override fun apply(target: Project) {
         super.apply(target)
-        target.plugins.withType(MavenPublishPlugin::class.java) {
-            target.configure(PublishingExtension::class) {
-                target.run { customizePublishing() }
-            }
-        }
+//        target.plugins.withType(MavenPublishPlugin::class.java).configureEach {
+//            target.configure(PublishingExtension::class) {
+//                target.run { customizePublishing() }
+//            }
+//        }
     }
 
     protected abstract val relevantPublications: Set<String>
 
-    private fun String.declined() = capital().let { it + if (it.endsWith("h")) "es" else "s" }
+//    private fun String.declined() = capital().let { it + if (it.endsWith("h")) "es" else "s" }
+//
+//    context (p: Project)
+//    private fun PublishingExtension.customizePublishing() {
+//        publications
+//            .withType(MavenPublication::class.java)
+//            .matching { it.name in relevantPublications }
+//            .forEach { pub ->
+//                p.log("configuring relevant publication ${pub.name}")
+//                p.tasks.withType(AbstractPublishToMaven::class.java).forEach { task ->
+//                    pubTaskNamePattern.matchEntire(task.name)?.let {
+//                        if (it.groupValues[2].equals(pub.name, ignoreCase = true)) {
+//                            val umbrellaTask =
+//                                p.maybeRegister<Task>("${it.groupValues[1]}ProjectTo${it.groupValues[3]}") {
+//                                    this.group = "Publishing"
+//                                    val description =
+//                                        "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
+//                                            "via tasks: ${task.name}"
+//                                    this.description = this.description
+//                                        ?.let { desc -> desc + ", ${task.name}" }
+//                                        ?.let { desc -> desc + ", ${task.name}" }
+//                                        ?: description
+//                                }
+//                            umbrellaTask.configure { u ->
+//                                u.dependsOn(task)
+//                                p.log("let task ${u.path} depend on ${task.path}")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        fixPublishing()
+//    }
 
-    context (p: Project)
-    private fun PublishingExtension.customizePublishing() {
-        publications.withType(MavenPublication::class.java).matching { it.name in relevantPublications }.all { pub ->
-            p.log("configuring relevant publication ${pub.name}")
-            p.tasks.withType(AbstractPublishToMaven::class.java).all { task ->
-                pubTaskNamePattern.matchEntire(task.name)?.let {
-                    if (it.groupValues[2].equals(pub.name, ignoreCase = true)) {
-                        val umbrellaTask = p.tasks.maybeCreate("${it.groupValues[1]}ProjectTo${it.groupValues[3]}")
-                        umbrellaTask.group = "Publishing"
-                        val description =
-                            "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
-                                "via tasks: ${task.name}"
-                        umbrellaTask.description = umbrellaTask.description
-                            ?.let { desc -> desc + ", ${task.name}" }
-                            ?: description
-                        umbrellaTask.dependsOn(task)
-                        p.log("let task ${umbrellaTask.path} depend on ${task.path}")
-                    }
-                }
-            }
-        }
-        fixPublishing()
-    }
-
-    context (_: Project)
-    protected open fun PublishingExtension.fixPublishing() {
-        // does nothing be default
-    }
+//    context (_: Project)
+//    protected open fun PublishingExtension.fixPublishing() {
+//        // does nothing be default
+//    }
 
     protected fun Project.configureKotlinVersionFromCatalogIfPossible() {
         kotlinVersion(multiPlatformHelper.kotlinVersion)
@@ -198,27 +207,27 @@ abstract class AbstractKotlinProjectPlugin(
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
 
     protected fun Project.addPlatformSpecificTaskAliases() {
-        tasks.create("${targetName}Test") {
+        tasks.register("${targetName}Test") {
             it.group = "verification"
-            it.dependsOn("test")
+            it.dependsOn(tasks.named("test"))
             log("add ${it.path} task as an alias for ${it.sibling("test")}")
         }
-        tasks.create("${targetName}MainClasses") {
+        tasks.register("${targetName}MainClasses") {
             it.group = "build"
-            it.dependsOn("mainClasses")
+            it.dependsOn(tasks.named("mainClasses"))
             log("add ${it.path} task as an alias for ${it.sibling("mainClasses")}")
         }
-        tasks.create("${targetName}TestClasses") {
+        tasks.register("${targetName}TestClasses") {
             it.group = "build"
-            it.dependsOn("testClasses")
+            it.dependsOn(tasks.named("testClasses"))
             log("add ${it.path} task as an alias for ${it.sibling("testClasses")}")
         }
     }
 
     protected fun Project.addMultiplatformTaskAliases(target: String) {
-        tasks.maybeCreate("test").let {
-            it.dependsOn("${target}Test")
-            log("let task ${it.path} be triggered by ${it.sibling("test")}")
+        maybeRegister<Task>("test") {
+            this.dependsOn(tasks.named("${target}Test"))
+            log("let task test be triggered by ${this.sibling("test")}")
         }
     }
 

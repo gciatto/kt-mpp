@@ -11,14 +11,16 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
-import org.gradle.internal.impldep.org.junit.rules.TemporaryFolder
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+import org.junit.rules.TemporaryFolder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 
+@EnableRuleMigrationSupport
 class Tests :
     StringSpec(
         {
@@ -52,7 +54,7 @@ class Tests :
                                 .withProjectDir(testFolder.root)
                                 .withPluginClasspath()
                                 .withArguments(test.configuration.tasks + options + test.configuration.options)
-//                        .withDebug(true)
+                                // .withDebug(true)
                                 .run { if (test.expectation.failure.isEmpty()) build() else buildAndFail() }
                         println(result.tasks)
                         println(result.output)

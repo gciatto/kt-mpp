@@ -236,7 +236,7 @@ internal open class MultiPlatformHelperExtensionImpl(
             }
         }
 
-    private fun <T> KProperty0<Property<T>>.populateFromProperty(converter: (String) -> T?): T? =
+    private fun <T : Any> KProperty0<Property<T>>.populateFromProperty(converter: (String) -> T?): T? =
         project
             .findProperty(name)
             ?.let { converter(it.toString()) }

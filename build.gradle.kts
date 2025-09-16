@@ -3,7 +3,8 @@
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import io.gitlab.arturbosch.detekt.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
@@ -76,6 +77,7 @@ dependencies {
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)
     testImplementation(libs.bundles.kotlin.testing)
+    testImplementation("org.junit.jupiter:junit-jupiter-migrationsupport")
 }
 
 // Enforce Kotlin version coherence
@@ -95,7 +97,7 @@ kotlin {
         compilerOptions {
             allWarningsAsErrors = true
             freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-parameters")
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 }
@@ -111,20 +113,19 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     disableTrackStateOnWindows<JacocoReport>()
 }
 
-// tasks.withType<Test> {
-//    useJUnitPlatform()
-//    dependsOn(tasks.generateJacocoTestKitProperties)
-//    testLogging {
-//        showStandardStreams = true
-//        showCauses = true
-//        showStackTraces = true
-//        events(
-//            *org.gradle.api.tasks.testing.logging.TestLogEvent
-//                .values(),
-//        )
-//        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-//    }
-// }
+tasks.withType<Test> {
+    useJUnitPlatform()
+    dependsOn(tasks.generateJacocoTestKitProperties)
+    testLogging {
+        showStandardStreams = true
+        showCauses = true
+        showStackTraces = true
+        events(
+            *TestLogEvent.entries.toTypedArray(),
+        )
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
 
 detekt {
     config.from(".detekt-config.yml")
@@ -313,39 +314,46 @@ gradlePlugin {
             moreTags = arrayOf("fat-jar", "uber-jar", "redist", "shadow"),
         )
 
-        tasks.create("generatePluginsInfo") {
-            group = "build"
-            val pkg = project.group.toString().replace('.', '/')
-            sourceSets.main {
-                val targetFile = kotlin.srcDirs.first { it.name == "kotlin" }.resolve("$pkg/kt/mpp/Plugins.kt")
-                outputs.file(targetFile)
-                doLast {
-                    @Suppress("ktlint")
+        val info =
+            tasks.register("generatePluginsInfo") {
+                group = "build"
+                val pkg = project.group.toString().replace('.', '/')
+                sourceSets.main {
+                    val targetFile = kotlin.srcDirs.first { it.name == "kotlin" }.resolve("$pkg/kt/mpp/Plugins.kt")
+                    outputs.file(targetFile)
+                    doLast {
+                        @Suppress("ktlint")
                     val text = "@file:Suppress(\"MaxLineLength\", \"ktlint\")\n\n" +
                             "package ${project.group}.kt.mpp\n\n" +
                             "object Plugins {\n" +
                             pluginsClasses.joinToString("\n") { it.generateKotlinMethod() } +
                             "}\n"
-                    targetFile.writeText(text)
+                        targetFile.writeText(text)
+                    }
                 }
             }
-            tasks.getByName("sourcesJar").dependsOn(this)
-            tasks.getByName("compileKotlin").dependsOn(this)
-            tasks.getByName("detekt").dependsOn(this)
-            tasks.withType(DokkaTask::class.java) { dependsOn(this@create) }
-            tasks.withType(Cpd::class.java) { dependsOn(this@create) }
-            tasks.withType(BaseKtLintCheckTask::class.java) { dependsOn(this@create) }
-        }
+
+        tasks.named("sourcesJar") { dependsOn(info) }
+        tasks.named("compileKotlin") { dependsOn(info) }
+        tasks.named("detekt") { dependsOn(info) }
+        tasks.withType(DokkaTask::class.java).configureEach { dependsOn(info) }
+        tasks.withType(Cpd::class.java).configureEach { dependsOn(info) }
+        tasks.withType(BaseKtLintCheckTask::class.java).configureEach { dependsOn(info) }
     }
 }
 
-tasks
-    .withType(Detekt::class.java)
-    .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
-    .all {
-        val detektTask = this
-        tasks.check.configure { dependsOn(detektTask) }
-    }
+tasks.named("check") {
+    dependsOn(
+        tasks.withType<Detekt>().matching { it.name.endsWith("Main") || it.name.endsWith("Test") },
+    )
+}
+
+// tasks
+//    .withType(Detekt::class.java)
+//    .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
+//    .configureEach {
+//        tasks.check.configure { dependsOn(this@configureEach) }
+//    }
 
 // tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
 //    group = "publishing"
@@ -371,7 +379,7 @@ fun testDirectories(): Set<File> =
     buildSet {
         sourceSets.test {
             resources.srcDirs.forEach { testResourcesDir ->
-                fileTree(testResourcesDir) { include("**/test.yaml") }.asFileTree.visit {
+                fileTree(testResourcesDir) { include("test2/test.yaml") }.asFileTree.visit {
                     if (!isDirectory) {
                         add(file.parentFile)
                     }
@@ -381,14 +389,16 @@ fun testDirectories(): Set<File> =
     }
 
 for (testDir in testDirectories()) {
-    tasks.create<Copy>("copyLibsTo${testDir.name.capitalized()}") {
-        group = "verification"
-        description = "Copies the gradle/libs.versions.toml file into test project ${testDir.name}"
-        from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
-        destinationDir = testDir.resolve("gradle")
-        tasks.getByName("processTestResources").dependsOn(this)
-        tasks.withType(Cpd::class.java) { dependsOn(this@create) }
-    }
+    val copy =
+        tasks.register<Copy>("copyLibsTo${testDir.name.capitalized()}") {
+            group = "verification"
+            description = "Copies the gradle/libs.versions.toml file into test project ${testDir.name}"
+            from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
+            destinationDir = testDir.resolve("gradle")
+        }
+
+    tasks.named("processTestResources") { dependsOn(copy) }
+    tasks.withType(Cpd::class.java).configureEach { dependsOn(copy) }
 }
 
 // tasks.withType<PublishToMavenLocal>().configureEach {

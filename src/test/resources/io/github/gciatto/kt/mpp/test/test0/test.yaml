@@ -12,57 +12,18 @@ tests:
         - ':tasks'
       output_contains:
         - "test0: set nodeVersion=22"
-        - "test0: set :compileJava.sourceCompatibility=11"
-        - "test0: set :compileJava.targetCompatibility=11"
-        - "test0: set :compileTestJava.sourceCompatibility=11"
-        - "test0: set :compileTestJava.targetCompatibility=11"
-        - "full: set :full:compileJava.sourceCompatibility=11"
-        - "full: set :full:compileJava.targetCompatibility=11"
-        - "full: set :full:compileTestJava.sourceCompatibility=11"
-        - "full: set :full:compileTestJava.targetCompatibility=11"
-        - "subproject-mp: set :subproject-mp:compileJava.sourceCompatibility=11"
-        - "subproject-mp: set :subproject-mp:compileJava.targetCompatibility=11"
-        - "subproject-mp: set :subproject-mp:compileTestJava.sourceCompatibility=11"
-        - "subproject-mp: set :subproject-mp:compileTestJava.targetCompatibility=11"
-        - "subproject-jvm: set java.targetCompatibility=11"
-        - "subproject-jvm: set java.sourceCompatibility=11"
-        - "subproject-jvm: set :subproject-jvm:compileJava.sourceCompatibility=11"
-        - "subproject-jvm: set :subproject-jvm:compileJava.targetCompatibility=11"
-        - "subproject-jvm: set :subproject-jvm:compileTestJava.sourceCompatibility=11"
-        - "subproject-jvm: set :subproject-jvm:compileTestJava.targetCompatibility=11"
-        - "test0: set :compileKotlinJvm.jvmTarget=11"
-        - "test0: set :compileTestKotlinJvm.jvmTarget=11"
-        - "full: set :full:compileKotlinJvm.jvmTarget=11"
-        - "full: set :full:compileTestKotlinJvm.jvmTarget=11"
-        - "subproject-mp: set :subproject-mp:compileKotlinJvm.jvmTarget=11"
-        - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=11"
-        - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=11"
-        - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=11"
-  - description: "Runtime versions are set according to properties"
-    configuration:
-      tasks:
-        - "tasks"
-      options:
-        - "--info"
-        - "-PnodeVersion=20-latest"
-        - "-PjvmVersion=17"
-    expectation:
-      success:
-        - ':tasks'
-      output_contains:
-        - "test0: set nodeVersion=20"
-        - "test0: set :compileJava.sourceCompatibility=17"
-        - "test0: set :compileJava.targetCompatibility=17"
-        - "test0: set :compileTestJava.sourceCompatibility=17"
-        - "test0: set :compileTestJava.targetCompatibility=17"
-        - "full: set :full:compileJava.sourceCompatibility=17"
-        - "full: set :full:compileJava.targetCompatibility=17"
-        - "full: set :full:compileTestJava.sourceCompatibility=17"
-        - "full: set :full:compileTestJava.targetCompatibility=17"
-        - "subproject-mp: set :subproject-mp:compileJava.sourceCompatibility=17"
-        - "subproject-mp: set :subproject-mp:compileJava.targetCompatibility=17"
-        - "subproject-mp: set :subproject-mp:compileTestJava.sourceCompatibility=17"
-        - "subproject-mp: set :subproject-mp:compileTestJava.targetCompatibility=17"
+        - "test0: set :compileJvmMainJava.sourceCompatibility=17"
+        - "test0: set :compileJvmMainJava.targetCompatibility=17"
+        - "test0: set :compileJvmTestJava.sourceCompatibility=17"
+        - "test0: set :compileJvmTestJava.targetCompatibility=17"
+        - "full: set :full:compileJvmMainJava.sourceCompatibility=17"
+        - "full: set :full:compileJvmMainJava.targetCompatibility=17"
+        - "full: set :full:compileJvmTestJava.sourceCompatibility=17"
+        - "full: set :full:compileJvmTestJava.targetCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileJvmMainJava.sourceCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileJvmMainJava.targetCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileJvmTestJava.sourceCompatibility=17"
+        - "subproject-mp: set :subproject-mp:compileJvmTestJava.targetCompatibility=17"
         - "subproject-jvm: set java.targetCompatibility=17"
         - "subproject-jvm: set java.sourceCompatibility=17"
         - "subproject-jvm: set :subproject-jvm:compileJava.sourceCompatibility=17"
@@ -77,6 +38,45 @@ tests:
         - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=17"
         - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=17"
         - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=17"
+  - description: "Runtime versions are set according to properties"
+    configuration:
+      tasks:
+        - "tasks"
+      options:
+        - "--info"
+        - "-PnodeVersion=20-latest"
+        - "-PjvmVersion=18"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test0: set nodeVersion=20"
+        - "test0: set :compileJvmMainJava.sourceCompatibility=18"
+        - "test0: set :compileJvmMainJava.targetCompatibility=18"
+        - "test0: set :compileJvmTestJava.sourceCompatibility=18"
+        - "test0: set :compileJvmTestJava.targetCompatibility=18"
+        - "full: set :full:compileJvmMainJava.sourceCompatibility=18"
+        - "full: set :full:compileJvmMainJava.targetCompatibility=18"
+        - "full: set :full:compileJvmTestJava.sourceCompatibility=18"
+        - "full: set :full:compileJvmTestJava.targetCompatibility=18"
+        - "subproject-mp: set :subproject-mp:compileJvmMainJava.sourceCompatibility=18"
+        - "subproject-mp: set :subproject-mp:compileJvmMainJava.targetCompatibility=18"
+        - "subproject-mp: set :subproject-mp:compileJvmTestJava.sourceCompatibility=18"
+        - "subproject-mp: set :subproject-mp:compileJvmTestJava.targetCompatibility=18"
+        - "subproject-jvm: set java.targetCompatibility=18"
+        - "subproject-jvm: set java.sourceCompatibility=18"
+        - "subproject-jvm: set :subproject-jvm:compileJava.sourceCompatibility=18"
+        - "subproject-jvm: set :subproject-jvm:compileJava.targetCompatibility=18"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.sourceCompatibility=18"
+        - "subproject-jvm: set :subproject-jvm:compileTestJava.targetCompatibility=18"
+        - "test0: set :compileKotlinJvm.jvmTarget=18"
+        - "test0: set :compileTestKotlinJvm.jvmTarget=18"
+        - "full: set :full:compileKotlinJvm.jvmTarget=18"
+        - "full: set :full:compileTestKotlinJvm.jvmTarget=18"
+        - "subproject-mp: set :subproject-mp:compileKotlinJvm.jvmTarget=18"
+        - "subproject-mp: set :subproject-mp:compileTestKotlinJvm.jvmTarget=18"
+        - "subproject-jvm: set :subproject-jvm:compileKotlin.jvmTarget=18"
+        - "subproject-jvm: set :subproject-jvm:compileTestKotlin.jvmTarget=18"
   - description: Projects have detektAll task with correct dependencies
     configuration:
       tasks:
@@ -144,44 +144,15 @@ tests:
         - "kotlinNpmInstall"
         - "kotlinYarnSetup"
         - "nodeKotlinClean"
-        - "packageJson"
         - "rootPackageJson"
-        - "testPackageJson"
         # signing
         - "signAllPublications"
-        - "signJavaOSSRHPublication"
         - "signJsPublication"
         - "signJvmPublication"
         - "signKotlinMultiplatformPublication"
-        - "signKotlinOSSRHPublication"
+        - "signOSSRHPublication"
         # maven
-        - "publish"
-        - "publishAllPublicationsToMavenCentralRepository"
-        - "publishJavaOSSRHPublicationToMavenCentralRepository"
-        - "publishJavaOSSRHPublicationToMavenLocal"
-        - "publishJsPublicationToMavenCentralRepository"
-        - "publishJsPublicationToMavenLocal"
-        - "publishJvmPublicationToMavenCentralRepository"
-        - "publishJvmPublicationToMavenLocal"
-        - "publishKotlinMultiplatformPublicationToMavenCentralRepository"
-        - "publishKotlinMultiplatformPublicationToMavenLocal"
-        - "publishKotlinOSSRHPublicationToMavenCentralRepository"
-        - "publishKotlinOSSRHPublicationToMavenLocal"
-        - "publishToMavenLocal"
-        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
-        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
-        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
-        # nexus
-        - "closeStagingRepositoryOnMavenCentral"
-        - "createStagingRepositoryOnMavenCentral"
-        - "dropStagingRepositoryOnMavenCentral"
-        - "releaseStagingRepositoryOnMavenCentral"
-        - "uploadAllPublicationsToMavenCentralNexus"
-        - "uploadJavaOSSRHToMavenCentralNexus"
-        - "uploadJsToMavenCentralNexus"
-        - "uploadJvmToMavenCentralNexus"
-        - "uploadKotlinMultiplatformToMavenCentralNexus"
-        - "uploadKotlinOSSRHToMavenCentralNexus"
+        - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
         # npm
         - "publishJsPackageToNpmjsRegistry"
         # detekt
@@ -198,7 +169,6 @@ tests:
         - "jsNodeTest"
         - "jsTest"
         - "jvmTest"
-        - "nodeTest"
         - "test"
         # versions
         - "printNpmVersion"
@@ -213,10 +183,14 @@ tests:
         - ':subproject-mp:tasks'
         - ':subproject-mp:showPublications'
       output_contains:
-        - "subproject-mp: publications: adhocKotlinOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH"
-        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
-        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
-        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+        - "subproject-mp: publications: js, jvm, kotlinMultiplatform"
+        - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
+        - "publishJsPublicationToMavenLocal - Publishes Maven publication 'js' to the local Maven repository."
+        - "publishJsPublicationToProjectLocalRepository - Publishes Maven publication 'js' to Maven repository 'ProjectLocal'."
+        - "publishJvmPublicationToMavenLocal - Publishes Maven publication 'jvm' to the local Maven repository."
+        - "publishJvmPublicationToProjectLocalRepository - Publishes Maven publication 'jvm' to Maven repository 'ProjectLocal'."
+        - "publishKotlinMultiplatformPublicationToMavenLocal - Publishes Maven publication 'kotlinMultiplatform' to the local Maven repository."
+        - "publishKotlinMultiplatformPublicationToProjectLocalRepository - Publishes Maven publication 'kotlinMultiplatform' to Maven repository 'ProjectLocal'."
   - description: "Sub-project :full is multiplatform, hence it has tasks concerning all platforms"
     configuration:
       tasks:
@@ -228,9 +202,14 @@ tests:
         - ":full:showPublications"
       output_contains:
         - "full: publications: js, jvm, kotlinMultiplatform"
-        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
-        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
-        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+        - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
+        - "publishJsPackageToNpmjsRegistry - Publishes NPM package to NPM registry"
+        - "publishJsPublicationToMavenLocal - Publishes Maven publication 'js' to the local Maven repository."
+        - "publishJsPublicationToProjectLocalRepository - Publishes Maven publication 'js' to Maven repository 'ProjectLocal'."
+        - "publishJvmPublicationToMavenLocal - Publishes Maven publication 'jvm' to the local Maven repository."
+        - "publishJvmPublicationToProjectLocalRepository - Publishes Maven publication 'jvm' to Maven repository 'ProjectLocal'."
+        - "publishKotlinMultiplatformPublicationToMavenLocal - Publishes Maven publication 'kotlinMultiplatform' to the local Maven repository."
+        - "publishKotlinMultiplatformPublicationToProjectLocalRepository - Publishes Maven publication 'kotlinMultiplatform' to Maven repository 'ProjectLocal'."
   - description: "Sub-project :subproject-jvm is JVM-only, hence it has tasks concerning the JVM platform"
     configuration:
       tasks:
@@ -241,14 +220,12 @@ tests:
         - ":subproject-jvm:tasks"
         - ":subproject-jvm:showPublications"
       output_contains:
-        - "subproject-jvm: publications: javaOSSRH, kotlinOSSRH"
-        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishJavaOSSRHPublicationToMavenCentralRepository, publishKotlinOSSRHPublicationToMavenCentralRepository"
-        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishJavaOSSRHPublicationToMavenLocal, publishKotlinOSSRHPublicationToMavenLocal"
-        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJavaOSSRHToMavenCentralNexus, uploadKotlinOSSRHToMavenCentralNexus"
+        - "subproject-jvm: publications: OSSRH"
+        - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
   - description: "Attempting to publish a JVM project should involve sources generation"
     configuration:
       tasks:
-        - ":subproject-jvm:publishProjectToMavenLocal"
+        - ":subproject-jvm:publishAllPublicationsToProjectLocalRepository"
       options:
         - "--dry-run"
     expectation:
@@ -264,10 +241,8 @@ tests:
         - ':subproject-js:tasks'
         - ':subproject-js:showPublications'
       output_contains:
-        - "subproject-js: publications: kotlinOSSRH"
-        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinOSSRHPublicationToMavenCentralRepository"
-        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinOSSRHPublicationToMavenLocal"
-        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadKotlinOSSRHToMavenCentralNexus"
+        - "subproject-js: publications: "
+        - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
   - description: "Sub-project :full has shadow Jar tasks"
     configuration:
       tasks:
@@ -301,20 +276,13 @@ tests:
   - description: "Try to compile all sub-projects"
     configuration:
       tasks:
-        - "classes"
-        - "testClasses"
-      options:
-        - "--continue"
+        - "assemble"
     expectation:
       success:
-        - ":subproject-jvm:classes"
-        - ":subproject-jvm:testClasses"
-        - ":subproject-mp:classes"
-        - ":subproject-mp:testClasses"
-        - ":subproject-js:mainClasses"
-        - ":subproject-js:testClasses"
-        - ":full:classes"
-        - ":full:testClasses"
+        - ":subproject-jvm:assemble"
+        - ":subproject-mp:assemble"
+        - ":subproject-js:assemble"
+        - ":full:assemble"
   - description: "Detekt task works and triggers sub-tasks"
     configuration:
       tasks: "detektAll"
@@ -357,28 +325,16 @@ tests:
   - description: "Metadata generation works"
     configuration:
       tasks:
-        - "generateMetadataFileForOSSRHPublication"
+        - "generateMetadataFileForKotlinMultiplatformPublication"
     expectation:
       success:
-        - ":full:generateMetadataFileForOSSRHPublication"
+        - ":full:generateMetadataFileForKotlinMultiplatformPublication"
+        - ":subproject-mp:generateMetadataFileForKotlinMultiplatformPublication"
   - description: "Upload to Maven implies sources and javadoc being generated"
     configuration:
       tasks:
-        - "publishProjectToMavenLocal"
-        - "printMavenLocal"
-      options:
-        - "--continue"
+        - "publishToMavenLocal"
     expectation:
-      success:
-        - ":full:publishKotlinMultiplatformPublicationToMavenLocal"
-        - ":full:publishJvmPublicationToMavenLocal"
-        - ":full:publishJsPublicationToMavenLocal"
-        - ":subproject-mp:publishKotlinMultiplatformPublicationToMavenLocal"
-        - ":subproject-mp:publishJvmPublicationToMavenLocal"
-        - ":subproject-mp:publishJsPublicationToMavenLocal"
-        - ":subproject-jvm:publishKotlinOSSRHPublicationToMavenLocal"
-        - ":subproject-jvm:publishJavaOSSRHPublicationToMavenLocal"
-        - ":subproject-js:publishKotlinOSSRHPublicationToMavenLocal"
       # find build/.m2 -type f -wholename '*'
       file_exists:
         - name: build/.m2/repository/io/github/gciatto/full/maven-metadata-local.xml
@@ -524,18 +480,18 @@ tests:
               </dependency>
         - name: build/.m2/repository/io/github/gciatto/full-jvm/1.0.0/full-jvm-1.0.0.pom.asc
         #
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/maven-metadata-local.xml
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-sources.jar
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-sources.jar.asc
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-javadoc.jar
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0-javadoc.jar.asc
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.klib.asc
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/maven-metadata-local.xml
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0-sources.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0-sources.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0-javadoc.jar
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0-javadoc.jar.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0.klib
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0.klib.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0.pom
           trim: true
           contents:
             - <groupId>io.github.gciatto</groupId>
-            - <artifactId>subproject-js</artifactId>
+            - <artifactId>subproject-js-js</artifactId>
             - <version>1.0.0</version>
             - <name>Test0</name>
             - <description>Test project for kt-mpp plugin</description>
@@ -561,7 +517,7 @@ tests:
               <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib-js</artifactId>
-        - name: build/.m2/repository/io/github/gciatto/subproject-js/1.0.0/subproject-js-1.0.0.pom.asc
+        - name: build/.m2/repository/io/github/gciatto/subproject-js-js/1.0.0/subproject-js-js-1.0.0.pom.asc
         #
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/maven-metadata-local.xml
         - name: build/.m2/repository/io/github/gciatto/subproject-jvm/1.0.0/subproject-jvm-1.0.0-sources.jar

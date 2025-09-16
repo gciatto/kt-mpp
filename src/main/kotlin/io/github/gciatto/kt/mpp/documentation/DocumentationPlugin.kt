@@ -5,6 +5,7 @@ import io.github.gciatto.kt.mpp.utils.log
 import org.gradle.api.Project
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.register
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.dokka.gradle.DokkaPlugin
 
@@ -13,8 +14,8 @@ class DocumentationPlugin : AbstractProjectPlugin() {
         forAllKotlinPlugins { _ ->
             val dokka = apply(DokkaPlugin::class)
             log("apply ${dokka::class.java.name} as doc generator")
-            tasks.withType(DokkaMultiModuleTask::class.java) {
-                tasks.create<Zip>("${it.name}Zip") {
+            tasks.withType(DokkaMultiModuleTask::class.java).forEach {
+                tasks.register<Zip>("${it.name}Zip") {
                     group = "documentation"
                     archiveClassifier.set("documentation")
                     from(it.outputDirectory)

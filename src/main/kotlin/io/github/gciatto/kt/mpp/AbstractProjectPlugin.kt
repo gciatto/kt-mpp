@@ -5,14 +5,17 @@ import io.github.gciatto.kt.mpp.helpers.MultiPlatformHelperExtensionImpl
 import io.github.gciatto.kt.mpp.utils.forEachPlugin
 import io.github.gciatto.kt.mpp.utils.kotlinPlugin
 import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.maybeRegister
 import io.github.gciatto.kt.mpp.utils.npmCompliantVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.UnknownTaskException
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.provider.Provider
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -90,17 +93,17 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         )
     }
 
-    private fun Project.makeAssembleTaskDependOnJarTask(task: Jar) {
-        tasks.matching { it.name == "assemble" }.all { assemble ->
-            assemble.dependsOn(task)
-            log("make ${assemble.path} task dependant on ${task.path}")
+    private fun Project.makeAssembleTaskDependOnJarTask(task: TaskProvider<Jar>) {
+        tasks.named("assemble") {
+            it.dependsOn(task)
+            log("make ${it.path} depend on ${task.name}")
         }
     }
 
     context(p: Project)
-    protected fun MavenPublication.addJarTask(task: Jar) {
+    protected fun MavenPublication.addJarTask(task: TaskProvider<Jar>) {
         artifact(task)
-        p.log("add task ${task.path} to publication $name, as javadoc artifact")
+        p.log("add task ${task.name} to publication $name, as javadoc artifact")
     }
 
     protected fun Project.createJarTask(
@@ -108,13 +111,14 @@ abstract class AbstractProjectPlugin : Plugin<Project> {
         classifier: String,
         group: String,
         action: Jar.() -> Unit,
-    ): Jar =
-        tasks.maybeCreate(name, Jar::class.java).also {
-            it.group = group
-            it.archiveClassifier.set(classifier)
+    ): TaskProvider<Jar> =
+        maybeRegister<Jar>(name) {
+            this.group = group
+            this.archiveClassifier.set(classifier)
+            this.duplicatesStrategy = DuplicatesStrategy.WARN
+            this.action()
+        }.also {
             makeAssembleTaskDependOnJarTask(it)
-            it.duplicatesStrategy = DuplicatesStrategy.WARN
-            it.action()
         }
 
     @Suppress("MagicNumber")
