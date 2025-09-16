@@ -1,3 +1,13 @@
+## [5.1.4](https://github.com/gciatto/kt-mpp/compare/5.1.3...5.1.4) (2025-09-16)
+
+### Dependency updates
+
+* **deps:** update dependency org.danilopianini:npm-publish-gradle-plugin to v4.1.2 ([b367ca7](https://github.com/gciatto/kt-mpp/commit/b367ca775ac399c2d64431e9f8eb1382ae1e6012))
+
+### Bug Fixes
+
+* **ci:** upload all to github ([ea47148](https://github.com/gciatto/kt-mpp/commit/ea471488454067ed3c6b772c53d347e2ccf2154b))
+
 ## [5.1.3](https://github.com/gciatto/kt-mpp/compare/5.1.2...5.1.3) (2025-09-16)
 
 ### Dependency updates
