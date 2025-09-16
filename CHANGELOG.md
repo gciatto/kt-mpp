@@ -1,3 +1,28 @@
+## [5.1.0](https://github.com/gciatto/kt-mpp/compare/5.0.1...5.1.0) (2025-09-16)
+
+### Features
+
+* general upgrade ([1cad267](https://github.com/gciatto/kt-mpp/commit/1cad2678d29f03cb3fe8bba5c630b34cd8fb9ee0))
+
+### Dependency updates
+
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.143 ([b494100](https://github.com/gciatto/kt-mpp/commit/b494100e07dada4fc1bafb1ecd9ee83072688d5b))
+* **deps:** update kotest to v6.0.3 ([35b3afd](https://github.com/gciatto/kt-mpp/commit/35b3afd9cb9da37c6bb997100b5fa1f71b2adc6d))
+* **deps:** update node.js to 20.15 ([1db878f](https://github.com/gciatto/kt-mpp/commit/1db878fa296377b4a8ffb0565cb1991f4a1e981a))
+* **deps:** update node.js to 20.16 ([58072b0](https://github.com/gciatto/kt-mpp/commit/58072b0ff327b323b5cdfe2ae7d79c121b79bb03))
+* **deps:** update node.js to 20.17 ([b1009fb](https://github.com/gciatto/kt-mpp/commit/b1009fb04a9581887d088fa7225614e1aa56f885))
+* **deps:** update node.js to 20.18 ([c4607c6](https://github.com/gciatto/kt-mpp/commit/c4607c645150670f73220d6886dfa8544cb47958))
+* **deps:** update node.js to 20.19 ([8c75594](https://github.com/gciatto/kt-mpp/commit/8c75594c8d38f13a66e3b0623b790de7679ae86b))
+* **deps:** update node.js to v22 ([2b38ed2](https://github.com/gciatto/kt-mpp/commit/2b38ed2bcd24c9117f1dea4ac7bd2fc5e3337ea1))
+* **deps:** update plugin gitsemver to v7.0.3 ([ccdf181](https://github.com/gciatto/kt-mpp/commit/ccdf18186bc8d84674a7dabbc5836491ce01d668))
+* **deps:** update plugin kotlin-qa to v0.94.1 ([92ca97a](https://github.com/gciatto/kt-mpp/commit/92ca97acd053b662e2f0710adf545897dc0f655f))
+* **deps:** update plugin kotlin-qa to v0.95.0 ([3168d57](https://github.com/gciatto/kt-mpp/commit/3168d57a52146a0873eb246a9b85ac5b7936fdb0))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.1 ([7bcfaa9](https://github.com/gciatto/kt-mpp/commit/7bcfaa984a4db94e71576d8ca06a56665b7aec2e))
+
+### Build and continuous integration
+
+* **deps:** update dependency ubuntu to v24 ([b3d2dd0](https://github.com/gciatto/kt-mpp/commit/b3d2dd02435bd2743bfa2b096ec1b3a69f7353d5))
+
 ## [5.0.1](https://github.com/gciatto/kt-mpp/compare/5.0.0...5.0.1) (2025-09-13)
 
 ### Dependency updates
