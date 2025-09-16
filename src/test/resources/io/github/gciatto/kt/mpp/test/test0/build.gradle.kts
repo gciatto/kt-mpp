@@ -29,7 +29,7 @@ allprojects {
     }
     plugins.withId("maven-publish") {
         extensions.getByType(PublishingExtension::class.java).run {
-            tasks.create("showPublications") {
+            tasks.register("showPublications") {
                 doLast {
                     log("publications: ${publications.joinToString { it.name }}", LogLevel.LIFECYCLE)
                 }
@@ -38,14 +38,14 @@ allprojects {
     }
 }
 
-tasks.create("printMavenLocal") {
-    doLast {
-        fileTree(localMavenRepoDir).forEach {
-            println(it)
-        }
-    }
-    val printMavenLocal = this
-    tasks.withType<PublishToMavenLocal> {
-        printMavenLocal.mustRunAfter(this)
-    }
-}
+//tasks.create("printMavenLocal") {
+//    doLast {
+//        fileTree(localMavenRepoDir).forEach {
+//            println(it)
+//        }
+//    }
+//    val printMavenLocal = this
+//    tasks.withType<PublishToMavenLocal> {
+//        printMavenLocal.mustRunAfter(this)
+//    }
+//}

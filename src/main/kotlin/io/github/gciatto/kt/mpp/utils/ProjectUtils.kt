@@ -12,6 +12,8 @@ import io.github.gciatto.kt.mpp.utils.JvmVersions.toJvmTarget
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.UnknownTaskException
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.VersionConstraint
@@ -19,6 +21,7 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
@@ -251,3 +254,15 @@ internal fun Project.getVersionFromCatalog(
         }
     }
 }
+
+inline fun <reified T : Task> Project.maybeRegister(
+    name: String,
+    noinline configuration: T.() -> Unit = {},
+): TaskProvider<T> =
+    try {
+        tasks.named(name, T::class.java).apply {
+            configure(configuration)
+        }
+    } catch (_: UnknownTaskException) {
+        tasks.register(name, T::class.java, configuration)
+    }

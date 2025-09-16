@@ -54,13 +54,12 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
     private fun KotlinMultiplatformExtension.dependenciesFor(
         sourceSet: String,
         action: KotlinDependencyHandler.() -> Unit,
-    ) = sourceSets.getByName(sourceSet).dependencies(action)
+    ) = sourceSets.named(sourceSet).dependencies(action)
 
     @Suppress("DEPRECATION")
     context(p: Project, k: KotlinMultiplatformExtension)
     private fun KotlinJvmTarget.configureJvm() {
         p.multiPlatformHelper.initializeJvmRelatedProperties()
-        this.withJava()
         p.log("configure Kotlin JVM target to accept Java sources")
         this.compilerOptions {
             configureJvmKotlinOptions()

@@ -2,7 +2,6 @@ package io.github.gciatto.kt.mpp.helpers
 
 import io.github.gciatto.kt.mpp.kotlin.JsBinaryType
 import io.github.gciatto.kt.mpp.publishing.Developer
-import org.danilopianini.gradle.mavencentral.DocStyle
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.file.FileCollection
@@ -46,7 +45,8 @@ interface MultiPlatformHelperExtension {
     val nodeVersion: Property<String>
     val kotlinVersion: Property<String>
     val jvmVersion: Property<String>
-    val docStyle: Property<DocStyle>
+
+    // val docStyle: Property<DocStyle>
     val jsPackageName: Property<String>
     val bugFinderConfigPath: RegularFileProperty
     val bugFinderConfig: FileCollection

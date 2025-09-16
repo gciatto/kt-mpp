@@ -16,9 +16,14 @@ tests:
       success:
         - ':tasks'
       output_contains:
-        - "publishProjectToMavenCentralRepository - Publishes the whole project to MavenCentralRepository via tasks: publishKotlinMultiplatformPublicationToMavenCentralRepository, publishJsPublicationToMavenCentralRepository, publishJvmPublicationToMavenCentralRepository"
-        - "publishProjectToMavenLocal - Publishes the whole project to MavenLocal via tasks: publishKotlinMultiplatformPublicationToMavenLocal, publishJsPublicationToMavenLocal, publishJvmPublicationToMavenLocal"
-        - "uploadProjectToMavenCentralNexus - Uploads the whole project to MavenCentralNexus via tasks: uploadJsToMavenCentralNexus, uploadJvmToMavenCentralNexus, uploadKotlinMultiplatformToMavenCentralNexus"
+        - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
+        - "publishJsPackageToNpmjsRegistry - Publishes NPM package to NPM registry"
+        - "publishJsPublicationToMavenLocal - Publishes Maven publication 'js' to the local Maven repository."
+        - "publishJsPublicationToProjectLocalRepository - Publishes Maven publication 'js' to Maven repository 'ProjectLocal'."
+        - "publishJvmPublicationToMavenLocal - Publishes Maven publication 'jvm' to the local Maven repository."
+        - "publishJvmPublicationToProjectLocalRepository - Publishes Maven publication 'jvm' to Maven repository 'ProjectLocal'."
+        - "publishKotlinMultiplatformPublicationToMavenLocal - Publishes Maven publication 'kotlinMultiplatform' to the local Maven repository."
+        - "publishKotlinMultiplatformPublicationToProjectLocalRepository - Publishes Maven publication 'kotlinMultiplatform' to Maven repository 'ProjectLocal'."
   - description: "Multi-platform root-project has correct publications"
     configuration:
       tasks:
@@ -27,19 +32,16 @@ tests:
       success:
         - ':showPublications'
       output_contains:
-        - 'test2: publications: adhocKotlinOSSRH, js, jvm, kotlinMultiplatform, kotlinOSSRH'
+        - 'test2: publications: js, jvm, kotlinMultiplatform'
   - description: "Upload multiplatform root-project to Maven implies sources and javadoc being generated"
     configuration:
       tasks:
-        - "publishProjectToMavenLocal"
-        - "printMavenLocal"
-      options:
-        - "--continue"
+        - "publishToMavenLocal"
     expectation:
       success:
-        - ":publishKotlinMultiplatformPublicationToMavenLocal"
-        - ":publishJvmPublicationToMavenLocal"
         - ":publishJsPublicationToMavenLocal"
+        - ":publishJvmPublicationToMavenLocal"
+        - ":publishKotlinMultiplatformPublicationToMavenLocal"
       # find build/.m2 -type f -wholename '*'
       file_exists:
         - name: build/.m2/repository/io/github/gciatto/test2/maven-metadata-local.xml

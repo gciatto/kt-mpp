@@ -19,6 +19,7 @@ jobs:
             releaseMavenCentralPortalPublication
             --dry-run
           should-deploy: true
+          should-run-codecov: false
           maven-central-username: gciatto
           maven-central-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           signing-key: ${{ secrets.SIGNING_KEY }}

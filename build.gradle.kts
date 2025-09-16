@@ -3,10 +3,13 @@
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import io.gitlab.arturbosch.detekt.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
+import kotlin.text.replace
+import kotlin.text.startsWith
 import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -28,7 +31,7 @@ plugins {
 group = "io.github.gciatto"
 description = "Kotlin multi-platform and multi-project configurations plugin for Gradle"
 
-inner class ProjectInfo {
+class ProjectInfo {
     val longName = "Advanced Kotlin multi-platform plugin for Gradle Plugins"
     val website = "https://github.com/gciatto/$name"
     val vcsUrl = "$website.git"
@@ -74,6 +77,7 @@ dependencies {
     testImplementation(libs.konf.yaml)
     testImplementation(libs.classgraph)
     testImplementation(libs.bundles.kotlin.testing)
+    testImplementation("org.junit.jupiter:junit-jupiter-migrationsupport")
 }
 
 // Enforce Kotlin version coherence
@@ -93,7 +97,7 @@ kotlin {
         compilerOptions {
             allWarningsAsErrors = true
             freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-parameters")
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 }
@@ -117,8 +121,7 @@ tasks.withType<Test> {
         showCauses = true
         showStackTraces = true
         events(
-            *org.gradle.api.tasks.testing.logging.TestLogEvent
-                .values(),
+            *TestLogEvent.entries.toTypedArray(),
         )
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
@@ -129,17 +132,9 @@ detekt {
     buildUponDefaultConfig = true
 }
 
-signing {
-    if (System.getenv()["CI"].equals("true", ignoreCase = true)) {
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        useInMemoryPgpKeys(signingKey, signingPassword)
-    }
-}
-
 /*
  * Publication on Maven Central and the Plugin portal
- */
+*/
 publishOnCentral {
     projectLongName.set(info.longName)
     projectDescription.set(description ?: TODO("Missing description"))
@@ -149,21 +144,48 @@ publishOnCentral {
         user.set("gciatto")
         password.set(System.getenv("GITHUB_TOKEN"))
     }
-    publishing {
-        publications {
-            withType<MavenPublication> {
-                pom {
-                    developers {
-                        developer {
-                            name.set("Giovanni Ciatto")
-                            email.set("giovanni.ciatto@gmail.com")
-                            url.set("https://www.about.me/gciatto")
-                        }
+}
+
+publishing {
+    publications {
+        withType<MavenPublication> {
+            pom {
+                developers {
+                    developer {
+                        name.set("Giovanni Ciatto")
+                        email.set("giovanni.ciatto@gmail.com")
+                        url.set("https://www.about.me/gciatto")
                     }
                 }
             }
         }
     }
+}
+
+signing {
+    if (System.getenv()["CI"].equals("true", ignoreCase = true)) {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+//    val signingKeyFile: String? by project
+//    val signingPassword: String? by project
+//    if (signingKeyFile != null) {
+//        val keyContent =
+//            signingKeyFile!!.let {
+//                if (it.startsWith("file:")) {
+//                    it
+//                        .replace("\$rootProject", project.rootProject.projectDir.absolutePath)
+//                        .replace("\$project", project.projectDir.absolutePath)
+//                        .replace("file:", "")
+//                        .let { x -> File(x).readText(Charsets.UTF_8) }
+//                } else {
+//                    it
+//                }
+//            }
+//        println("Set sign: $keyContent")
+//        useInMemoryPgpKeys(keyContent, signingPassword)
+//    }
 }
 
 class PluginDescriptor(
@@ -292,59 +314,66 @@ gradlePlugin {
             moreTags = arrayOf("fat-jar", "uber-jar", "redist", "shadow"),
         )
 
-        tasks.create("generatePluginsInfo") {
-            group = "build"
-            val pkg = project.group.toString().replace('.', '/')
-            sourceSets.main {
-                val targetFile = kotlin.srcDirs.first { it.name == "kotlin" }.resolve("$pkg/kt/mpp/Plugins.kt")
-                outputs.file(targetFile)
-                doLast {
-                    @Suppress("ktlint")
+        val info =
+            tasks.register("generatePluginsInfo") {
+                group = "build"
+                val pkg = project.group.toString().replace('.', '/')
+                sourceSets.main {
+                    val targetFile = kotlin.srcDirs.first { it.name == "kotlin" }.resolve("$pkg/kt/mpp/Plugins.kt")
+                    outputs.file(targetFile)
+                    doLast {
+                        @Suppress("ktlint")
                     val text = "@file:Suppress(\"MaxLineLength\", \"ktlint\")\n\n" +
                             "package ${project.group}.kt.mpp\n\n" +
                             "object Plugins {\n" +
                             pluginsClasses.joinToString("\n") { it.generateKotlinMethod() } +
                             "}\n"
-                    targetFile.writeText(text)
+                        targetFile.writeText(text)
+                    }
                 }
             }
-            tasks.getByName("sourcesJar").dependsOn(this)
-            tasks.getByName("compileKotlin").dependsOn(this)
-            tasks.getByName("detekt").dependsOn(this)
-            tasks.withType(DokkaTask::class.java) { dependsOn(this@create) }
-            tasks.withType(Cpd::class.java) { dependsOn(this@create) }
-            tasks.withType(BaseKtLintCheckTask::class.java) { dependsOn(this@create) }
-        }
+
+        tasks.named("sourcesJar") { dependsOn(info) }
+        tasks.named("compileKotlin") { dependsOn(info) }
+        tasks.named("detekt") { dependsOn(info) }
+        tasks.withType(DokkaTask::class.java).configureEach { dependsOn(info) }
+        tasks.withType(Cpd::class.java).configureEach { dependsOn(info) }
+        tasks.withType(BaseKtLintCheckTask::class.java).configureEach { dependsOn(info) }
     }
 }
 
-tasks
-    .withType(Detekt::class.java)
-    .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
-    .all {
-        val detektTask = this
-        tasks.check.configure { dependsOn(detektTask) }
-    }
-
-tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
-    group = "publishing"
-    description = "Quick way to call tasks upload*PluginMarkerMavenToMavenCentralNexus altogether"
-    tasks.withType<PublishToMavenRepository> {
-        if (name.startsWith("upload") && name.endsWith("PluginMarkerMavenToMavenCentralNexus")) {
-            this@create.dependsOn(this)
-        }
-    }
-}
-
-tasks.create("uploadToMavenCentralNexus") {
-    group = "publishing"
-    description = "Quick upload relevant publication to Nexus, altogether"
+tasks.named("check") {
     dependsOn(
-        "uploadAllPluginMarkersToMavenCentralNexus",
-        "uploadKotlinOSSRHToMavenCentralNexus",
-        "uploadPluginMavenToMavenCentralNexus",
+        tasks.withType<Detekt>().matching { it.name.endsWith("Main") || it.name.endsWith("Test") },
     )
 }
+
+// tasks
+//    .withType(Detekt::class.java)
+//    .matching { task -> task.name.let { it.endsWith("Main") || it.endsWith("Test") } }
+//    .configureEach {
+//        tasks.check.configure { dependsOn(this@configureEach) }
+//    }
+
+// tasks.create("uploadAllPluginMarkersToMavenCentralNexus") {
+//    group = "publishing"
+//    description = "Quick way to call tasks upload*PluginMarkerMavenToMavenCentralNexus altogether"
+//    tasks.withType<PublishToMavenRepository> {
+//        if (name.startsWith("upload") && name.endsWith("PluginMarkerMavenToMavenCentralNexus")) {
+//            this@create.dependsOn(this)
+//        }
+//    }
+// }
+
+// tasks.create("uploadToMavenCentralNexus") {
+//    group = "publishing"
+//    description = "Quick upload relevant publication to Nexus, altogether"
+//    dependsOn(
+//        "uploadAllPluginMarkersToMavenCentralNexus",
+//        "uploadKotlinOSSRHToMavenCentralNexus",
+//        "uploadPluginMavenToMavenCentralNexus",
+//    )
+// }
 
 fun testDirectories(): Set<File> =
     buildSet {
@@ -360,12 +389,18 @@ fun testDirectories(): Set<File> =
     }
 
 for (testDir in testDirectories()) {
-    tasks.create<Copy>("copyLibsTo${testDir.name.capitalized()}") {
-        group = "verification"
-        description = "Copies the gradle/libs.versions.toml file into test project ${testDir.name}"
-        from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
-        destinationDir = testDir.resolve("gradle")
-        tasks.getByName("processTestResources").dependsOn(this)
-        tasks.withType(Cpd::class.java) { dependsOn(this@create) }
-    }
+    val copy =
+        tasks.register<Copy>("copyLibsTo${testDir.name.capitalized()}") {
+            group = "verification"
+            description = "Copies the gradle/libs.versions.toml file into test project ${testDir.name}"
+            from(rootProject.rootDir.resolve("gradle/libs.versions.toml"))
+            destinationDir = testDir.resolve("gradle")
+        }
+
+    tasks.named("processTestResources") { dependsOn(copy) }
+    tasks.withType(Cpd::class.java).configureEach { dependsOn(copy) }
 }
+
+// tasks.withType<PublishToMavenLocal>().configureEach {
+//    dependsOn(tasks.withType<Sign>())
+// }

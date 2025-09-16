@@ -35,12 +35,12 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     private fun Project.configureMavenRepositories() =
         configure(PublishOnCentralExtension::class) {
-            configureMavenCentral.set(true)
-            mavenCentral.run {
-                val mavenCentralUsername: String? = multiPlatformHelper.mavenCentralUsername.orNull
-                val mavenCentralPassword: String? = multiPlatformHelper.mavenCentralPassword.orNull
-                configure(mavenCentralUsername, mavenCentralPassword)
-            }
+            // configureMavenCentral.set(true)
+            // mavenCentral.run {
+            //    val mavenCentralUsername: String? = multiPlatformHelper.mavenCentralUsername.orNull
+            //    val mavenCentralPassword: String? = multiPlatformHelper.mavenCentralPassword.orNull
+            //    configure(mavenCentralUsername, mavenCentralPassword)
+            // }
             multiPlatformHelper.otherMavenRepo.orNull?.takeIf { "oss.sonatype.org" !in it.host }?.let {
                 val mavenUsername: String? = multiPlatformHelper.otherMavenUsername.orNull
                 val mavenPassword: String? = multiPlatformHelper.otherMavenPassword.orNull
@@ -77,11 +77,14 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                     "hence Maven publications won't be signed"
             )
             }
-            val signAll = tasks.create("signAllPublications") { it.group = "signing" }
-            tasks.withType(Sign::class.java) {
+            val signs = tasks.withType(Sign::class.java)
+            signs.configureEach { v ->
+                v.group = "signing"
+            }
+            tasks.register("signAllPublications") {
                 it.group = "signing"
-                signAll.dependsOn(it)
-                log("make ${signAll.path} tasks dependant on ${it.path}")
+                it.dependsOn(signs)
+                log("make ${it.path} tasks dependant on ...")
             }
         }
 
@@ -100,7 +103,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
 
     private fun Project.addMissingInformationToPublications() =
         configure(PublishingExtension::class) {
-            publications.withType(MavenPublication::class.java) { pub ->
+            publications.withType(MavenPublication::class.java).configureEach { pub ->
                 pub.pom { pom ->
                     pom.developers { devs ->
                         multiPlatformHelper.developers.all {
@@ -119,28 +122,25 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             }
         }
 
-    private fun Project.configurePublishOnCentralExtension() =
-        configure(PublishOnCentralExtension::class) {
-            autoConfigureAllPublications.set(true)
-        }
+//    private fun Project.configurePublishOnCentralExtension() =
+//        configure(PublishOnCentralExtension::class) {
+//            // autoConfigureAllPublications.set(true)
+//        }
 
-    private fun Project.fixSignPublishTaskDependencies() {
-        tasks.withType(Sign::class.java) { before ->
-            tasks.withType(AbstractPublishToMaven::class.java) { after ->
-                after.mustRunAfter(before)
-                log("make task ${after.path} run after ${before.path}")
-            }
+    private fun Project.fixSignPublishTaskDependencies() =
+        tasks.withType(AbstractPublishToMaven::class.java).configureEach { after ->
+            after.mustRunAfter(tasks.withType(Sign::class.java))
+            log("make task ${after.path} run after Sign*")
         }
-    }
 
     private fun Project.fixMavenPublicationsJavadocArtifact() {
-        plugins.withType(PublishOnMavenPlugin::class.java) { _ ->
+        plugins.withType(PublishOnMavenPlugin::class.java).configureEach { _ ->
             configure(PublishOnCentralExtension::class) {
-                val logMsg = "use %s style for javadoc JAR when publishing"
-                docStyle.set(multiPlatformHelper.docStyle.getLogging(logMsg))
+                // val logMsg = "use %s style for javadoc JAR when publishing"
+                // docStyle.set(multiPlatformHelper.docStyle.getLogging(logMsg))
                 configure(PublishingExtension::class) {
-                    publications.withType(MavenPublication::class.java).matching { "OSSRH" !in it.name }.all {
-                        it.artifact(tasks.named("javadocJar"))
+                    publications.withType(MavenPublication::class.java).matching { "OSSRH" !in it.name }.configureEach {
+                        // it.artifact(tasks.named("javadocJar"))
                         log("add javadoc JAR to publication ${it.name}")
                     }
                 }
@@ -154,7 +154,7 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
             apply(plugin = "org.danilopianini.publish-on-central")
             log("apply org.danilopianini.publish-on-central plugin")
             multiPlatformHelper.initializeMavenRelatedProperties()
-            configurePublishOnCentralExtension()
+            // configurePublishOnCentralExtension()
             configureMavenRepositories()
             configurePublications()
             addMissingInformationToPublications()
