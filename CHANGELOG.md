@@ -1,3 +1,17 @@
+## [5.1.3](https://github.com/gciatto/kt-mpp/compare/5.1.2...5.1.3) (2025-09-16)
+
+### Dependency updates
+
+* **deps:** update dependency org.danilopianini:npm-publish-gradle-plugin to v4.0.8 ([6553fe1](https://github.com/gciatto/kt-mpp/commit/6553fe191a3085acbc73cca5101fe02cb1f8c505))
+
+### Bug Fixes
+
+* **c1:** publish to github ([b75b9a3](https://github.com/gciatto/kt-mpp/commit/b75b9a300ed696fa5dadb2c7ed712df72a41c957))
+
+### Build and continuous integration
+
+* **deps:** update dependency ubuntu github actions runner to v24 ([c00933c](https://github.com/gciatto/kt-mpp/commit/c00933cfcaff0cc65b3eb8243b88be71cc890c42))
+
 ## [5.1.2](https://github.com/gciatto/kt-mpp/compare/5.1.1...5.1.2) (2025-09-16)
 
 ### Bug Fixes
