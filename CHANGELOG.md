@@ -1,3 +1,9 @@
+## [5.1.1](https://github.com/gciatto/kt-mpp/compare/5.1.0...5.1.1) (2025-09-16)
+
+### Bug Fixes
+
+* **ci:** use secret for mcr username ([36aa3ac](https://github.com/gciatto/kt-mpp/commit/36aa3acd0898d685a1f5faf4bdb4cbcde9efe1cb))
+
 ## [5.1.0](https://github.com/gciatto/kt-mpp/compare/5.0.1...5.1.0) (2025-09-16)
 
 ### Features
