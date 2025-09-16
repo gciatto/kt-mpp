@@ -379,7 +379,7 @@ fun testDirectories(): Set<File> =
     buildSet {
         sourceSets.test {
             resources.srcDirs.forEach { testResourcesDir ->
-                fileTree(testResourcesDir) { include("test2/test.yaml") }.asFileTree.visit {
+                fileTree(testResourcesDir) { include("**/test.yaml") }.asFileTree.visit {
                     if (!isDirectory) {
                         add(file.parentFile)
                     }
