@@ -1,3 +1,9 @@
+## [5.1.2](https://github.com/gciatto/kt-mpp/compare/5.1.1...5.1.2) (2025-09-16)
+
+### Bug Fixes
+
+* **ci:** missing username ([3dff6af](https://github.com/gciatto/kt-mpp/commit/3dff6afe669a59cb06d8463b803a2db567c35964))
+
 ## [5.1.1](https://github.com/gciatto/kt-mpp/compare/5.1.0...5.1.1) (2025-09-16)
 
 ### Bug Fixes
