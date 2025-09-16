@@ -3,15 +3,21 @@ package io.github.gciatto.kt.mpp.jar
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.github.gciatto.kt.mpp.helpers.MultiPlatformHelperExtension
 import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.maybeRegister
 import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.UnknownTaskException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
-import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.internal.extensions.stdlib.capitalized
+import org.gradle.kotlin.dsl.accessors.runtime.maybeRegister
 import org.gradle.kotlin.dsl.attributes
+import org.gradle.kotlin.dsl.named
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import java.io.File
 
@@ -59,7 +65,7 @@ fun Project.shadowJarTask(
     name: String = defaultTaskName(platform),
     classifier: Provider<String> = provider { null },
     excludedPlatforms: Set<String> = defaultExcludedPlatforms(platform),
-): ShadowJar {
+): TaskProvider<ShadowJar> {
     val entryPoint = entryPoint.orElse(multiPlatformHelper.fatJarEntryPoint)
     val classifier = classifier.orElse(multiPlatformHelper.fatJarClassifier)
 
@@ -67,32 +73,35 @@ fun Project.shadowJarTask(
         locations.map { it.asFile }.map { if (it.isDirectory) fileTree(it) else zipTree(it) }.reduce(FileTree::plus)
 
     fun fileShouldBeIncluded(file: File): Boolean = excludedPlatforms.none { file.name.endsWith("$it.jar") }
-    return tasks.maybeCreate(name, ShadowJar::class.java).also { jarTask ->
-        jarTask.group = "shadow"
-        entryPoint.orNull?.let { className ->
-            jarTask.manifest { it.attributes("Main-Class" to className) }
+    val shadowJar =
+        this.maybeRegister<ShadowJar>(name) {
+            this.group = "shadow"
+            entryPoint.orNull?.let { className ->
+                this.manifest { it.attributes("Main-Class" to className) }
+            }
+            this.archiveBaseName.set(project.provider { "${rootProject.name}-${project.name}" })
+            this.archiveVersion.set(project.provider { project.version.toString() })
+            this.archiveClassifier.set(platform?.let { p -> classifier.map { "$it-$p" } } ?: classifier)
+            this.from(files("${rootProject.projectDir}/LICENSE"))
+
+            log(
+                "configure task ${this.path} for assembling fat jars",
+                platform?.let { " on $it" },
+                entryPoint.orNull?.let { ", with entry point $it" },
+                excludedPlatforms.takeIf { it.isNotEmpty() }?.let { ", excluding dependencies for platforms $it" }
+                    ?: ", including all dependencies",
+            )
         }
-        jarTask.archiveBaseName.set(project.provider { "${rootProject.name}-${project.name}" })
-        jarTask.archiveVersion.set(project.provider { project.version.toString() })
-        jarTask.archiveClassifier.set(platform?.let { p -> classifier.map { "$it-$p" } } ?: classifier)
-        configureJarForProject(jarTask, ::fileShouldBeIncluded, ::setOfFileSystemLocationsToFileTree)
-        jarTask.from(files("${rootProject.projectDir}/LICENSE"))
-        tasks.maybeCreate("allShadowJars").also {
-            it.dependsOn(jarTask)
-            it.group = "shadow"
-        }
-        log(
-            "configure task ${jarTask.path} for assembling fat jars",
-            platform?.let { " on $it" },
-            entryPoint.orNull?.let { ", with entry point $it" },
-            excludedPlatforms.takeIf { it.isNotEmpty() }?.let { ", excluding dependencies for platforms $it" }
-                ?: ", including all dependencies",
-        )
+    configureJarForProject(shadowJar, ::fileShouldBeIncluded, ::setOfFileSystemLocationsToFileTree)
+    this.maybeRegister<Task>("allShadowJars") {
+        this.dependsOn(shadowJar)
+        this.group = "shadow"
     }
+    return shadowJar
 }
 
 private fun Project.configureJarFromFileCollection(
-    jarTask: ShadowJar,
+    jarTask: TaskProvider<ShadowJar>,
     fileCollection: FileCollection,
     shouldBeIncluded: (File) -> Boolean,
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
@@ -101,10 +110,10 @@ private fun Project.configureJarFromFileCollection(
     .filter(shouldBeIncluded)
     .elements
     .map(toFileTree)
-    .let { jarTask.from(it) }
+    .let { x -> jarTask.configure { it.from(x) } }
 
 private fun Project.configureJarForJvmProject(
-    jarTask: ShadowJar,
+    jarTask: TaskProvider<ShadowJar>,
     shouldBeIncluded: (File) -> Boolean,
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
 ) {
@@ -114,12 +123,12 @@ private fun Project.configureJarForJvmProject(
                 configureJarFromFileCollection(jarTask, it.runtimeClasspath, shouldBeIncluded, toFileTree)
             }
         }
-        jarTask.dependsOn("classes")
+        jarTask.configure { j -> j.dependsOn(tasks.named("classes")) }
     }
 }
 
 private fun Project.configureJarForMpProject(
-    jarTask: ShadowJar,
+    jarTask: TaskProvider<ShadowJar>,
     shouldBeIncluded: (File) -> Boolean,
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
 ) {
@@ -131,12 +140,12 @@ private fun Project.configureJarForMpProject(
                 }
             }
         }
-        jarTask.dependsOn("jvmMainClasses")
+        jarTask.configure { it.dependsOn(tasks.named("jvmMainClasses")) }
     }
 }
 
 private fun Project.configureJarForProject(
-    jarTask: ShadowJar,
+    jarTask: TaskProvider<ShadowJar>,
     shouldBeIncluded: (File) -> Boolean,
     toFileTree: (Set<FileSystemLocation>) -> FileTree,
 ) {

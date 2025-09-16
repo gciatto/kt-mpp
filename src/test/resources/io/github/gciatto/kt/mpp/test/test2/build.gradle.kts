@@ -48,14 +48,14 @@ plugins.withId("maven-publish") {
     }
 }
 
-tasks.create("printMavenLocal") {
-    doLast {
-        fileTree(localMavenRepoDir).forEach {
-            println(it)
-        }
-    }
-    val printMavenLocal = this
-    tasks.withType<PublishToMavenLocal> {
-        printMavenLocal.mustRunAfter(this)
-    }
-}
+//tasks.create("printMavenLocal") {
+//    doLast {
+//        fileTree(localMavenRepoDir).forEach {
+//            println(it)
+//        }
+//    }
+//    val printMavenLocal = this
+//    tasks.withType<PublishToMavenLocal> {
+//        printMavenLocal.mustRunAfter(this)
+//    }
+//}

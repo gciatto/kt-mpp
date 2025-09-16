@@ -2,12 +2,14 @@ package io.github.gciatto.kt.mpp.verification
 
 import io.github.gciatto.kt.mpp.AbstractProjectPlugin
 import io.github.gciatto.kt.mpp.utils.log
+import io.github.gciatto.kt.mpp.utils.maybeRegister
 import io.github.gciatto.kt.mpp.utils.multiPlatformHelper
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektPlugin
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.DomainObjectCollection
 import org.gradle.api.Project
+import org.gradle.api.Task
 
 class BugFinderPlugin : AbstractProjectPlugin() {
     companion object {
@@ -33,11 +35,14 @@ class BugFinderPlugin : AbstractProjectPlugin() {
             }
             buildUponDefaultConfig = true
         }
-        val detektAll = tasks.maybeCreate("detektAll").also { it.group = "verification" }
-        detektTasks.all { detektAll.dependsOn(it) }
-        tasks.matching { it.name == "check" }.all {
+        val detektAll =
+            maybeRegister<Task>("detektAll") {
+                this.group = "verification"
+                this.dependsOn(detektTasks)
+            }
+        tasks.matching { it.name == "check" }.configureEach {
             it.dependsOn(detektAll)
-            log("add task ${detektAll.path} and make ${it.path} depend on it")
+            log("add task detektAll and make ${it.path} depend on it")
         }
     }
 }
