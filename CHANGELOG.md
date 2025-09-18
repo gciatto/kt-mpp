@@ -1,3 +1,15 @@
+## [5.1.5](https://github.com/gciatto/kt-mpp/compare/5.1.4...5.1.5) (2025-09-18)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.1.0 ([f2ff212](https://github.com/gciatto/kt-mpp/commit/f2ff212444ff345b1a5380c4136a619920a7412e))
+* **deps:** update dependency org.danilopianini:npm-publish-gradle-plugin to v4.1.3 ([cb65317](https://github.com/gciatto/kt-mpp/commit/cb653171c9d3f48b57a260dc5f782b408b07923c))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.144 ([898d475](https://github.com/gciatto/kt-mpp/commit/898d4755f2970830440f6df4fae2cc6dfc4526ff))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.145 ([3cf1686](https://github.com/gciatto/kt-mpp/commit/3cf1686ea9759787149826b8dba0df2ba527b809))
+* **deps:** update plugin com.gradle.develocity to v4.2 ([9ccc3b9](https://github.com/gciatto/kt-mpp/commit/9ccc3b967eec245ffc7a8e20354ec01a6bcf92a1))
+* **deps:** update plugin gitsemver to v7.0.4 ([7c63929](https://github.com/gciatto/kt-mpp/commit/7c639299d2a0f244954fa4e59d17662de6a4d4c4))
+* **deps:** update publishoncentral to v9.1.5 ([5878965](https://github.com/gciatto/kt-mpp/commit/58789655a8cde52caa53519ad7627160c0d69293))
+
 ## [5.1.4](https://github.com/gciatto/kt-mpp/compare/5.1.3...5.1.4) (2025-09-16)
 
 ### Dependency updates
