@@ -7,7 +7,7 @@ kotest = "6.0.4"
 kotlin = "2.2.21"
 ktlint = "13.1.0"
 node = "22-latest"
-publishOnCentral = "9.1.5"
+publishOnCentral = "9.1.6"
 
 [libraries]
 classgraph = "io.github.classgraph:classgraph:4.8.184"
