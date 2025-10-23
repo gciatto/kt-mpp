@@ -1,3 +1,31 @@
+## [5.1.6](https://github.com/gciatto/kt-mpp/compare/5.1.5...5.1.6) (2025-10-23)
+
+### Dependency updates
+
+* **core-deps:** update dependency org.jetbrains.kotlin.jvm to v2.2.21 ([4851722](https://github.com/gciatto/kt-mpp/commit/4851722dd39dc80afb2881d356c202a2be1be2f5))
+* **deps:** update dependency com.gradleup.shadow:shadow-gradle-plugin to v9.2.1 ([9f9534b](https://github.com/gciatto/kt-mpp/commit/9f9534b1e46fa93560b51e756d1ed128aecd5d9e))
+* **deps:** update dependency com.gradleup.shadow:shadow-gradle-plugin to v9.2.2 ([07cad16](https://github.com/gciatto/kt-mpp/commit/07cad16be1d0947ac49cc37e6f9084c30cf88356))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.184 ([ba37cbd](https://github.com/gciatto/kt-mpp/commit/ba37cbd50b2783851817d32198951f6232929d88))
+* **deps:** update dependency io.kotest:kotest-runner-junit5-jvm to v6.0.4 ([7ae2b68](https://github.com/gciatto/kt-mpp/commit/7ae2b68975187490e7617f6666a61223725a6a82))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.146 ([b2007db](https://github.com/gciatto/kt-mpp/commit/b2007db42840cfa5f1ac1d01a596fc95f076171f))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.147 ([2891be3](https://github.com/gciatto/kt-mpp/commit/2891be30ca890e74715d4182897efb7929a70e59))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.148 ([164c2be](https://github.com/gciatto/kt-mpp/commit/164c2bece16620407c0fb4c16a11b11445bd7287))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.149 ([0910ee2](https://github.com/gciatto/kt-mpp/commit/0910ee21db9a1786b54a8ffa41c469e7065a4683))
+* **deps:** update node.js to 22.20 ([c8a4092](https://github.com/gciatto/kt-mpp/commit/c8a4092b07c0ea1d339a0599cf0b5983868d065b))
+* **deps:** update node.js to 22.21 ([65180b5](https://github.com/gciatto/kt-mpp/commit/65180b557ae2a6e1265d283ff444b10591bbcecf))
+* **deps:** update plugin com.gradle.develocity to v4.2.1 ([fb3fcbd](https://github.com/gciatto/kt-mpp/commit/fb3fcbd5fa395859785f54063ee40361e5b17196))
+* **deps:** update plugin com.gradle.develocity to v4.2.2 ([f5f1362](https://github.com/gciatto/kt-mpp/commit/f5f1362eb841147575f7827eb82558ad4a360ae1))
+* **deps:** update plugin kotlin-qa to v0.95.1 ([9621fa6](https://github.com/gciatto/kt-mpp/commit/9621fa6100c159e8ecdde22bbf894a4ebdd0b671))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.2 ([5ed7072](https://github.com/gciatto/kt-mpp/commit/5ed707234d3ced20792c0e570fdc157eae61359d))
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v6 ([20bc22a](https://github.com/gciatto/kt-mpp/commit/20bc22ad3a52c7e28103c160775ac33de1d2c1a1))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.10 ([3682615](https://github.com/gciatto/kt-mpp/commit/3682615d102c3affce1fa775e391b217287632fc))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.8 ([24fe050](https://github.com/gciatto/kt-mpp/commit/24fe05012edcc217d53386223c0b75c80c39a728))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.9 ([c7bead2](https://github.com/gciatto/kt-mpp/commit/c7bead2782f34c14cb667ef3e3760363c4acb15b))
+* **deps:** update dependency macos github actions runner to v15 ([6bf9317](https://github.com/gciatto/kt-mpp/commit/6bf931754e1c9dabc3dc700c1448d0c0f2c9428f))
+
 ## [5.1.5](https://github.com/gciatto/kt-mpp/compare/5.1.4...5.1.5) (2025-09-18)
 
 ### Dependency updates
