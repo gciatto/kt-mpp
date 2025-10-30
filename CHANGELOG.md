@@ -1,3 +1,20 @@
+## [5.1.7](https://github.com/gciatto/kt-mpp/compare/5.1.6...5.1.7) (2025-10-30)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.2.0 ([6394a08](https://github.com/gciatto/kt-mpp/commit/6394a08c87ab670673f3b3dfd491e4b94a4504c6))
+* **deps:** update dependency org.danilopianini:npm-publish-gradle-plugin to v4.1.4 ([e3ec91e](https://github.com/gciatto/kt-mpp/commit/e3ec91ee93f791fffe4cff9ee0a591f15306dd3b))
+* **deps:** update dependency org.danilopianini:npm-publish-gradle-plugin to v4.1.5 ([e8ced5b](https://github.com/gciatto/kt-mpp/commit/e8ced5be0fddaceb7cd0c7f8a39ac1bd12aa2803))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.150 ([38f038a](https://github.com/gciatto/kt-mpp/commit/38f038a633388990910611004a0181215fcad11b))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.151 ([8e0f028](https://github.com/gciatto/kt-mpp/commit/8e0f0283e0c24d187d7b503989f0b3eb824584f4))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.152 ([d74903f](https://github.com/gciatto/kt-mpp/commit/d74903f68628bdb44939daba1412a8d866b03c11))
+* **deps:** update plugin gitsemver to v7.0.5 ([67de68f](https://github.com/gciatto/kt-mpp/commit/67de68f0c8997b883a479528cb2c7dc3716fbca2))
+* **deps:** update plugin gitsemver to v7.0.6 ([63d4d3a](https://github.com/gciatto/kt-mpp/commit/63d4d3a4d0109947a41d54bfe09e57d566ceb360))
+* **deps:** update plugin kotlin-qa to v0.95.2 ([58dc34e](https://github.com/gciatto/kt-mpp/commit/58dc34e021db2209cef7b14e7c8ddcf2a2034592))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.3 ([eee1ed9](https://github.com/gciatto/kt-mpp/commit/eee1ed901b7318d9ab8725326414b3d8a3d850a9))
+* **deps:** update publishoncentral to v9.1.6 ([4cbb99b](https://github.com/gciatto/kt-mpp/commit/4cbb99b054f70ba4452531dbd6721425f3197367))
+* **deps:** update publishoncentral to v9.1.7 ([64a11dc](https://github.com/gciatto/kt-mpp/commit/64a11dc7de6a24f260c49cf739489f22fa05d107))
+
 ## [5.1.6](https://github.com/gciatto/kt-mpp/compare/5.1.5...5.1.6) (2025-10-23)
 
 ### Dependency updates
