@@ -1,3 +1,25 @@
+## [5.1.8](https://github.com/gciatto/kt-mpp/compare/5.1.7...5.1.8) (2025-11-17)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.2.1 ([138d01f](https://github.com/gciatto/kt-mpp/commit/138d01f301bbb65b97e47c895b317094482be48e))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.153 ([b16ecc9](https://github.com/gciatto/kt-mpp/commit/b16ecc9d3ca9c62bc2d8f26621bbb5482ea0027a))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.154 ([e22ad70](https://github.com/gciatto/kt-mpp/commit/e22ad70675c880056460a6dd061e74d632d3ede0))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.155 ([54e19df](https://github.com/gciatto/kt-mpp/commit/54e19df3a3a487a573f2db56d3b214d38e73029c))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.156 ([764d676](https://github.com/gciatto/kt-mpp/commit/764d6761815a4a4fe7d9c9894795bed678cc3357))
+* **deps:** update ktlint to v14 ([b14911f](https://github.com/gciatto/kt-mpp/commit/b14911fcd16e152fc08c1e5f631ce04704a695f6))
+* **deps:** update node.js to v24 ([3173ca0](https://github.com/gciatto/kt-mpp/commit/3173ca00e62f2460ab22d93ded566351acb93edb))
+* **deps:** update plugin kotlin-qa to v0.95.3 ([615f287](https://github.com/gciatto/kt-mpp/commit/615f2875983418b5c7cea018a37b18c225ebc694))
+* **deps:** update plugin kotlin-qa to v0.96.0 ([693ab0d](https://github.com/gciatto/kt-mpp/commit/693ab0d835b1c40f3c4948ed2945c5c32bcae4c3))
+* **deps:** update plugin kotlin-qa to v0.97.0 ([4819d36](https://github.com/gciatto/kt-mpp/commit/4819d36a89a9b109aed84ad523888f6cace2ebbb))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.4 ([78e5748](https://github.com/gciatto/kt-mpp/commit/78e5748289de2fe1fd6dcd2f24f12e5e5b95fcf9))
+* **deps:** update publishoncentral to v9.1.8 ([d753d68](https://github.com/gciatto/kt-mpp/commit/d753d687cd12da5a1004c1978e03195bda9ed881))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.11 ([3b287f4](https://github.com/gciatto/kt-mpp/commit/3b287f43b8fa3cf0aa63ad02f03a7141048e9320))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.12 ([f21ac0f](https://github.com/gciatto/kt-mpp/commit/f21ac0fab335696a2c4c7a98f00b6a9dc327e743))
+
 ## [5.1.7](https://github.com/gciatto/kt-mpp/compare/5.1.6...5.1.7) (2025-10-30)
 
 ### Dependency updates
