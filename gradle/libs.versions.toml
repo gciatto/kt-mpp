@@ -21,7 +21,7 @@ konf-yaml = { module = "com.uchuhimo:konf-yaml", version.ref = "konf" }
 kotest-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
 publishOnCentral = { module = "org.danilopianini:publish-on-central", version.ref = "publishOnCentral" }
-shadowJar = "com.gradleup.shadow:shadow-gradle-plugin:9.2.2"
+shadowJar = "com.gradleup.shadow:shadow-gradle-plugin:9.3.0"
 npmPublish = "org.danilopianini:npm-publish-gradle-plugin:4.1.8"
 
 [bundles]
