@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.1
-      - uses: DanySK/build-check-deploy-gradle-action@4.0.16
+      - uses: DanySK/build-check-deploy-gradle-action@4.0.17
         with:
           java-distribution: ${{ matrix.jdk-dist }}
           java-version: ${{ matrix.java-version }}
