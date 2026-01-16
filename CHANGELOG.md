@@ -1,3 +1,21 @@
+## [5.1.10](https://github.com/gciatto/kt-mpp/compare/5.1.9...5.1.10) (2026-01-16)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.3.0 ([14818e4](https://github.com/gciatto/kt-mpp/commit/14818e46de3ed49b8842aeb33df7f27820c5ee23))
+* **deps:** update dependency com.gradleup.shadow:shadow-gradle-plugin to v9.3.1 ([91876f1](https://github.com/gciatto/kt-mpp/commit/91876f1a6990f9acc9fafcf276d88510bdcf8955))
+* **deps:** update node.js to 24.13 ([06ee33d](https://github.com/gciatto/kt-mpp/commit/06ee33d309348bf516e9a280886425018804442f))
+* **deps:** update plugin com.gradle.develocity to v4.3.1 ([b2c1ed8](https://github.com/gciatto/kt-mpp/commit/b2c1ed8d2ef56aaad59f6abf87272fd76a6ec48b))
+* **deps:** update plugin gitsemver to v7.0.8 ([08fdc7d](https://github.com/gciatto/kt-mpp/commit/08fdc7dff072fd5f7013e863a8af47562a1eeeed))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.6 ([0069db2](https://github.com/gciatto/kt-mpp/commit/0069db20b590c3bac341b4a08ae961e6ff4bacbf))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.7 ([5b85f04](https://github.com/gciatto/kt-mpp/commit/5b85f04651220a5217674c9ec091d619826c9cf1))
+* **deps:** update publishoncentral to v9.1.9 ([90c64ab](https://github.com/gciatto/kt-mpp/commit/90c64abf48573b81098af09043d2ecda9a7ea676))
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v6.2.0 ([6a24ac1](https://github.com/gciatto/kt-mpp/commit/6a24ac1e2de6df31c1e9469dcce87162b1f4c7e2))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.18 ([26b0130](https://github.com/gciatto/kt-mpp/commit/26b0130bd56a902a31af0223ff42afa387de692e))
+
 ## [5.1.9](https://github.com/gciatto/kt-mpp/compare/5.1.8...5.1.9) (2025-12-16)
 
 ### Dependency updates
