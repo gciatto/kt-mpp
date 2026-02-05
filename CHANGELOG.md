@@ -1,3 +1,16 @@
+## [5.1.12](https://github.com/gciatto/kt-mpp/compare/5.1.11...5.1.12) (2026-02-05)
+
+### Dependency updates
+
+* **core-deps:** update kotlin monorepo to v2.3.10 ([baec314](https://github.com/gciatto/kt-mpp/commit/baec3147a1ef865134a22e8c5798488b958b01cb))
+* **deps:** update dependency org.danilopianini:npm-publish-gradle-plugin to v4.1.10 ([80e8484](https://github.com/gciatto/kt-mpp/commit/80e84848f964cc74864dea5ee72f58e4a77503f7))
+* **deps:** update plugin gitsemver to v7.0.11 ([b09c592](https://github.com/gciatto/kt-mpp/commit/b09c592c62f258d32e6d7c9edf88796d285e7c83))
+* **deps:** update publishoncentral to v9.1.12 ([978d4aa](https://github.com/gciatto/kt-mpp/commit/978d4aa49ac9a994d4d7b20c3e2cfcc997726147))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.23 ([8c4a4e1](https://github.com/gciatto/kt-mpp/commit/8c4a4e17255cdc98fec820c3ff17bff49eecda45))
+
 ## [5.1.11](https://github.com/gciatto/kt-mpp/compare/5.1.10...5.1.11) (2026-01-29)
 
 ### Dependency updates
