@@ -1,16 +1,22 @@
 @file:Suppress("OPT_IN_USAGE")
 
 import de.aaschmid.gradle.plugins.cpd.Cpd
-import io.gitlab.arturbosch.detekt.Detekt
+import dev.detekt.gradle.Detekt
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.internal.extensions.stdlib.capitalized
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 import kotlin.text.replace
 import kotlin.text.startsWith
-import org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION as KOTLIN_VERSION
+
+val kotlinVersion =
+    extensions
+        .getByType<VersionCatalogsExtension>()
+        .named("libs")
+        .findVersion("kotlin")
+        .get()
+        .requiredVersion
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -85,7 +91,7 @@ configurations.matching { "detekt" !in it.name }.all {
     val configuration = this
     resolutionStrategy.eachDependency {
         if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {
-            useVersion(KOTLIN_VERSION)
+            useVersion(kotlinVersion)
             val artifact = "${requested.group}:${requested.name}"
             because("Force version $version for $artifact in configuration ${configuration.name}")
         }
@@ -336,7 +342,9 @@ gradlePlugin {
         tasks.named("sourcesJar") { dependsOn(info) }
         tasks.named("compileKotlin") { dependsOn(info) }
         tasks.named("detekt") { dependsOn(info) }
-        tasks.withType(DokkaTask::class.java).configureEach { dependsOn(info) }
+        tasks.named("detektMainSourceSet") { dependsOn(info) }
+        tasks.named("dokkaGeneratePublicationHtml") { dependsOn(info) }
+        // tasks.withType(DokkaTask::class.java).configureEach { dependsOn(info) }
         tasks.withType(Cpd::class.java).configureEach { dependsOn(info) }
         tasks.withType(BaseKtLintCheckTask::class.java).configureEach { dependsOn(info) }
     }
