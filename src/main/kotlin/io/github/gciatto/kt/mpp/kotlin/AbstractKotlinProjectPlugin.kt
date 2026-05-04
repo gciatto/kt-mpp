@@ -259,10 +259,12 @@ abstract class AbstractKotlinProjectPlugin(
                 library()
                 p.log("configure kotlin js to produce a library")
             }
+
             JsBinaryType.EXECUTABLE -> {
                 executable()
                 p.log("configure kotlin js to produce an executable")
             }
+
             else -> {}
         }
     }
