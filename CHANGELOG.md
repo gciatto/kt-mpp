@@ -1,3 +1,11 @@
+## [5.2.1](https://github.com/gciatto/kt-mpp/compare/5.2.0...5.2.1) (2026-05-13)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.5.1 ([f234d6a](https://github.com/gciatto/kt-mpp/commit/f234d6a133ca1e63ce475884e20d5c483bb25092))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.17 ([78bfa78](https://github.com/gciatto/kt-mpp/commit/78bfa7806dd9b3afac17ccdf49098b40ef938359))
+* **deps:** update publishoncentral to v9.2.3 ([e4ac19c](https://github.com/gciatto/kt-mpp/commit/e4ac19c935309076ad36243d5982675d9e62623e))
+
 ## [5.2.0](https://github.com/gciatto/kt-mpp/compare/5.1.12...5.2.0) (2026-05-04)
 
 ### Features
