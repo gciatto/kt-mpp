@@ -54,6 +54,7 @@ interface MultiPlatformHelperExtension {
     val fatJarPlatforms: DomainObjectSet<String>
     val fatJarClassifier: Property<String>
     val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>>
+    val fatJarDefaultExcludedPlatforms: DomainObjectSet<String>
     val fatJarEntryPoint: Property<String>
 
     fun fatJarPlatformInclude(

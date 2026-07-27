@@ -41,13 +41,18 @@ internal fun Project.excludedPlatformsFor(platform: String): Set<String> =
 private fun defaultTaskName(platform: String?): String =
     "shadowJar" + platform?.let { "For${it.toPascalCase()}" }.orEmpty()
 
+// must not be called before the build script has been evaluated, as it reads mutable collections
 private fun Project.defaultExcludedPlatforms(platform: String?): Set<String> =
-    platform?.let { excludedPlatformsFor(it) }.orEmpty()
+    platform?.let { excludedPlatformsFor(it) }
+        ?: multiPlatformHelper.fatJarDefaultExcludedPlatforms.toSet()
 
 fun MultiPlatformHelperExtension.javaFxFatJars() {
     fatJarPlatforms.addAll(listOf("win", "linux", "mac", "mac-aarch64"))
     fatJarPlatformInclude("mac", "linux")
     fatJarPlatformInclude("mac-aarch64", "linux")
+    // the two macOS artifacts share the file names of their native libraries, hence the
+    // platform-less fat jar can only carry one of them
+    fatJarDefaultExcludedPlatforms.add("mac-aarch64")
 }
 
 fun Project.shadowJarTask(
@@ -55,7 +60,7 @@ fun Project.shadowJarTask(
     entryPoint: String?,
     classifier: String?,
     name: String = defaultTaskName(platform),
-    excludedPlatforms: Set<String> = defaultExcludedPlatforms(platform),
+    excludedPlatforms: Set<String>? = null,
 ) = shadowJarTask(platform, provider { entryPoint }, name, provider { classifier }, excludedPlatforms)
 
 @Suppress("NAME_SHADOWING")
@@ -64,7 +69,7 @@ fun Project.shadowJarTask(
     entryPoint: Provider<String> = provider { null },
     name: String = defaultTaskName(platform),
     classifier: Provider<String> = provider { null },
-    excludedPlatforms: Set<String> = defaultExcludedPlatforms(platform),
+    excludedPlatforms: Set<String>? = null,
 ): TaskProvider<ShadowJar> {
     val entryPoint = entryPoint.orElse(multiPlatformHelper.fatJarEntryPoint)
     val classifier = classifier.orElse(multiPlatformHelper.fatJarClassifier)
@@ -72,7 +77,10 @@ fun Project.shadowJarTask(
     fun setOfFileSystemLocationsToFileTree(locations: Set<FileSystemLocation>): FileTree =
         locations.map { it.asFile }.map { if (it.isDirectory) fileTree(it) else zipTree(it) }.reduce(FileTree::plus)
 
-    fun fileShouldBeIncluded(file: File): Boolean = excludedPlatforms.none { file.name.endsWith("$it.jar") }
+    // resolved on demand: platforms and inclusions may still be declared after this registration
+    fun actualExcludedPlatforms(): Set<String> = excludedPlatforms ?: defaultExcludedPlatforms(platform)
+
+    fun fileShouldBeIncluded(file: File): Boolean = actualExcludedPlatforms().none { file.name.endsWith("$it.jar") }
     val shadowJar =
         this.maybeRegister<ShadowJar>(name) {
             this.group = "shadow"
@@ -88,7 +96,9 @@ fun Project.shadowJarTask(
                 "configure task ${this.path} for assembling fat jars",
                 platform?.let { " on $it" },
                 entryPoint.orNull?.let { ", with entry point $it" },
-                excludedPlatforms.takeIf { it.isNotEmpty() }?.let { ", excluding dependencies for platforms $it" }
+                actualExcludedPlatforms()
+                    .takeIf { it.isNotEmpty() }
+                    ?.let { ", excluding dependencies for platforms $it" }
                     ?: ", including all dependencies",
             )
         }

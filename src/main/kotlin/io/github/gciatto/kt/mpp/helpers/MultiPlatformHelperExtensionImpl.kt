@@ -187,6 +187,9 @@ internal open class MultiPlatformHelperExtensionImpl(
     override val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>> =
         project.objects.domainObjectSet(Pair::class.java) as DomainObjectSet<Pair<String, String>>
 
+    override val fatJarDefaultExcludedPlatforms: DomainObjectSet<String> =
+        objects.domainObjectSet(String::class.java)
+
     override val fatJarEntryPoint: Property<String> = propertyWithConvention()
 
     override fun populateArgumentsFromProperties() {
