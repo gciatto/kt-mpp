@@ -38,5 +38,5 @@ kotlin-qa = "org.danilopianini.gradle-kotlin-qa:1.8.1"
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ktlint-idea = { id = "org.jlleitschuh.gradle.ktlint-idea", version.ref = "ktlint" }
 publishOnCentral = { id = "org.danilopianini.publish-on-central", version.ref = "publishOnCentral" }
-taskTree = "com.dorongold.task-tree:4.0.1"
+taskTree = "com.dorongold.task-tree:4.0.2"
 
