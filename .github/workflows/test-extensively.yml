@@ -29,21 +29,7 @@ jobs:
           path: |
             ~/.gradle/caches/build-cache-1
             .github/.cache/test-extensively
-          key: >-
-            test-extensively-${{ runner.os }}-java-${{ matrix.java-version }}-${{ matrix.jdk-dist }}-${{
-            hashFiles(
-            'src/**',
-            '**/*.gradle',
-            '**/*.gradle.kts',
-            '**/settings.gradle',
-            '**/settings.gradle.kts',
-            '**/gradle.properties',
-            'gradle/libs.versions.toml',
-            'gradle/wrapper/gradle-wrapper.properties',
-            'buildSrc/**/*.kt',
-            '*.kts'
-            )
-            }}
+          key: ${{ format('test-extensively-{0}-java-{1}-{2}-{3}', runner.os, matrix.java-version, matrix.jdk-dist, hashFiles('src/**', '**/*.gradle', '**/*.gradle.kts', '**/settings.gradle', '**/settings.gradle.kts', '**/gradle.properties', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/**/*.kt', '*.kts')) }}
       - name: Run tests
         if: steps.cache-test-result.outputs.cache-hit != 'true'
         uses: DanySK/build-check-deploy-gradle-action@4.0.43
