@@ -42,7 +42,7 @@ jobs:
             ./gradlew test --continue
           should-run-codecov: false
       - name: Mark successful test cache
-        if: steps.cache-test-result.outputs.cache-hit != 'true'
+        if: steps.cache-test-result.outputs.cache-hit != 'true' && success()
         run: |
           mkdir -p .github/.cache/test-extensively
           echo "ok" > .github/.cache/test-extensively/success
