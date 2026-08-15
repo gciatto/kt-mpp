@@ -22,7 +22,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
-      - uses: DanySK/build-check-deploy-gradle-action@4.0.43
+      - name: Restore Gradle test cache
+        id: cache-test-result
+        uses: actions/cache/restore@v4.2.4
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-1
+            .github/.cache/test-extensively
+          key: >-
+            test-extensively-${{ runner.os }}-java-${{ matrix.java-version }}-${{ matrix.jdk-dist }}-${{
+            hashFiles(
+            'src/**',
+            '**/*.gradle',
+            '**/*.gradle.kts',
+            '**/settings.gradle',
+            '**/settings.gradle.kts',
+            '**/gradle.properties',
+            'gradle/libs.versions.toml',
+            'gradle/wrapper/gradle-wrapper.properties',
+            'buildSrc/**/*.kt',
+            '*.kts'
+            )
+            }}
+      - name: Run tests
+        if: steps.cache-test-result.outputs.cache-hit != 'true'
+        uses: DanySK/build-check-deploy-gradle-action@4.0.43
         with:
           java-distribution: ${{ matrix.jdk-dist }}
           java-version: ${{ matrix.java-version }}
@@ -31,3 +55,19 @@ jobs:
           check-command: |
             ./gradlew test --continue
           should-run-codecov: false
+      - name: Mark successful test cache
+        if: steps.cache-test-result.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .github/.cache/test-extensively
+          echo "ok" > .github/.cache/test-extensively/success
+      - name: Save Gradle test cache
+        if: steps.cache-test-result.outputs.cache-hit != 'true' && success()
+        uses: actions/cache/save@v4.2.4
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-1
+            .github/.cache/test-extensively
+          key: ${{ steps.cache-test-result.outputs.cache-primary-key }}
+      - name: Skip tests on cache hit
+        if: steps.cache-test-result.outputs.cache-hit == 'true'
+        run: echo "Inputs unchanged since last successful run, skipping tests."
