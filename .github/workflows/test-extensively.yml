@@ -31,6 +31,7 @@ jobs:
             .github/.cache/test-extensively
           key: ${{ format('test-extensively-{0}-java-{1}-{2}-{3}', runner.os, matrix.java-version, matrix.jdk-dist, hashFiles('src/**', '**/*.gradle', '**/*.gradle.kts', '**/settings.gradle', '**/settings.gradle.kts', '**/gradle.properties', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/**/*.kt', '*.kts')) }}
       - name: Run tests
+        id: run-tests
         if: steps.cache-test-result.outputs.cache-hit != 'true'
         uses: DanySK/build-check-deploy-gradle-action@4.0.43
         with:
@@ -42,12 +43,12 @@ jobs:
             ./gradlew test --continue
           should-run-codecov: false
       - name: Mark successful test cache
-        if: steps.cache-test-result.outputs.cache-hit != 'true' && success()
+        if: steps.cache-test-result.outputs.cache-hit != 'true' && steps.run-tests.conclusion == 'success'
         run: |
           mkdir -p .github/.cache/test-extensively
           echo "ok" > .github/.cache/test-extensively/success
       - name: Save Gradle test cache
-        if: steps.cache-test-result.outputs.cache-hit != 'true' && success()
+        if: steps.cache-test-result.outputs.cache-hit != 'true' && steps.run-tests.conclusion == 'success'
         uses: actions/cache/save@v4.2.4
         with:
           path: |
