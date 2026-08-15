@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v7.0.1
       - name: Restore Gradle test cache
         id: cache-test-result
-        uses: actions/cache/restore@v4.2.4
+        uses: actions/cache/restore@v4.3.0
         with:
           path: |
             ~/.gradle/caches/build-cache-1
@@ -49,7 +49,7 @@ jobs:
           echo "ok" > .github/.cache/test-extensively/success
       - name: Save Gradle test cache
         if: steps.cache-test-result.outputs.cache-hit != 'true' && steps.run-tests.conclusion == 'success'
-        uses: actions/cache/save@v4.2.4
+        uses: actions/cache/save@v4.3.0
         with:
           path: |
             ~/.gradle/caches/build-cache-1
