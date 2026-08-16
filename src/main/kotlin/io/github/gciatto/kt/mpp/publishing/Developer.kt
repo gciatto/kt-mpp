@@ -41,7 +41,7 @@ data class Developer(
             return Developer(name, url, email, org)
         }
 
-        fun Project.getAllDevs(): Set<Developer> =
+        private fun Project.getAllDevs(properties: Map<String, Any>): Set<Developer> =
             properties.keys
                 .asSequence()
                 .filter { it.startsWith("developer") && it.endsWith("Name") }
@@ -49,5 +49,11 @@ data class Developer(
                 .distinct()
                 .map { getDev(it) }
                 .toSet()
+
+        fun Project.getAllDevs(): Set<Developer> =
+            providers
+                .gradlePropertiesPrefixedBy("developer")
+                .map { getAllDevs(it) }
+                .get()
     }
 }
