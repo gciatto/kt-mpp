@@ -1,3 +1,22 @@
+## [5.2.3](https://github.com/gciatto/kt-mpp/compare/5.2.2...5.2.3) (2026-08-16)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.7.0 ([dc93db5](https://github.com/gciatto/kt-mpp/commit/dc93db5812f942c4a4785ff72d8bda15bb675aa5))
+* **deps:** use kotlin 2.4.10 ([e8057e3](https://github.com/gciatto/kt-mpp/commit/e8057e387a04253b5493398bc2381ed600ef0ee3))
+
+### Build and continuous integration
+
+* **deps:** update actions/cache action to v6 ([03c47ab](https://github.com/gciatto/kt-mpp/commit/03c47abca17284b5840dc790aca4fc5c6d1e9dda))
+
+### General maintenance
+
+* **ci:** cache-gate extensive CI tests by source/build input digest ([#664](https://github.com/gciatto/kt-mpp/issues/664)) ([fcb51ff](https://github.com/gciatto/kt-mpp/commit/fcb51ff402187a1d87bc6874ed0695582edb72e7))
+
+### Refactoring
+
+* avoid usage of deprecated Project.properties ([a7e36b5](https://github.com/gciatto/kt-mpp/commit/a7e36b5f847100a15dacea88db07dcfc695216af))
+
 ## [5.2.2](https://github.com/gciatto/kt-mpp/compare/5.2.1...5.2.2) (2026-08-15)
 
 ### Dependency updates
