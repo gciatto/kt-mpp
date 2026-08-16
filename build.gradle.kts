@@ -102,7 +102,7 @@ kotlin {
     target {
         compilerOptions {
             allWarningsAsErrors = true
-            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn", "-Xcontext-parameters")
+            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
