@@ -1,3 +1,9 @@
+## [5.2.4](https://github.com/gciatto/kt-mpp/compare/5.2.3...5.2.4) (2026-08-19)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.7.1 ([12f4baa](https://github.com/gciatto/kt-mpp/commit/12f4baaab311ed38b7ed70b3ad79f7f023bb5088))
+
 ## [5.2.3](https://github.com/gciatto/kt-mpp/compare/5.2.2...5.2.3) (2026-08-16)
 
 ### Dependency updates
