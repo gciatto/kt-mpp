@@ -34,6 +34,7 @@ import kotlin.jvm.optionals.asSequence
 import kotlin.reflect.KClass
 
 internal fun kotlinPlugin(name: String) = "org.jetbrains.kotlin.$name"
+
 private const val REGENERATE_NODE_VERSIONS_CACHE_TASK_NAME = "regenerateNodeVersionsCache"
 
 internal val Project.gradlePropertiesFile: File

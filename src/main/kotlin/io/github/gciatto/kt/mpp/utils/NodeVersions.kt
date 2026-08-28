@@ -202,8 +202,7 @@ object NodeVersions {
         version: String = "latest",
     ): String = latest(fromProject(project), version)
 
-    fun latest(version: String = "latest"): String =
-        latest(fromCurrentProcess(), version)
+    fun latest(version: String = "latest"): String = latest(fromCurrentProcess(), version)
 
     private fun latest(
         context: ResolutionContext,
