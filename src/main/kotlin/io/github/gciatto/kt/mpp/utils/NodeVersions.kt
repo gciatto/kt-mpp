@@ -108,7 +108,11 @@ object NodeVersions {
             }.onSuccess {
                 return it
             }.onFailure {
-                failures = it
+                if (failures == null) {
+                    failures = it
+                } else {
+                    failures.addSuppressed(it)
+                }
                 if (attempt < settings.retries) {
                     try {
                         Thread.sleep(waitMillis)
@@ -147,28 +151,28 @@ object NodeVersions {
         context: ResolutionContext,
         forceRefresh: Boolean = false,
     ): Set<StableVersion> {
-            val loaded =
-                if (!forceRefresh) {
-                    VERSIONS_CACHE[context.key]
-                        ?: context.cacheFile
-                            .takeIf { it.exists() && it.isFile }
-                            ?.readText()
-                            ?.let(::parseVersions)
-                            ?.takeIf(Set<StableVersion>::isNotEmpty)
-                } else {
-                    null
-                }
-
-            val value =
-                loaded ?: fetchVersionsFromWeb(context).also { fetched ->
-                    writeCache(context, fetched)
-                }
-
-            VERSIONS_CACHE[context.key] = value
-            if (forceRefresh) {
-                RESOLUTION_CACHE.remove(context.key)
+        val loaded =
+            if (!forceRefresh) {
+                VERSIONS_CACHE[context.key]
+                    ?: context.cacheFile
+                        .takeIf { it.exists() && it.isFile }
+                        ?.readText()
+                        ?.let(::parseVersions)
+                        ?.takeIf(Set<StableVersion>::isNotEmpty)
+            } else {
+                null
             }
-            return value
+
+        val value =
+            loaded ?: fetchVersionsFromWeb(context).also { fetched ->
+                writeCache(context, fetched)
+            }
+
+        VERSIONS_CACHE[context.key] = value
+        if (forceRefresh) {
+            RESOLUTION_CACHE.remove(context.key)
+        }
+        return value
     }
 
     @Suppress("NAME_SHADOWING")
