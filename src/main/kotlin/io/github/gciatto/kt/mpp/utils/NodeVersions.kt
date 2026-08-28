@@ -141,14 +141,6 @@ object NodeVersions {
         context.cacheFile.writeText(payload)
     }
 
-    private fun loadVersions(
-        context: ResolutionContext,
-        forceRefresh: Boolean = false,
-    ): Set<StableVersion> =
-        synchronized(CACHE_LOCK) {
-            loadVersionsLocked(context, forceRefresh)
-        }
-
     private fun loadVersionsLocked(
         context: ResolutionContext,
         forceRefresh: Boolean = false,
