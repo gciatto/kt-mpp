@@ -138,16 +138,10 @@ object NodeVersions {
                 .sorted()
                 .joinToString(System.lineSeparator()) { it.toVersionString() }
                 .plus(System.lineSeparator())
-        context.cacheFile.writeText(payload)
-    }
-
-    private fun loadVersions(
-        context: ResolutionContext,
-        forceRefresh: Boolean = false,
-    ): Set<StableVersion> =
-        synchronized(CACHE_LOCK) {
-            loadVersionsLocked(context, forceRefresh)
+        runCatching {
+            context.cacheFile.writeText(payload)
         }
+    }
 
     private fun loadVersionsLocked(
         context: ResolutionContext,
@@ -158,8 +152,7 @@ object NodeVersions {
                 VERSIONS_CACHE[context.key]
                     ?: context.cacheFile
                         .takeIf { it.exists() && it.isFile }
-                        ?.readText()
-                        ?.let(::parseVersions)
+                        ?.let { runCatching { parseVersions(it.readText()) }.getOrNull() }
                         ?.takeIf(Set<StableVersion>::isNotEmpty)
             } else {
                 null
@@ -210,8 +203,7 @@ object NodeVersions {
         version: String = "latest",
     ): String = latest(fromProject(project), version)
 
-    fun latest(version: String = "latest"): String =
-        latest(fromCurrentProcess(), version)
+    fun latest(version: String = "latest"): String = latest(fromCurrentProcess(), version)
 
     private fun latest(
         context: ResolutionContext,

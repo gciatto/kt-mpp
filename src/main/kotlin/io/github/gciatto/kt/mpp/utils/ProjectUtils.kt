@@ -34,6 +34,7 @@ import kotlin.jvm.optionals.asSequence
 import kotlin.reflect.KClass
 
 internal fun kotlinPlugin(name: String) = "org.jetbrains.kotlin.$name"
+
 private const val REGENERATE_NODE_VERSIONS_CACHE_TASK_NAME = "regenerateNodeVersionsCache"
 
 internal val Project.gradlePropertiesFile: File
@@ -133,7 +134,7 @@ fun Project.nodeVersion(
     override: Any? = null,
 ) {
     plugins.withType<NodeJsRootPlugin> {
-        if (rootProject.tasks.findByName(REGENERATE_NODE_VERSIONS_CACHE_TASK_NAME) == null) {
+        if (REGENERATE_NODE_VERSIONS_CACHE_TASK_NAME !in rootProject.tasks.names) {
             rootProject.tasks.register(REGENERATE_NODE_VERSIONS_CACHE_TASK_NAME) { task ->
                 task.group = "help"
                 task.description =
