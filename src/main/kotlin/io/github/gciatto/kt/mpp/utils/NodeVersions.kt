@@ -111,7 +111,8 @@ object NodeVersions {
                 if (failures == null) {
                     failures = it
                 } else {
-                    failures.addSuppressed(it)
+                    val previousFailure: Throwable = failures
+                    previousFailure.addSuppressed(it)
                 }
                 if (attempt < settings.retries) {
                     try {
@@ -124,7 +125,8 @@ object NodeVersions {
                 }
             }
         }
-        throw failures ?: error("Unable to fetch Node versions from $NODE_DIST_URL")
+        val failure = failures ?: error("Unable to fetch Node versions from $NODE_DIST_URL")
+        throw failure
     }
 
     private fun writeCache(
