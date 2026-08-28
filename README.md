@@ -250,6 +250,14 @@ Overall, you may need to define, provide the following properties:
     + syntax of the form `<major>-latest` is admissible (e.g., `18-latest`),
     in this case, the latest version of NodeJS with the given major version will be selected among the ones available at
     https://nodejs.org/dist/
+    + fetched versions are cached in `<rootProject>/.node-versions` and reused in following runs
+    + task `regenerateNodeVersionsCache` can be used to refresh the cache manually
+
+- `nodeVersionsFetchRetries` (optional, default value: `3`): number of retries for downloading Node versions metadata from `https://nodejs.org/dist/`.
+
+- `nodeVersionsFetchBackoffMillis` (optional, default value: `250`): initial waiting time in milliseconds before retrying failed Node versions metadata downloads.
+
+- `nodeVersionsFetchMaxBackoffMillis` (optional, default value: `2000`): upper bound in milliseconds for exponential backoff while retrying failed Node versions metadata downloads.
 
 - `kotlinVersion` (optional, default value: `""`): the version of Kotlin to use for compiling Kotlin sources.
 
