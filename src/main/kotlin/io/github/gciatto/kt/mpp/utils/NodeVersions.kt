@@ -24,7 +24,7 @@ object NodeVersions {
     private val MAJOR_REGEX = "^(\\d+)(?:\\.[a-zA-Z])?$".toRegex()
     private val MAJOR_MINOR_REGEX = "^(\\d+)\\.(\\d+)(?:\\.[a-zA-Z])?$".toRegex()
     private val FULL_VERSION_REGEX = "^(\\d+)\\.(\\d+)\\.(\\d+)$".toRegex()
-    private val LATEST_VERSION_REGEX = "^v?(\\d+)-latest|latest-v?(\\d+)$".toRegex(RegexOption.IGNORE_CASE)
+    private val LATEST_VERSION_REGEX = "^(?:v?(\\d+)-latest|latest-v?(\\d+))$".toRegex(RegexOption.IGNORE_CASE)
 
     private data class FetchSettings(
         val retries: Int,
@@ -140,6 +140,13 @@ object NodeVersions {
         forceRefresh: Boolean = false,
     ): Set<StableVersion> =
         synchronized(CACHE_LOCK) {
+            loadVersionsLocked(context, forceRefresh)
+        }
+
+    private fun loadVersionsLocked(
+        context: ResolutionContext,
+        forceRefresh: Boolean = false,
+    ): Set<StableVersion> {
             val loaded =
                 if (!forceRefresh) {
                     VERSIONS_CACHE[context.key]
@@ -161,8 +168,8 @@ object NodeVersions {
             if (forceRefresh) {
                 RESOLUTION_CACHE.remove(context.key)
             }
-            value
-        }
+            return value
+    }
 
     @Suppress("NAME_SHADOWING")
     private fun findLatestVersion(
@@ -187,7 +194,9 @@ object NodeVersions {
 
     fun refreshCache(project: Project) {
         val context = fromProject(project)
-        loadVersions(context, forceRefresh = true)
+        synchronized(CACHE_LOCK) {
+            loadVersionsLocked(context, forceRefresh = true)
+        }
     }
 
     fun latest(
@@ -203,7 +212,7 @@ object NodeVersions {
         version: String = "latest",
     ): String =
         synchronized(CACHE_LOCK) {
-            val versions = loadVersions(context)
+            val versions = loadVersionsLocked(context)
             val cache = RESOLUTION_CACHE.getOrPut(context.key) { mutableMapOf() }
             cache.getOrPut(version) {
                 findLatestVersion(version, versions)?.toVersionString() ?: error("No such node version: $version")
