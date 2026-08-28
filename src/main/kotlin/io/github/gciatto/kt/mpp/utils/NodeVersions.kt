@@ -15,6 +15,8 @@ object NodeVersions {
     private const val FETCH_BACKOFF_MILLIS_PROPERTY = "nodeVersionsFetchBackoffMillis"
     private const val FETCH_MAX_BACKOFF_MILLIS_PROPERTY = "nodeVersionsFetchMaxBackoffMillis"
 
+    private val CACHE_LOCK = Any()
+
     private val VERSIONS_CACHE = mutableMapOf<String, Set<StableVersion>>()
 
     private val RESOLUTION_CACHE = mutableMapOf<String, MutableMap<String, String>>()
@@ -137,7 +139,7 @@ object NodeVersions {
         context: ResolutionContext,
         forceRefresh: Boolean = false,
     ): Set<StableVersion> =
-        synchronized(VERSIONS_CACHE) {
+        synchronized(CACHE_LOCK) {
             val loaded =
                 if (!forceRefresh) {
                     VERSIONS_CACHE[context.key]
@@ -156,6 +158,9 @@ object NodeVersions {
                 }
 
             VERSIONS_CACHE[context.key] = value
+            if (forceRefresh) {
+                RESOLUTION_CACHE.remove(context.key)
+            }
             value
         }
 
@@ -182,9 +187,6 @@ object NodeVersions {
 
     fun refreshCache(project: Project) {
         val context = fromProject(project)
-        synchronized(RESOLUTION_CACHE) {
-            RESOLUTION_CACHE.remove(context.key)
-        }
         loadVersions(context, forceRefresh = true)
     }
 
@@ -199,16 +201,12 @@ object NodeVersions {
     private fun latest(
         context: ResolutionContext,
         version: String = "latest",
-    ): String {
-        val versions = loadVersions(context)
-        val cache =
-            synchronized(RESOLUTION_CACHE) {
-                RESOLUTION_CACHE.getOrPut(context.key) { mutableMapOf() }
-            }
-        return synchronized(cache) {
+    ): String =
+        synchronized(CACHE_LOCK) {
+            val versions = loadVersions(context)
+            val cache = RESOLUTION_CACHE.getOrPut(context.key) { mutableMapOf() }
             cache.getOrPut(version) {
                 findLatestVersion(version, versions)?.toVersionString() ?: error("No such node version: $version")
             }
         }
-    }
 }
