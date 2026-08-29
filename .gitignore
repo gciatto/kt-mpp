@@ -3,3 +3,4 @@ build/
 .idea/
 node_modules/
 /src/main/kotlin/io/github/gciatto/kt/mpp/Plugins.kt
+.node-versions
