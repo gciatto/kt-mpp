@@ -33,9 +33,7 @@ object NodeVersions {
         val numbers = match.groupValues.drop(1).mapNotNull { it.toIntOrNull() }
         val minVersion = StableVersion.of(numbers)
         val upperBound = minVersion.nextMajor()
-        return VERSIONS.filter { it >= minVersion && it < upperBound }.maxOrNull().also {
-            println(it)
-        }
+        return VERSIONS.filter { it in minVersion..<upperBound }.maxOrNull()
     }
 
     fun latest(version: String = "latest"): String =
