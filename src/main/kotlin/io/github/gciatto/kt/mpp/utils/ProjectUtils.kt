@@ -137,7 +137,12 @@ fun Project.nodeVersion(
                 override?.toString()?.takeIf { it.isNotBlank() }
                     ?: default.takeIf { it.isPresent }?.get()
                     ?: version
-            version = NodeVersions.latest(requestedVersion)
+            val cacheFile =
+                rootProject.layout.buildDirectory
+                    .file("kt-mpp/node-dist-cache.txt")
+                    .get()
+                    .asFile
+            version = NodeVersions.latest(requestedVersion, cacheFile)
             log("set nodeVersion=$version")
         }
     }

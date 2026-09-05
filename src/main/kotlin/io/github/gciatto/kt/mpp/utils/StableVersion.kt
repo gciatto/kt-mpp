@@ -25,7 +25,7 @@ data class StableVersion(
 
     fun nextMinor(): StableVersion = StableVersion(major, minor + 1, 0)
 
-    fun nextPatch(): StableVersion = StableVersion(major, minor, minor + 1)
+    fun nextPatch(): StableVersion = StableVersion(major, minor, patch + 1)
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
