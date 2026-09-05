@@ -31,11 +31,6 @@ import java.util.Locale
 abstract class AbstractKotlinProjectPlugin(
     targetName: String,
 ) : AbstractProjectPlugin() {
-//    companion object {
-//        private const val PUBLICATION_TASK_NAME_PATTERN = "([A-Z]\\w+?)(?:Publication)?To([A-Z]\\w+)"
-//        private val pubTaskNamePattern = "^(publish|upload)$PUBLICATION_TASK_NAME_PATTERN$".toRegex()
-//    }
-
     private val targetName: String =
         targetName.lowercase(Locale.getDefault()).also {
             require(it in SUPPORTED_KOTLIN_TARGETS) {
@@ -45,53 +40,9 @@ abstract class AbstractKotlinProjectPlugin(
 
     final override fun apply(target: Project) {
         super.apply(target)
-//        target.plugins.withType(MavenPublishPlugin::class.java).configureEach {
-//            target.configure(PublishingExtension::class) {
-//                target.run { customizePublishing() }
-//            }
-//        }
     }
 
     protected abstract val relevantPublications: Set<String>
-
-//    private fun String.declined() = capital().let { it + if (it.endsWith("h")) "es" else "s" }
-//
-//    context (p: Project)
-//    private fun PublishingExtension.customizePublishing() {
-//        publications
-//            .withType(MavenPublication::class.java)
-//            .matching { it.name in relevantPublications }
-//            .forEach { pub ->
-//                p.log("configuring relevant publication ${pub.name}")
-//                p.tasks.withType(AbstractPublishToMaven::class.java).forEach { task ->
-//                    pubTaskNamePattern.matchEntire(task.name)?.let {
-//                        if (it.groupValues[2].equals(pub.name, ignoreCase = true)) {
-//                            val umbrellaTask =
-//                                p.maybeRegister<Task>("${it.groupValues[1]}ProjectTo${it.groupValues[3]}") {
-//                                    this.group = "Publishing"
-//                                    val description =
-//                                        "${it.groupValues[1].declined()} the whole project to ${it.groupValues[3]} " +
-//                                            "via tasks: ${task.name}"
-//                                    this.description = this.description
-//                                        ?.let { desc -> desc + ", ${task.name}" }
-//                                        ?.let { desc -> desc + ", ${task.name}" }
-//                                        ?: description
-//                                }
-//                            umbrellaTask.configure { u ->
-//                                u.dependsOn(task)
-//                                p.log("let task ${u.path} depend on ${task.path}")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        fixPublishing()
-//    }
-
-//    context (_: Project)
-//    protected open fun PublishingExtension.fixPublishing() {
-//        // does nothing be default
-//    }
 
     protected fun Project.configureKotlinVersionFromCatalogIfPossible() {
         kotlinVersion(multiPlatformHelper.kotlinVersion)
