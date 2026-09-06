@@ -5,6 +5,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
+import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.concurrent.ConcurrentHashMap
@@ -50,7 +51,11 @@ internal fun writeVersionsCache(
     val tmp = File.createTempFile("node-dist-cache", ".tmp", file.parentFile)
     val content = "# generated-at=$generatedAt\n" + versions.joinToString("\n") { it.toVersionString() }
     tmp.writeText(content)
-    Files.move(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+    try {
+        Files.move(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+    } catch (_: AtomicMoveNotSupportedException) {
+        Files.move(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
+    }
 }
 
 @Suppress("TooGenericExceptionCaught")
@@ -97,7 +102,7 @@ object NodeVersions {
     private var cacheFile: File? = null
 
     @Volatile
-    private var config: FetchConfig = FetchConfig()
+    private var config: FetchConfig? = null
 
     private val VERSIONS: Set<StableVersion> by lazy { loadVersions() }
 
@@ -110,7 +115,7 @@ object NodeVersions {
 
     private fun loadVersions(): Set<StableVersion> {
         val file = cacheFile
-        val cfg = config
+        val cfg = config ?: FetchConfig()
         if (file != null && isCacheFresh(file, cfg.cacheTtlMillis)) {
             readVersionsCache(file)?.let { return it }
         }
@@ -149,17 +154,21 @@ object NodeVersions {
 
     private fun fetchVersions(cfg: FetchConfig): Set<StableVersion> {
         val connection = NODE_DIST_URL.toURL().openConnection() as HttpURLConnection
-        connection.connectTimeout = cfg.connectTimeoutMillis
-        connection.readTimeout = cfg.readTimeoutMillis
-        check(connection.responseCode == HttpURLConnection.HTTP_OK) {
-            "Unexpected HTTP status ${connection.responseCode} from $NODE_DIST_URL"
-        }
-        val versions =
-            BufferedReader(InputStreamReader(connection.inputStream)).use { reader ->
-                StableVersion.parseAll(reader).toSet()
+        try {
+            connection.connectTimeout = cfg.connectTimeoutMillis
+            connection.readTimeout = cfg.readTimeoutMillis
+            check(connection.responseCode == HttpURLConnection.HTTP_OK) {
+                "Unexpected HTTP status ${connection.responseCode} from $NODE_DIST_URL"
             }
-        check(versions.isNotEmpty()) { "Parsed 0 Node versions from $NODE_DIST_URL" }
-        return versions
+            val versions =
+                BufferedReader(InputStreamReader(connection.inputStream)).use { reader ->
+                    StableVersion.parseAll(reader).toSet()
+                }
+            check(versions.isNotEmpty()) { "Parsed 0 Node versions from $NODE_DIST_URL" }
+            return versions
+        } finally {
+            connection.disconnect()
+        }
     }
 
     @Suppress("NAME_SHADOWING")
@@ -193,9 +202,9 @@ object NodeVersions {
         cacheFile: File? = null,
         config: FetchConfig? = null,
     ): String {
-        cacheFile?.let { this.cacheFile = it }
-        config?.let { this.config = it }
-        return VERSIONS_CACHE.computeIfAbsent(version) {
+        if (this.cacheFile == null) cacheFile?.let { this.cacheFile = it }
+        if (this.config == null) config?.let { this.config = it }
+        return VERSIONS_CACHE.computeIfAbsent(version.trim()) {
             findLatestVersion(it)?.toVersionString() ?: error("No such node version: $version")
         }
     }

@@ -33,10 +33,14 @@ class TestNodeVersionsCache : AnnotationSpec() {
     }
 
     @Test
-    fun `missing or empty cache reads as null`() {
+    fun `missing cache reads as null`() {
         readVersionsCache(File(tempDir, "missing.txt")) shouldBe null
-        val empty = File(tempDir, "empty.txt").apply { writeText("no versions here") }
-        readVersionsCache(empty) shouldBe null
+    }
+
+    @Test
+    fun `unparseable cache content reads as null`() {
+        val unparseable = File(tempDir, "unparseable.txt").apply { writeText("no versions here") }
+        readVersionsCache(unparseable) shouldBe null
     }
 
     @Test
