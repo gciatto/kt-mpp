@@ -126,6 +126,16 @@ fun Project.nodeVersion(
     override: Any? = null,
 ) = nodeVersion(provider { default }, override)
 
+private fun Project.intProperty(
+    name: String,
+    default: Int,
+): Int = findProperty(name)?.toString()?.toIntOrNull() ?: default
+
+private fun Project.longProperty(
+    name: String,
+    default: Long,
+): Long = findProperty(name)?.toString()?.toLongOrNull() ?: default
+
 @Suppress("DEPRECATION_ERROR")
 fun Project.nodeVersion(
     default: Provider<String>,
@@ -142,7 +152,28 @@ fun Project.nodeVersion(
                     .file("kt-mpp/node-dist-cache.txt")
                     .get()
                     .asFile
-            version = NodeVersions.latest(requestedVersion, cacheFile)
+            val defaultConfig = NodeVersions.FetchConfig()
+            val config =
+                NodeVersions.FetchConfig(
+                    connectTimeoutMillis =
+                        intProperty(
+                            "nodeVersionsConnectTimeoutMillis",
+                            defaultConfig.connectTimeoutMillis,
+                        ),
+                    readTimeoutMillis =
+                        intProperty(
+                            "nodeVersionsReadTimeoutMillis",
+                            defaultConfig.readTimeoutMillis,
+                        ),
+                    maxAttempts = intProperty("nodeVersionsMaxAttempts", defaultConfig.maxAttempts),
+                    initialBackoffMillis =
+                        longProperty(
+                            "nodeVersionsInitialBackoffMillis",
+                            defaultConfig.initialBackoffMillis,
+                        ),
+                    cacheTtlMillis = longProperty("nodeVersionsCacheTtlMillis", defaultConfig.cacheTtlMillis),
+                )
+            version = NodeVersions.latest(requestedVersion, cacheFile, config)
             log("set nodeVersion=$version")
         }
     }

@@ -9,11 +9,32 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.concurrent.ConcurrentHashMap
 
+private val CACHE_TIMESTAMP_REGEX = "^#\\s*generated-at=(\\d+)\\s*$".toRegex()
+
+/**
+ * Reads the generation timestamp embedded as a `# generated-at=<epochMillis>` first line, rather than
+ * relying on the file's own last-modified time, since CI caching (e.g. GitHub Actions) may restore the
+ * file with a fresh mtime while its content is actually older.
+ */
+internal fun readCacheTimestamp(file: File): Long? =
+    runCatching { file.useLines { it.firstOrNull() } }
+        .getOrNull()
+        ?.let {
+            CACHE_TIMESTAMP_REGEX
+                .matchEntire(it)
+                ?.groupValues
+                ?.get(1)
+                ?.toLongOrNull()
+        }
+
 internal fun isCacheFresh(
     file: File,
     ttlMillis: Long,
     now: Long = System.currentTimeMillis(),
-): Boolean = file.isFile && now - file.lastModified() < ttlMillis
+): Boolean {
+    val generatedAt = readCacheTimestamp(file) ?: return false
+    return now - generatedAt < ttlMillis
+}
 
 internal fun readVersionsCache(file: File): Set<StableVersion>? =
     runCatching { StableVersion.parseAll(file.readText()).toSet() }
@@ -23,10 +44,12 @@ internal fun readVersionsCache(file: File): Set<StableVersion>? =
 internal fun writeVersionsCache(
     file: File,
     versions: Set<StableVersion>,
+    generatedAt: Long = System.currentTimeMillis(),
 ) {
     file.parentFile?.mkdirs()
     val tmp = File.createTempFile("node-dist-cache", ".tmp", file.parentFile)
-    tmp.writeText(versions.joinToString("\n") { it.toVersionString() })
+    val content = "# generated-at=$generatedAt\n" + versions.joinToString("\n") { it.toVersionString() }
+    tmp.writeText(content)
     Files.move(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
 }
 
@@ -55,16 +78,26 @@ internal fun <T> retryWithBackoff(
 
 object NodeVersions {
     private const val NODE_DIST_URL = "https://nodejs.org/dist"
-    private const val CONNECT_TIMEOUT_MILLIS = 5_000
-    private const val READ_TIMEOUT_MILLIS = 5_000
-    private const val MAX_ATTEMPTS = 3
-    private const val INITIAL_BACKOFF_MILLIS = 500L
-    private const val CACHE_TTL_MILLIS = 24 * 60 * 60 * 1000L
+
+    /**
+     * Tunables for fetching/caching the Node version list, overridable via Gradle properties
+     * (see [Project.nodeVersion][io.github.gciatto.kt.mpp.utils.nodeVersion]).
+     */
+    data class FetchConfig(
+        val connectTimeoutMillis: Int = 5_000,
+        val readTimeoutMillis: Int = 5_000,
+        val maxAttempts: Int = 3,
+        val initialBackoffMillis: Long = 500L,
+        val cacheTtlMillis: Long = 24 * 60 * 60 * 1000L,
+    )
 
     private val logger = Logging.getLogger(NodeVersions::class.java)
 
     @Volatile
     private var cacheFile: File? = null
+
+    @Volatile
+    private var config: FetchConfig = FetchConfig()
 
     private val VERSIONS: Set<StableVersion> by lazy { loadVersions() }
 
@@ -77,21 +110,22 @@ object NodeVersions {
 
     private fun loadVersions(): Set<StableVersion> {
         val file = cacheFile
-        if (file != null && isCacheFresh(file, CACHE_TTL_MILLIS)) {
+        val cfg = config
+        if (file != null && isCacheFresh(file, cfg.cacheTtlMillis)) {
             readVersionsCache(file)?.let { return it }
         }
         val fetched =
             runCatching {
                 retryWithBackoff(
-                    MAX_ATTEMPTS,
-                    INITIAL_BACKOFF_MILLIS,
+                    cfg.maxAttempts,
+                    cfg.initialBackoffMillis,
                     onRetry = { attempt, error ->
                         logger.warn(
-                            "Attempt $attempt/$MAX_ATTEMPTS to fetch Node version list " +
+                            "Attempt $attempt/${cfg.maxAttempts} to fetch Node version list " +
                                 "from $NODE_DIST_URL failed: ${error.message}",
                         )
                     },
-                ) { fetchVersions() }
+                ) { fetchVersions(cfg) }
             }
         fetched.getOrNull()?.let { versions ->
             val target = file
@@ -113,10 +147,10 @@ object NodeVersions {
         throw fetched.exceptionOrNull() ?: error("Failed to fetch Node version list from $NODE_DIST_URL")
     }
 
-    private fun fetchVersions(): Set<StableVersion> {
+    private fun fetchVersions(cfg: FetchConfig): Set<StableVersion> {
         val connection = NODE_DIST_URL.toURL().openConnection() as HttpURLConnection
-        connection.connectTimeout = CONNECT_TIMEOUT_MILLIS
-        connection.readTimeout = READ_TIMEOUT_MILLIS
+        connection.connectTimeout = cfg.connectTimeoutMillis
+        connection.readTimeout = cfg.readTimeoutMillis
         check(connection.responseCode == HttpURLConnection.HTTP_OK) {
             "Unexpected HTTP status ${connection.responseCode} from $NODE_DIST_URL"
         }
@@ -151,12 +185,16 @@ object NodeVersions {
      * so that repeated builds/CI jobs can avoid re-fetching https://nodejs.org/dist. Only the first
      * call that supplies one takes effect, since the fetched version list itself is cached for the
      * lifetime of this object (i.e. of the Gradle daemon).
+     * @param config tunables for the fetch/cache; only the first call that supplies one takes effect,
+     * for the same reason as [cacheFile].
      */
     fun latest(
         version: String = "latest",
         cacheFile: File? = null,
+        config: FetchConfig? = null,
     ): String {
         cacheFile?.let { this.cacheFile = it }
+        config?.let { this.config = it }
         return VERSIONS_CACHE.computeIfAbsent(version) {
             findLatestVersion(it)?.toVersionString() ?: error("No such node version: $version")
         }
