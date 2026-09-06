@@ -1,3 +1,18 @@
+## [5.3.0](https://github.com/gciatto/kt-mpp/compare/5.2.4...5.3.0) (2026-09-06)
+
+### Features
+
+* node versions retry & cache ([#677](https://github.com/gciatto/kt-mpp/issues/677)) ([9b3e5ca](https://github.com/gciatto/kt-mpp/commit/9b3e5ca813860c886900e00b6be264513db0b77f))
+
+### Dependency updates
+
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.193 ([c608439](https://github.com/gciatto/kt-mpp/commit/c6084393dd0c5d0c711df154750788b8fa4fd977))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.194 ([d7fea2b](https://github.com/gciatto/kt-mpp/commit/d7fea2b75b19c12a5d5a1e88624d0395a4c71d2f))
+* **deps:** update node.js to 24.20 ([eb9d659](https://github.com/gciatto/kt-mpp/commit/eb9d6598ae6cea0d8033bbb1dcdcda4be9348d55))
+* **deps:** update plugin kotlin-qa to v1.9.0 ([7eca583](https://github.com/gciatto/kt-mpp/commit/7eca5839ce3a84748093e4d61ca9e8689611eb85))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.23 ([3196712](https://github.com/gciatto/kt-mpp/commit/31967127ae7c299f3f9608fb751813f7b4ea2483))
+* **deps:** update publishoncentral to v9.2.10 ([d636c65](https://github.com/gciatto/kt-mpp/commit/d636c658b95e5afb94646630c10f0ed81b1913ea))
+
 ## [5.2.4](https://github.com/gciatto/kt-mpp/compare/5.2.3...5.2.4) (2026-08-19)
 
 ### Dependency updates
