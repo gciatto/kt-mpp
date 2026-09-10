@@ -1,3 +1,18 @@
+## [5.3.1](https://github.com/gciatto/kt-mpp/compare/5.3.0...5.3.1) (2026-09-10)
+
+### Dependency updates
+
+* **deps:** update node.js to 24.21 ([e24e52a](https://github.com/gciatto/kt-mpp/commit/e24e52a787f56fb4145164ad738e69668062027b))
+
+### Bug Fixes
+
+* follow redirects when fetching Node versions ([c95b687](https://github.com/gciatto/kt-mpp/commit/c95b687ee2d6fe78ce76abbe0eac1ff4b5f36374))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.44 ([b94e953](https://github.com/gciatto/kt-mpp/commit/b94e953d4bd5d5c2b6cfb48e321eef8091d58cf3))
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.45 ([b7f4ed9](https://github.com/gciatto/kt-mpp/commit/b7f4ed96d6bc75763779868f40be58646e157d7b))
+
 ## [5.3.0](https://github.com/gciatto/kt-mpp/compare/5.2.4...5.3.0) (2026-09-06)
 
 ### Features
