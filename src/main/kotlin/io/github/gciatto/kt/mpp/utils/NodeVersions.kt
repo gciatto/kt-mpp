@@ -155,6 +155,7 @@ object NodeVersions {
     private fun fetchVersions(cfg: FetchConfig): Set<StableVersion> {
         val connection = NODE_DIST_URL.toURL().openConnection() as HttpURLConnection
         try {
+            connection.instanceFollowRedirects = true
             connection.connectTimeout = cfg.connectTimeoutMillis
             connection.readTimeout = cfg.readTimeoutMillis
             check(connection.responseCode == HttpURLConnection.HTTP_OK) {
