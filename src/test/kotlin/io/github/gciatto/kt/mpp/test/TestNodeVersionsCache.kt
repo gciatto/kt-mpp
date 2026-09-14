@@ -2,11 +2,13 @@ package io.github.gciatto.kt.mpp.test
 
 import io.github.gciatto.kt.mpp.utils.StableVersion
 import io.github.gciatto.kt.mpp.utils.isCacheFresh
+import io.github.gciatto.kt.mpp.utils.readBundledFallbackVersions
 import io.github.gciatto.kt.mpp.utils.readCacheTimestamp
 import io.github.gciatto.kt.mpp.utils.readVersionsCache
 import io.github.gciatto.kt.mpp.utils.retryWithBackoff
 import io.github.gciatto.kt.mpp.utils.writeVersionsCache
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import java.io.File
 import kotlin.io.path.createTempDirectory
@@ -75,6 +77,13 @@ class TestNodeVersionsCache : AnnotationSpec() {
         result shouldBe "ok"
         calls shouldBe 3
         delays shouldBe listOf(100L, 200L)
+    }
+
+    @Test
+    fun `bundled fallback resource parses into a non-empty version set`() {
+        val versions = readBundledFallbackVersions()
+        versions?.isEmpty() shouldBe false
+        versions?.map { it.toVersionString() }?.shouldContain("0.1.14")
     }
 
     @Test

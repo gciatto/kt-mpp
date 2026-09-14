@@ -42,6 +42,22 @@ internal fun readVersionsCache(file: File): Set<StableVersion>? =
         .getOrNull()
         ?.takeIf { it.isNotEmpty() }
 
+/**
+ * Last-resort fallback used when both the live fetch from [NodeVersions] and the on-disk cache are
+ * unavailable (e.g. a fresh checkout with no network access, or nodejs.org returning something other
+ * than 200 OK). Kept in sync with `updateNodeVersionsFallback` in the root build script.
+ */
+internal const val NODE_VERSIONS_FALLBACK_RESOURCE = "node-versions-fallback.txt"
+
+internal fun readBundledFallbackVersions(): Set<StableVersion>? =
+    runCatching {
+        NodeVersions::class.java
+            .getResourceAsStream(NODE_VERSIONS_FALLBACK_RESOURCE)
+            ?.bufferedReader()
+            ?.use { StableVersion.parseAll(it.readText()).toSet() }
+    }.getOrNull()
+        ?.takeIf { it.isNotEmpty() }
+
 internal fun writeVersionsCache(
     file: File,
     versions: Set<StableVersion>,
@@ -148,6 +164,14 @@ object NodeVersions {
                 )
                 return it
             }
+        }
+        readBundledFallbackVersions()?.let {
+            logger.warn(
+                "Failed to fetch Node version list from $NODE_DIST_URL and no usable cache was found; " +
+                    "falling back to the version list bundled with the plugin, which may be outdated",
+                fetched.exceptionOrNull(),
+            )
+            return it
         }
         throw fetched.exceptionOrNull() ?: error("Failed to fetch Node version list from $NODE_DIST_URL")
     }

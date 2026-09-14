@@ -7,6 +7,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
+import java.net.HttpURLConnection
+import java.net.URI
 import kotlin.text.replace
 import kotlin.text.startsWith
 
@@ -412,3 +414,43 @@ for (testDir in testDirectories()) {
 // tasks.withType<PublishToMavenLocal>().configureEach {
 //    dependsOn(tasks.withType<Sign>())
 // }
+
+tasks.register("updateNodeVersionsFallback") {
+    group = "build"
+    description =
+        "Refreshes the bundled fallback list of Node.js versions used at runtime when " +
+        "https://nodejs.org/dist is unreachable or returns a non-200 status"
+    val nodeDistUrl = "https://nodejs.org/dist"
+    val targetFile =
+        layout.projectDirectory
+            .file("src/main/resources/io/github/gciatto/kt/mpp/utils/node-versions-fallback.txt")
+            .asFile
+    outputs.file(targetFile)
+    doLast {
+        val versionRegex = "(\\d+)\\.(\\d+)\\.(\\d+)".toRegex()
+        val connection = URI(nodeDistUrl).toURL().openConnection() as HttpURLConnection
+        val lines =
+            try {
+                connection.instanceFollowRedirects = true
+                connection.connectTimeout = 10_000
+                connection.readTimeout = 10_000
+                check(connection.responseCode == HttpURLConnection.HTTP_OK) {
+                    "Unexpected HTTP status ${connection.responseCode} from $nodeDistUrl"
+                }
+                connection.inputStream.bufferedReader().readLines()
+            } finally {
+                connection.disconnect()
+            }
+        val versions =
+            lines
+                .flatMap { versionRegex.findAll(it) }
+                .map { Triple(it.groupValues[1].toInt(), it.groupValues[2].toInt(), it.groupValues[3].toInt()) }
+                .toSortedSet(compareBy({ it.first }, { it.second }, { it.third }))
+        check(versions.isNotEmpty()) { "Parsed 0 Node versions from $nodeDistUrl" }
+        targetFile.parentFile.mkdirs()
+        targetFile.writeText(
+            "# generated-at=${System.currentTimeMillis()}\n" +
+                versions.joinToString("\n") { "${it.first}.${it.second}.${it.third}" },
+        )
+    }
+}
