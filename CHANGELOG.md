@@ -1,3 +1,9 @@
+## [5.4.0](https://github.com/gciatto/kt-mpp/compare/5.3.1...5.4.0) (2026-09-14)
+
+### Features
+
+* bundle a fallback Node.js version list to survive nodejs.org outages ([3c1c27f](https://github.com/gciatto/kt-mpp/commit/3c1c27f1473cb23ca54c53ead939170c2b377d2c))
+
 ## [5.3.1](https://github.com/gciatto/kt-mpp/compare/5.3.0...5.3.1) (2026-09-10)
 
 ### Dependency updates
