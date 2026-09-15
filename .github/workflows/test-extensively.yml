@@ -8,13 +8,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-15, ubuntu-24.04 ]
-        java-version: [17, 21]
+        os: [ windows-latest, macos-latest, ubuntu-latest ]
+        java-version: [17, 21, 25]
         jdk-dist:
-          - adopt-hotspot
+          - oracle
           - temurin
-#          - adopt-openj9
-#          - zulu
     runs-on: ${{ matrix.os }}
     concurrency:
       group: build-${{ github.workflow }}-${{ matrix.os }}-${{ matrix.java-version }}-${{ matrix.jdk-dist }}-${{ github.event.number || github.ref }}
