@@ -156,6 +156,8 @@ Overall, you may need to define, provide the following properties:
 
 - `bugFinderConfigPath` (optional, default value: `".detekt.yml"`): the path to the Detekt configuration file to be used for bug finding. If missing or blank, the default configuration will be used.
 
+- `bugFinderJvmTarget` (optional, default value: `"17"`): the JVM target used by Detekt.
+
 - `developer<ID>Email` (optional): the email of developer `<ID>` (useful for Maven/NPM publications).
 
 - `developer<ID>Name` (optional): the full name of developer `<ID>` (useful for Maven/NPM publications).

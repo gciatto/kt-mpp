@@ -35,6 +35,14 @@ class BugFinderPlugin : AbstractProjectPlugin() {
             }
             buildUponDefaultConfig = true
         }
+        val jvmTarget =
+            findProperty("bugFinderJvmTarget")
+                ?.toString()
+                ?.takeIf(String::isNotBlank) ?: "17"
+        tasks.withType(Detekt::class.java).configureEach { task ->
+            // Detekt exposes this setter as internal Kotlin API but public Gradle API.
+            task.javaClass.getMethod("setJvmTarget", String::class.java).invoke(task, jvmTarget)
+        }
         val detektAll =
             maybeRegister<Task>("detektAll") {
                 this.group = "verification"
