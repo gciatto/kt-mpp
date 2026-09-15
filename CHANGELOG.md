@@ -1,3 +1,13 @@
+## [5.4.1](https://github.com/gciatto/kt-mpp/compare/5.4.0...5.4.1) (2026-09-15)
+
+### Bug Fixes
+
+* set detekt jvm target to 17 ([b5bc58d](https://github.com/gciatto/kt-mpp/commit/b5bc58ddf3fbaf1828f5d90d32b6a5f2cc795c30))
+
+### General maintenance
+
+* **ci:** fix jdk versions and distributions for extensive ci testing ([0963eef](https://github.com/gciatto/kt-mpp/commit/0963eef3a8709bd255ee19e3bb6f2ba20daf1fdb))
+
 ## [5.4.0](https://github.com/gciatto/kt-mpp/compare/5.3.1...5.4.0) (2026-09-14)
 
 ### Features
