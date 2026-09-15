@@ -95,6 +95,15 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                 log("include file ${it.path} into NPM publication")
             }
             syncNpmVersionWithProject()
+            if (System.getProperty("os.name").startsWith("Windows", ignoreCase = true)) {
+                fun executable(vararg names: String) =
+                    nodeHome.map { home ->
+                        names.firstOrNull { home.file(it).asFile.isFile }?.let { home.file(it) }
+                            ?: home.file(names.first())
+                    }
+                nodeBin.set(executable("node.exe", "node"))
+                npmBin.set(executable("npm", "node_modules/npm/bin/npm-cli.js", "bin/npm"))
+            }
             // bundleKotlinDependencies.set(true)
             dry.set(mpp.npmDryRun.getLogging("set NPM dry run: %s"))
             configureNpmRepositories()
