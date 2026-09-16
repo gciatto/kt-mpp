@@ -156,7 +156,9 @@ Overall, you may need to define, provide the following properties:
 
 - `bugFinderConfigPath` (optional, default value: `".detekt.yml"`): the path to the Detekt configuration file to be used for bug finding. If missing or blank, the default configuration will be used.
 
-- `bugFinderJvmTarget` (optional, default value: `"17"`): the JVM target used by Detekt.
+- `bugFinderJvmTarget` (optional, default value: the value of `jvmVersion`, or the JVM version running Gradle if that is unset): the JVM target used by Detekt.
+
+- `bugFinderParallel` (optional, default value: `true`; only assignable via the `multiPlatformHelper` DSL block): if true, Detekt tasks run with parallel analysis enabled.
 
 - `developer<ID>Email` (optional): the email of developer `<ID>` (useful for Maven/NPM publications).
 
@@ -188,7 +190,19 @@ Overall, you may need to define, provide the following properties:
 - `jsBinaryType` (optional, default value: `"library"`): the type of binary to be generated for a Kotlin JS project (one of {`"executable"`, `"library"`, `"none"`).
   Publishing on NPM requires `"library"`.
 
+- `jsMainFunctionExecutionMode` (optional, default value: `NO_CALL`; only assignable via the `multiPlatformHelper` DSL block): whether the Kotlin JS `main` function should be called automatically (one of `org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode`'s values, e.g. `NO_CALL`, `CALL_MAIN`).
+
+- `jsModuleSystem` (optional, default value: `COMMON_JS`; only assignable via the `multiPlatformHelper` DSL block): the JS module system targeted by Kotlin JS compilation (one of `COMMON_JS`, `ES_MODULES`, `UMD`).
+
 - `jsPackageName` (optional, default value: `"<rootProject.name>-<project.name>"`): the name of the NPM package to be generated for a Kotlin JS project. If missing or blank, the package name will be `<rootProject.name>-<project.name>`.
+
+- `jsTargetBrowser` (optional, default value: `false`; only assignable via the `multiPlatformHelper` DSL block): if true, the Kotlin JS target is configured to run in the browser (webpack bundling included).
+
+- `jsTargetNode` (optional, default value: `true`; only assignable via the `multiPlatformHelper` DSL block): if true, the Kotlin JS target is configured to run on NodeJS.
+
+- `jsWebPackMode` (optional, default value: `DEVELOPMENT`; only assignable via the `multiPlatformHelper` DSL block): the Webpack mode used when bundling for the browser (one of `org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode`'s values, e.g. `DEVELOPMENT`, `PRODUCTION`). Only relevant if `jsTargetBrowser` is `true`.
+
+- `jsWebPackOutputFileName` (optional, default value: `"<rootProject.name>-<project.name>"`; only assignable via the `multiPlatformHelper` DSL block): the name of the Webpack bundle output file. Only relevant if `jsTargetBrowser` is `true`.
 
 - `ktCompilerArgsJs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JS sources.
 
@@ -239,6 +253,8 @@ Overall, you may need to define, provide the following properties:
 - `scmConnection` (optional): the connection string for the DVCS repository hosting the code of this project(useful for Maven/NPM publications).
 
 - `scmUrl` (optional): the URL of the DVCS repository hosting the code of this project (useful for Maven/NPM publications).
+
+- `showTestsInConsole` (optional, default value: `false`): if true, individual test results (and their standard output/error) are printed to the console while running test tasks.
 
 - `signingKey` (optional, default value: `""`): the ASCII-armored value of the private key to be used for signing Maven publications. It should be provided along with `<signingPassword>`. If missing or blank, publication artifact signing will be disabled.
 
