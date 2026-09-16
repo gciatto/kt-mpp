@@ -1,3 +1,25 @@
+## [5.5.0](https://github.com/gciatto/kt-mpp/compare/5.4.1...5.5.0) (2026-09-16)
+
+### Features
+
+* **js:** add more properties to finely configure js-only projects ([#690](https://github.com/gciatto/kt-mpp/issues/690)) ([74ccf3c](https://github.com/gciatto/kt-mpp/commit/74ccf3cf6edaf9a351ac86b6c4cf446dbd407cb7))
+
+### Dependency updates
+
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.195 ([1df3e2f](https://github.com/gciatto/kt-mpp/commit/1df3e2fc949aea89a9e6f3a4e45b4f4f00e58b91))
+
+### Bug Fixes
+
+* **npm-publishing:** add lookup algorithim for node and npm executables on windows ([8575320](https://github.com/gciatto/kt-mpp/commit/857532029b40cf13fac98f46031d4b18b03559fd))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.46 ([2bcf8fa](https://github.com/gciatto/kt-mpp/commit/2bcf8fa8f09068eb638f227a15e30a09d9b6ef1f))
+
+### General maintenance
+
+* **ci:** make release depend on test-extensively completion ([8059939](https://github.com/gciatto/kt-mpp/commit/805993972d09514c5193acb82456a8e8508c998f))
+
 ## [5.4.1](https://github.com/gciatto/kt-mpp/compare/5.4.0...5.4.1) (2026-09-15)
 
 ### Bug Fixes
