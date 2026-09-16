@@ -35,13 +35,17 @@ class BugFinderPlugin : AbstractProjectPlugin() {
             }
             buildUponDefaultConfig = true
         }
-        val jvmTarget =
-            findProperty("bugFinderJvmTarget")
-                ?.toString()
-                ?.takeIf(String::isNotBlank) ?: "17"
         tasks.withType(Detekt::class.java).configureEach { task ->
             // Detekt exposes this setter as internal Kotlin API but public Gradle API.
-            task.javaClass.getMethod("setJvmTarget", String::class.java).invoke(task, jvmTarget)
+            val jvmTarget = multiPlatformHelper.bugFinderJvmTarget.get()
+            task.javaClass
+                .getMethod("setJvmTarget", String::class.java)
+                .invoke(task, jvmTarget)
+            log("set jvmTarget=$jvmTarget for task ${task.path}")
+            task.parallel =
+                multiPlatformHelper.bugFinderParallel.get().also {
+                    log("set parallel=$it for task ${task.path}")
+                }
         }
         val detektAll =
             maybeRegister<Task>("detektAll") {

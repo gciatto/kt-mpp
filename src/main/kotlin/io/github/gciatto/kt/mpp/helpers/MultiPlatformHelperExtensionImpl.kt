@@ -16,6 +16,8 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.io.File
 import java.net.URL
 import java.util.Locale
@@ -41,6 +43,14 @@ internal open class MultiPlatformHelperExtensionImpl(
             } else {
                 it
             }
+        }
+
+    private inline fun <reified T : Any> propertyWithConvention(defaultValue: Provider<T>) =
+        objects.property(T::class.java).convention(defaultValue)
+
+    private fun gradlePropertyProvider(name: String): Provider<String> =
+        project.provider {
+            project.findProperty(name)?.toString()
         }
 
     private inline fun <reified T : Any> propertyWithLazyConvention(crossinline defaultValue: () -> T?) =
@@ -163,6 +173,23 @@ internal open class MultiPlatformHelperExtensionImpl(
             project.jsPackageName
         }
 
+    override val jsMainFunctionExecutionMode: Property<JsMainFunctionExecutionMode> =
+        propertyWithConvention(JsMainFunctionExecutionMode.NO_CALL)
+
+    override val jsModuleSystem: Property<JsModuleSystem> = propertyWithConvention(JsModuleSystem.COMMON_JS)
+
+    override val jsTargetBrowser: Property<Boolean> = booleanPropertyWithConvention(false)
+
+    override val jsTargetNode: Property<Boolean> = booleanPropertyWithConvention(true)
+
+    override val jsWebPackMode: Property<KotlinWebpackConfig.Mode> =
+        propertyWithConvention(KotlinWebpackConfig.Mode.DEVELOPMENT)
+
+    override val jsWebPackOutputFileName: Property<String> =
+        propertyWithConvention(
+            "${project.rootProject.name}-${project.name}",
+        )
+
     override val bugFinderConfigPath =
         filePropertyWithConvention(
             project.file(".detekt.yml"),
@@ -176,6 +203,19 @@ internal open class MultiPlatformHelperExtensionImpl(
                     collection.from(it)
                 }
             }
+
+    /**
+     * The Gradle property read here must stay named `bugFinderJvmTarget`, matching this property's own
+     * name and the one documented in the README: it is the public, user-facing knob for this setting.
+     */
+    override val bugFinderJvmTarget: Property<String> =
+        propertyWithConvention(
+            gradlePropertyProvider("bugFinderJvmTarget")
+                .orElse(jvmVersion)
+                .orElse(DEFAULT_JVM_VERSION),
+        )
+
+    override val bugFinderParallel: Property<Boolean> = booleanPropertyWithConvention(true)
 
     override val jsBinaryType: Property<JsBinaryType> = propertyWithConvention(JsBinaryType.LIBRARY)
 
@@ -191,6 +231,13 @@ internal open class MultiPlatformHelperExtensionImpl(
         objects.domainObjectSet(String::class.java)
 
     override val fatJarEntryPoint: Property<String> = propertyWithConvention()
+
+    override val showTestsInConsole: Property<Boolean> =
+        propertyWithConvention(
+            gradlePropertyProvider("showTestsInConsole")
+                .map { it.toBooleanStrictOrNull() }
+                .orElse(false),
+        )
 
     override fun populateArgumentsFromProperties() {
         for (property in listOf(::ktCompilerArgs, ::ktCompilerArgsJvm, ::ktCompilerArgsJs)) {

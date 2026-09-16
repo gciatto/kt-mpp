@@ -7,6 +7,8 @@ import org.gradle.api.DomainObjectSet
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
+import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode
 import java.net.URL
 
 interface MultiPlatformHelperExtension {
@@ -50,12 +52,21 @@ interface MultiPlatformHelperExtension {
     val jsPackageName: Property<String>
     val bugFinderConfigPath: RegularFileProperty
     val bugFinderConfig: FileCollection
+    val bugFinderJvmTarget: Property<String>
+    val bugFinderParallel: Property<Boolean>
+    val jsTargetNode: Property<Boolean>
+    val jsTargetBrowser: Property<Boolean>
+    val jsWebPackOutputFileName: Property<String>
+    val jsWebPackMode: Property<Mode>
+    val jsModuleSystem: Property<JsModuleSystem>
+    val jsMainFunctionExecutionMode: Property<JsMainFunctionExecutionMode>
     val jsBinaryType: Property<JsBinaryType>
     val fatJarPlatforms: DomainObjectSet<String>
     val fatJarClassifier: Property<String>
     val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>>
     val fatJarDefaultExcludedPlatforms: DomainObjectSet<String>
     val fatJarEntryPoint: Property<String>
+    val showTestsInConsole: Property<Boolean>
 
     fun fatJarPlatformInclude(
         platform: String,
