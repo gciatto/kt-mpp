@@ -58,6 +58,7 @@ interface MultiPlatformHelperExtension {
     val fatJarPlatformInclusions: DomainObjectSet<Pair<String, String>>
     val fatJarDefaultExcludedPlatforms: DomainObjectSet<String>
     val fatJarEntryPoint: Property<String>
+    val showTestsInConsole: Property<Boolean>
 
     fun fatJarPlatformInclude(
         platform: String,

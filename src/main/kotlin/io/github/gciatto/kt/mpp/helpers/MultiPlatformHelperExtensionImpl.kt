@@ -209,6 +209,13 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override val fatJarEntryPoint: Property<String> = propertyWithConvention()
 
+    override val showTestsInConsole: Property<Boolean> =
+        propertyWithConvention(
+            gradlePropertyProvider("showTestsInConsole")
+                .map { it.toBooleanStrictOrNull() }
+                .orElse(false),
+        )
+
     override fun populateArgumentsFromProperties() {
         for (property in listOf(::ktCompilerArgs, ::ktCompilerArgsJvm, ::ktCompilerArgsJs)) {
             project.findProperty(property.name)?.let { value ->
