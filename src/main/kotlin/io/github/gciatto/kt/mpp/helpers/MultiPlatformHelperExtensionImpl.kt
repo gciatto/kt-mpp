@@ -43,6 +43,14 @@ internal open class MultiPlatformHelperExtensionImpl(
             }
         }
 
+    private inline fun <reified T : Any> propertyWithConvention(defaultValue: Provider<T>) =
+        objects.property(T::class.java).convention(defaultValue)
+
+    private fun gradlePropertyProvider(name: String): Provider<String> =
+        project.provider {
+            project.findProperty(name)?.toString()
+        }
+
     private inline fun <reified T : Any> propertyWithLazyConvention(crossinline defaultValue: () -> T?) =
         objects.property(T::class.java).convention(project.provider { defaultValue() })
 
@@ -176,6 +184,15 @@ internal open class MultiPlatformHelperExtensionImpl(
                     collection.from(it)
                 }
             }
+
+    override val bugFinderJvmTarget: Property<String> =
+        propertyWithConvention(
+            gradlePropertyProvider("bugFinderJvmVersion")
+                .orElse(jvmVersion)
+                .orElse(DEFAULT_JVM_VERSION),
+        )
+
+    override val bugFinderParallel: Property<Boolean> = booleanPropertyWithConvention(true)
 
     override val jsBinaryType: Property<JsBinaryType> = propertyWithConvention(JsBinaryType.LIBRARY)
 

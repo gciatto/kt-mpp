@@ -50,6 +50,8 @@ interface MultiPlatformHelperExtension {
     val jsPackageName: Property<String>
     val bugFinderConfigPath: RegularFileProperty
     val bugFinderConfig: FileCollection
+    val bugFinderJvmTarget: Property<String>
+    val bugFinderParallel: Property<Boolean>
     val jsBinaryType: Property<JsBinaryType>
     val fatJarPlatforms: DomainObjectSet<String>
     val fatJarClassifier: Property<String>
