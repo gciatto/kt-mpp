@@ -284,6 +284,30 @@ tests:
         - ":subproject-mp:assemble"
         - ":subproject-js:assemble"
         - ":full:assemble"
+  - description: "Detekt jvmTarget defaults to the project JVM version and parallelism defaults to true"
+    configuration:
+      tasks:
+        - ":subproject-jvm:detekt"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":subproject-jvm:detekt"
+      output_contains:
+        - "subproject-jvm: set jvmTarget=17 for task :subproject-jvm:detekt"
+        - "subproject-jvm: set parallel=true for task :subproject-jvm:detekt"
+  - description: "Detekt jvmTarget can be overridden via the bugFinderJvmTarget property"
+    configuration:
+      tasks:
+        - ":subproject-jvm:detekt"
+      options:
+        - "--info"
+        - "-PbugFinderJvmTarget=11"
+    expectation:
+      success:
+        - ":subproject-jvm:detekt"
+      output_contains:
+        - "subproject-jvm: set jvmTarget=11 for task :subproject-jvm:detekt"
   - description: "Detekt task works and triggers sub-tasks"
     configuration:
       tasks: "detektAll"
@@ -628,3 +652,44 @@ tests:
           - "test0: add free compiler arg for Kotlin compiler"
           - "test0: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.js.ExperimentalJsExport"
           - "test0: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.time.ExperimentalTime"
+  - description: "JS targets are configured with default main function execution mode and module system"
+    configuration:
+      tasks:
+        - "tasks"
+      options:
+        - "--info"
+    expectation:
+        success:
+            - ":tasks"
+        output_contains:
+          - "full: set JS main function execution mode to NO_CALL"
+          - "full: configure kotlin JS to use CommonJS module system"
+          - "subproject-js: set JS main function execution mode to NO_CALL"
+          - "subproject-js: configure kotlin JS to use CommonJS module system"
+          - "subproject-mp: set JS main function execution mode to NO_CALL"
+          - "subproject-mp: configure kotlin JS to use CommonJS module system"
+          - "test0: set JS main function execution mode to NO_CALL"
+          - "test0: configure kotlin JS to use CommonJS module system"
+  - description: "By default, individual test results are not printed to the console"
+    configuration:
+      tasks:
+        - ":jvmTest"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":jvmTest"
+      output_doesnt_contain:
+        - "test0: Enabled logging for :jvmTest"
+  - description: "showTestsInConsole property makes individual test results printed to the console"
+    configuration:
+      tasks:
+        - ":jvmTest"
+      options:
+        - "--info"
+        - "-PshowTestsInConsole=true"
+    expectation:
+      success:
+        - ":jvmTest"
+      output_contains:
+        - "test0: Enabled logging for :jvmTest"
