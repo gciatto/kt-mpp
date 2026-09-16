@@ -1,6 +1,7 @@
 package io.github.gciatto.kt.mpp.kotlin
 
 import io.github.gciatto.kt.mpp.AbstractProjectPlugin
+import io.github.gciatto.kt.mpp.helpers.JsModuleSystem
 import io.github.gciatto.kt.mpp.utils.jvmVersion
 import io.github.gciatto.kt.mpp.utils.kotlinVersion
 import io.github.gciatto.kt.mpp.utils.log
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
@@ -66,10 +68,9 @@ abstract class AbstractKotlinProjectPlugin(
 
     context(p: Project)
     protected fun KotlinJsCompilerOptions.configureJsKotlinOptions() {
-        main.set(JsMainFunctionExecutionMode.NO_CALL)
-        p.multiPlatformHelper.ktCompilerArgs.all {
-            freeCompilerArgs.add(it)
-            p.log("add JVM-specific free compiler arg for Kotlin compiler: $it")
+        p.multiPlatformHelper.jsMainFunctionExecutionMode.orNull?.let {
+            main.set(it)
+            p.log("set JS main function execution mode to $it")
         }
         p.multiPlatformHelper.ktCompilerArgsJs.all {
             freeCompilerArgs.add(it)
@@ -178,14 +179,41 @@ abstract class AbstractKotlinProjectPlugin(
         }
     }
 
-    protected fun KotlinTarget.targetCompilationId(compilation: KotlinCompilation<*>): String =
-        "${name}${compilation.compilationName.capital()}"
+    protected fun KotlinMultiplatformExtension.dependenciesFor(
+        sourceSet: String,
+        action: KotlinDependencyHandler.() -> Unit,
+    ) = sourceSets.named(sourceSet).dependencies(action)
 
-    protected fun targetCompilationId(task: Task): String = task.name.replace("compile", "")
+    context(p: Project)
+    protected fun KotlinMultiplatformExtension.configureJsTarget() {
+        js {
+            p.multiPlatformHelper.initializeJsRelatedProperties()
+            if (p.multiPlatformHelper.jsTargetBrowser.get()) {
+                configureJsForBrowser()
+            }
+            binaries.configureAutomatically()
+            configureJsModuleSystem()
+            compilerOptions {
+                configureKotlinOptions()
+                configureJsKotlinOptions()
+            }
+            if (p.multiPlatformHelper.jsTargetNode.get()) {
+                configureNodeJs()
+            }
+            this@configureJsTarget.dependenciesFor("jsMain") {
+                val useBom = p.multiPlatformHelper.useKotlinBom.orNull ?: false
+                addMainDependencies(p.project, "js", skipBom = !useBom)
+            }
+            this@configureJsTarget.dependenciesFor("jsTest") {
+                addTestDependencies(p.project, "js", skipAnnotations = true)
+            }
+            p.addMultiplatformTaskAliases("js")
+        }
+    }
 
-    context (p: Project, jsTarget: KotlinJsTargetDsl)
-    protected fun configureNodeJs() {
-        jsTarget.nodejs {
+    context (p: Project)
+    protected fun KotlinJsTargetDsl.configureNodeJs() {
+        nodejs {
             p.log("configure kotlin JS to target NodeJS")
             testTask(
                 Action {
@@ -196,6 +224,44 @@ abstract class AbstractKotlinProjectPlugin(
                     }
                 },
             )
+        }
+    }
+
+    context (p: Project, jsTarget: KotlinJsTargetDsl)
+    protected fun configureJsForBrowser() {
+        jsTarget.browser {
+            p.log("project configured to use Kotlin JS Browser target")
+            webpackTask { webpack ->
+                p.multiPlatformHelper.jsWebPackMode.orNull?.let {
+                    webpack.mode = it
+                    p.log("set webpack mode to $it")
+                }
+                webpack.mainOutputFileName.set(
+                    p.multiPlatformHelper.jsWebPackOutputFileName.map {
+                        p.log("set webpack main output file name to $it")
+                        it
+                    },
+                )
+            }
+        }
+    }
+
+    context(p: Project)
+    protected fun KotlinJsTargetDsl.configureJsModuleSystem() {
+        when (p.multiPlatformHelper.jsModuleSystem.orNull) {
+            JsModuleSystem.COMMON_JS -> {
+                useCommonJs()
+                p.log("configure kotlin JS to use CommonJS module system")
+            }
+
+            JsModuleSystem.ES_MODULES -> {
+                useEsModules()
+                p.log("configure kotlin JS to use ES module system")
+            }
+
+            else -> {
+                p.log("configure kotlin JS to use UMD module system")
+            }
         }
     }
 

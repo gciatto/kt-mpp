@@ -16,6 +16,8 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.io.File
 import java.net.URL
 import java.util.Locale
@@ -170,6 +172,23 @@ internal open class MultiPlatformHelperExtensionImpl(
         propertyWithLazyConvention {
             project.jsPackageName
         }
+
+    override val jsMainFunctionExecutionMode: Property<JsMainFunctionExecutionMode> =
+        propertyWithConvention(JsMainFunctionExecutionMode.NO_CALL)
+
+    override val jsModuleSystem: Property<JsModuleSystem> = propertyWithConvention(JsModuleSystem.COMMON_JS)
+
+    override val jsTargetBrowser: Property<Boolean> = booleanPropertyWithConvention(false)
+
+    override val jsTargetNode: Property<Boolean> = booleanPropertyWithConvention(true)
+
+    override val jsWebPackMode: Property<KotlinWebpackConfig.Mode> =
+        propertyWithConvention(KotlinWebpackConfig.Mode.DEVELOPMENT)
+
+    override val jsWebPackOutputFileName: Property<String> =
+        propertyWithConvention(
+            "${project.rootProject.name}-${project.name}",
+        )
 
     override val bugFinderConfigPath =
         filePropertyWithConvention(

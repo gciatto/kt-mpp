@@ -30,12 +30,12 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
             if (ktTargetJvmDisable) {
                 log("disable JVM target", LogLevel.WARN)
             } else {
-                jvm { x -> x.configureJvm() }
+                configureJvmTarget()
             }
             if (ktTargetJsDisable) {
                 log("disable JS target", LogLevel.WARN)
             } else {
-                js { x -> x.configureJs() }
+                configureJsTarget()
             }
             dependenciesFor("commonMain") {
                 val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
@@ -50,47 +50,23 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         }
     }
 
-    // context(p : Project, k : KotlinMultiplatformExtension)
-    private fun KotlinMultiplatformExtension.dependenciesFor(
-        sourceSet: String,
-        action: KotlinDependencyHandler.() -> Unit,
-    ) = sourceSets.named(sourceSet).dependencies(action)
-
     @Suppress("DEPRECATION")
-    context(p: Project, k: KotlinMultiplatformExtension)
-    private fun KotlinJvmTarget.configureJvm() {
-        p.multiPlatformHelper.initializeJvmRelatedProperties()
-        p.log("configure Kotlin JVM target to accept Java sources")
-        this.compilerOptions {
-            configureJvmKotlinOptions()
+    context(p: Project)
+    private fun KotlinMultiplatformExtension.configureJvmTarget() {
+        jvm {
+            p.multiPlatformHelper.initializeJvmRelatedProperties()
+            p.log("configure Kotlin JVM target to accept Java sources")
+            this.compilerOptions {
+                configureJvmKotlinOptions()
+            }
+            this@configureJvmTarget.dependenciesFor("jvmMain") {
+                val useBom = p.multiPlatformHelper.useKotlinBom.orNull ?: false
+                addMainDependencies(p.project, "jdk8", skipBom = !useBom)
+            }
+            this@configureJvmTarget.dependenciesFor("jvmTest") {
+                addTestDependencies(p.project, "junit", skipAnnotations = true)
+            }
+            p.addMultiplatformTaskAliases("jvm")
         }
-        val useBom = p.multiPlatformHelper.useKotlinBom.orNull ?: false
-        k.dependenciesFor("jvmMain") {
-            addMainDependencies(p.project, "jdk8", skipBom = !useBom)
-        }
-        k.dependenciesFor("jvmTest") {
-            addTestDependencies(p.project, "junit", skipAnnotations = true)
-        }
-        p.addMultiplatformTaskAliases("jvm")
-    }
-
-    context(p: Project, k: KotlinMultiplatformExtension)
-    private fun KotlinJsTargetDsl.configureJs() {
-        p.multiPlatformHelper.initializeJsRelatedProperties()
-        this.binaries.configureAutomatically()
-        this.compilerOptions {
-            configureJsKotlinOptions()
-        }
-        with(this) {
-            configureNodeJs()
-        }
-        val useBom = p.multiPlatformHelper.useKotlinBom.orNull ?: false
-        k.dependenciesFor("jsMain") {
-            addMainDependencies(p.project, "js", skipBom = !useBom)
-        }
-        k.dependenciesFor("jsTest") {
-            addTestDependencies(p.project, "js", skipAnnotations = true)
-        }
-        p.addMultiplatformTaskAliases("js")
     }
 }
