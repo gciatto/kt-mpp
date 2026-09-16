@@ -102,7 +102,9 @@ class PublishOnNpmPlugin : AbstractProjectPlugin() {
                             ?: home.file(names.first())
                     }
                 nodeBin.set(executable("node.exe", "node"))
-                npmBin.set(executable("npm", "node_modules/npm/bin/npm-cli.js", "bin/npm"))
+                // npmBin is passed as an argument to node.exe, so it must be a JS file: the bare "npm"
+                // file ships even on Windows, but it's a POSIX/cygwin shell shim, not JavaScript.
+                npmBin.set(executable("node_modules/npm/bin/npm-cli.js", "bin/npm"))
             }
             // bundleKotlinDependencies.set(true)
             dry.set(mpp.npmDryRun.getLogging("set NPM dry run: %s"))
