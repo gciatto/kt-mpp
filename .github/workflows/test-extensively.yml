@@ -31,7 +31,7 @@ jobs:
       - name: Run tests
         id: run-tests
         if: steps.cache-test-result.outputs.cache-hit != 'true'
-        uses: DanySK/build-check-deploy-gradle-action@4.0.45
+        uses: DanySK/build-check-deploy-gradle-action@4.0.46
         with:
           java-distribution: ${{ matrix.jdk-dist }}
           java-version: ${{ matrix.java-version }}
