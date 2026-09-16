@@ -204,9 +204,13 @@ internal open class MultiPlatformHelperExtensionImpl(
                 }
             }
 
+    /**
+     * The Gradle property read here must stay named `bugFinderJvmTarget`, matching this property's own
+     * name and the one documented in the README: it is the public, user-facing knob for this setting.
+     */
     override val bugFinderJvmTarget: Property<String> =
         propertyWithConvention(
-            gradlePropertyProvider("bugFinderJvmVersion")
+            gradlePropertyProvider("bugFinderJvmTarget")
                 .orElse(jvmVersion)
                 .orElse(DEFAULT_JVM_VERSION),
         )

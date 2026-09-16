@@ -72,6 +72,10 @@ abstract class AbstractKotlinProjectPlugin(
             main.set(it)
             p.log("set JS main function execution mode to $it")
         }
+        p.multiPlatformHelper.ktCompilerArgs.all {
+            freeCompilerArgs.add(it)
+            p.log("add JVM-specific free compiler arg for Kotlin compiler: $it")
+        }
         p.multiPlatformHelper.ktCompilerArgsJs.all {
             freeCompilerArgs.add(it)
             p.log("add JS-specific free compiler arg for Kotlin compiler: $it")
