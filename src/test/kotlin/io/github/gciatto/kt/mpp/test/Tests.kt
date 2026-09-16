@@ -47,7 +47,10 @@ class Tests :
                             location.copyRecursively(this.root)
                         }
                     log.debug("Test has been copied into {} and is ready to get executed", testFolder)
-                    test.description {
+                    val isDetektTest =
+                        "detekt" in test.description.lowercase() ||
+                            test.configuration.tasks.any { "detekt" in it.lowercase() }
+                    test.description.config(enabled = !(isDetektTest && isJvmIncompatibleWithDetekt)) {
                         val result =
                             GradleRunner
                                 .create()
@@ -98,6 +101,15 @@ class Tests :
     ) {
     companion object {
         val log: Logger = LoggerFactory.getLogger(Tests::class.java)
+
+        /**
+         * Detekt 1.23.x bundles an old embedded Kotlin compiler whose IntelliJ `JavaVersion.parse`
+         * cannot handle the 4-component `java.version` string reported by JDK 25+, and crashes while
+         * bootstrapping its `KotlinCoreEnvironment`. This is a host-JVM incompatibility unrelated to
+         * this plugin's own jvmTarget configuration; drop this skip once Detekt is upgraded past it.
+         */
+        private val isJvmIncompatibleWithDetekt: Boolean =
+            (System.getProperty("java.specification.version")?.toIntOrNull() ?: 0) >= 25
 
         private fun BuildResult.outcomeOf(path: String) =
             checkNotNull(task(path)?.outcome) {
