@@ -204,16 +204,8 @@ internal open class MultiPlatformHelperExtensionImpl(
                 }
             }
 
-    /**
-     * The Gradle property read here must stay named `bugFinderJvmTarget`, matching this property's own
-     * name and the one documented in the README: it is the public, user-facing knob for this setting.
-     */
     override val bugFinderJvmTarget: Property<String> =
-        propertyWithConvention(
-            gradlePropertyProvider("bugFinderJvmTarget")
-                .orElse(jvmVersion)
-                .orElse(DEFAULT_JVM_VERSION),
-        )
+        propertyWithConvention(jvmVersion.orElse(DEFAULT_JVM_VERSION))
 
     override val bugFinderParallel: Property<Boolean> = booleanPropertyWithConvention(true)
 
@@ -363,6 +355,9 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override fun initializeBugFinderRelatedProperties() {
         ::bugFinderConfigPath.populateFromProperty()
+        // The Gradle property read here must stay named `bugFinderJvmTarget`, matching this property's own
+        // name and the one documented in the README: it is the public, user-facing knob for this setting.
+        ::bugFinderJvmTarget.populateFromProperty()
     }
 
     override fun initializeMavenRelatedProperties() {
