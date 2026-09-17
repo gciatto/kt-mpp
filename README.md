@@ -158,7 +158,7 @@ Overall, you may need to define, provide the following properties:
 
 - `bugFinderJvmTarget` (optional, default value: the value of `jvmVersion`, or the JVM version running Gradle if that is unset): the JVM target used by Detekt.
 
-- `bugFinderParallel` (optional, default value: `true`; only assignable via the `multiPlatformHelper` DSL block): if true, Detekt tasks run with parallel analysis enabled.
+- `bugFinderParallel` (optional, default value: `true`): if true, Detekt tasks run with parallel analysis enabled.
 
 - `developer<ID>Email` (optional): the email of developer `<ID>` (useful for Maven/NPM publications).
 
@@ -213,10 +213,6 @@ Overall, you may need to define, provide the following properties:
 - `ktTargetJsDisable` (optional, default value: `false`): if true, disables the JS target on a multi-platform project.
 
 - `ktTargetJvmDisable` (optional, default value: `false`): if true, disables the JVM target on a multi-platform project.
-
-- `mavenCentralPassword` (optional): the password of the user willing to release Maven publications on Maven Central.
-
-- `mavenCentralUsername` (optional): the username of the user willing to release Maven publications on Maven Central.
 
 - `mochaTimeout` (mandatory, default value: `"180s"`): the amount of time to be .
 

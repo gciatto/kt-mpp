@@ -16,31 +16,8 @@ import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 
 class PublishOnMavenPlugin : AbstractProjectPlugin() {
-    context(p: Project)
-    private fun Repository.configure(
-        username: String?,
-        pwd: String?,
-    ) {
-        if (username != null && pwd != null) {
-            user.set(username)
-            password.set(pwd)
-            @Suppress("ktlint")
-            p.log(
-                "configure Maven repository $name " +
-                    "(URL: $url, username: ${user.get().asField()}, " +
-                    "password: ${password.get().asPassword()})"
-            )
-        }
-    }
-
     private fun Project.configureMavenRepositories() =
         configure(PublishOnCentralExtension::class) {
-            // configureMavenCentral.set(true)
-            // mavenCentral.run {
-            //    val mavenCentralUsername: String? = multiPlatformHelper.mavenCentralUsername.orNull
-            //    val mavenCentralPassword: String? = multiPlatformHelper.mavenCentralPassword.orNull
-            //    configure(mavenCentralUsername, mavenCentralPassword)
-            // }
             multiPlatformHelper.otherMavenRepo.orNull?.takeIf { "oss.sonatype.org" !in it.host }?.let {
                 val mavenUsername: String? = multiPlatformHelper.otherMavenUsername.orNull
                 val mavenPassword: String? = multiPlatformHelper.otherMavenPassword.orNull
@@ -121,11 +98,6 @@ class PublishOnMavenPlugin : AbstractProjectPlugin() {
                 }
             }
         }
-
-//    private fun Project.configurePublishOnCentralExtension() =
-//        configure(PublishOnCentralExtension::class) {
-//            // autoConfigureAllPublications.set(true)
-//        }
 
     private fun Project.fixSignPublishTaskDependencies() =
         tasks.withType(AbstractPublishToMaven::class.java).configureEach { after ->
