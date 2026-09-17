@@ -1,4 +1,4 @@
-listOf("jvm", "js", "mp", "other").forEach {
+listOf("jvm", "js", "browser", "mp", "other").forEach {
     include("subproject-$it")
 }
 include("full")

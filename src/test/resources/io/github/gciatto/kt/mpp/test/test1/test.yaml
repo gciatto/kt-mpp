@@ -5,7 +5,11 @@ tests:
     configuration:
       tasks:
         - "test"
+      options:
+        - "--info"
     expectation:
       success:
         - ':full:jvmTest'
         - ':full:jsTest'
+      output_contains:
+        - "full: set Mocha per-test-case timeout to 180s"

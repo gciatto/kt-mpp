@@ -79,3 +79,43 @@ tests:
         - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.module
         - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.pom
         - name: build/.m2/repository/io/github/gciatto/test2-js/1.0.0/test2-js-1.0.0.klib
+  - description: "ktTargetJvmDisable property disables the JVM target"
+    configuration:
+      tasks:
+        - ":tasks"
+      options:
+        - "-PktTargetJvmDisable=true"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test2: disable JVM target"
+      not_executed:
+        - ":compileKotlinJvm"
+        - ":jvmJar"
+  - description: "useKotlinBom property makes the Kotlin BOM an implementation dependency"
+    configuration:
+      tasks:
+        - ":tasks"
+      options:
+        - "--info"
+        - "-PuseKotlinBom=true"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test2: add implementation dependency to org.jetbrains.kotlin:kotlin-bom"
+  - description: "jsModuleSystem and jsMainFunctionExecutionMode properties can be overridden"
+    configuration:
+      tasks:
+        - ":tasks"
+      options:
+        - "--info"
+        - "-PjsModuleSystem=es_modules"
+        - "-PjsMainFunctionExecutionMode=call"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test2: configure kotlin JS to use ES module system"
+        - "test2: set JS main function execution mode to CALL"
