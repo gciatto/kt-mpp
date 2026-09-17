@@ -24,6 +24,7 @@ tests:
       output_contains:
         - "test3: configure bug finder from files:"
         - "custom-detekt.yml"
+        - "test3: set parallel=false for task :detekt"
   - description: "jsPackageName property overrides the NPM package name"
     configuration:
       tasks:
