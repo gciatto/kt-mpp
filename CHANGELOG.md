@@ -1,3 +1,23 @@
+## [6.0.0](https://github.com/gciatto/kt-mpp/compare/5.5.0...6.0.0) (2026-09-17)
+
+### ⚠ BREAKING CHANGES
+
+* uniform properties initialization via gradle properties (#691)
+
+### Features
+
+* uniform properties initialization via gradle properties ([#691](https://github.com/gciatto/kt-mpp/issues/691)) ([ff9c947](https://github.com/gciatto/kt-mpp/commit/ff9c9476fddc39829b3a800058379a36d534c674))
+
+### Dependency updates
+
+* **deps:** update kotest to v6.2.5 ([206f754](https://github.com/gciatto/kt-mpp/commit/206f7543cef9f1852d3b2a2dacb81ae26a86ec7c))
+* **deps:** update plugin com.gradle.develocity to v4.5.1 ([3deb9b1](https://github.com/gciatto/kt-mpp/commit/3deb9b139d05f461a9ffafce70f3738e43e7d085))
+* **deps:** update plugin gitsemver to v7.0.24 ([a978bdf](https://github.com/gciatto/kt-mpp/commit/a978bdf76e594a1b8d6eb560a78cc3286f1172bd))
+* **deps:** update plugin gradlepluginpublish to v2.2.1 ([631f41d](https://github.com/gciatto/kt-mpp/commit/631f41d2e4cfbfd2db79e0e13cc7b327218f0b67))
+* **deps:** update plugin kotlin-qa to v1.9.2 ([4b13173](https://github.com/gciatto/kt-mpp/commit/4b131737d5b4c2c69b8b091cb805f4483583463b))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.24 ([9e58722](https://github.com/gciatto/kt-mpp/commit/9e58722e64e837210468ee00123781734a6c0436))
+* **deps:** update publishoncentral to v9.2.11 ([5fc9284](https://github.com/gciatto/kt-mpp/commit/5fc9284caa1bab851f00672cff6356c4e6430878))
+
 ## [5.5.0](https://github.com/gciatto/kt-mpp/compare/5.4.1...5.5.0) (2026-09-16)
 
 ### Features
