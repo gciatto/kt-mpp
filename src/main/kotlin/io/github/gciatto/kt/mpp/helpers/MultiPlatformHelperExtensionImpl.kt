@@ -335,11 +335,21 @@ internal open class MultiPlatformHelperExtensionImpl(
         populateArgumentsFromProperties()
     }
 
-    override fun initializeJsRelatedProperties() {
-        ::mochaTimeout.populateFromProperty()
-        ::jsBinaryType.populateFromProperty { str ->
-            str.takeIf(String::isNotBlank)?.let { JsBinaryType.valueOf(it.uppercase(Locale.getDefault())) }
+    private inline fun <reified T : Enum<T>> parseValue(str: String?): T? =
+        str?.takeIf(String::isNotBlank)?.let { value ->
+            enumValues<T>().firstOrNull { it.name.equals(value, ignoreCase = true) }
         }
+
+    override fun initializeJsRelatedProperties() {
+        ::jsBinaryType.populateFromProperty(::parseValue)
+        ::jsMainFunctionExecutionMode.populateFromProperty(::parseValue)
+        ::jsModuleSystem.populateFromProperty(::parseValue)
+        ::jsTargetBrowser.populateFromProperty()
+        ::jsTargetNode.populateFromProperty()
+        ::jsWebPackMode.populateFromProperty(::parseValue)
+        ::jsWebPackOutputFileName.populateFromProperty()
+        ::mochaTimeout.populateFromProperty()
+        ::jsPackageName.populateFromProperty()
     }
 
     override fun initializeJvmRelatedProperties() {
