@@ -1,0 +1,4 @@
+[versions]
+jvm = "17"
+kotlin = "2.4.10"
+node = "20-latest"
