@@ -1,0 +1,62 @@
+options:
+  - "--stacktrace"
+tests:
+  - description: "otherMavenRepo/otherMavenUsername/otherMavenPassword properties configure an extra Maven repository"
+    configuration:
+      tasks:
+        - ":tasks"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "(URL: https://repo.example.org/maven, username: 'gciatto', password: ********)"
+  - description: "bugFinderConfigPath property points Detekt to a custom config file"
+    configuration:
+      tasks:
+        - ":detekt"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":detekt"
+      output_contains:
+        - "test3: configure bug finder from files:"
+        - "custom-detekt.yml"
+        - "test3: set parallel=false for task :detekt"
+  - description: "jsPackageName property overrides the NPM package name"
+    configuration:
+      tasks:
+        - "publishJsPackageToNpmjsRegistry"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":publishJsPackageToNpmjsRegistry"
+      output_contains:
+        - "test3: set NPM package name: custom-test3-package"
+        - "+ @myOrg/custom-test3-package@1.0.0"
+  - description: "kotlinVersion property forces dependency resolution to a specific Kotlin version"
+    configuration:
+      tasks:
+        - ":compileKotlinJvm"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":compileKotlinJvm"
+      output_contains:
+        - "test3: force version 2.4.0 for dependency org.jetbrains.kotlin:kotlin-stdlib"
+  - description: "versionsFromCatalog property can be overridden to read versions from a different catalog"
+    configuration:
+      tasks:
+        - ":tasks"
+      options:
+        - "--info"
+        - "-PversionsFromCatalog=libs2"
+    expectation:
+      success:
+        - ':tasks'
+      output_contains:
+        - "test3: set nodeVersion=20"

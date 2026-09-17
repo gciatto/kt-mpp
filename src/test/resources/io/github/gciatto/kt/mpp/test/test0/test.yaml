@@ -232,6 +232,13 @@ tests:
     expectation:
       output_contains:
         - ":subproject-jvm:sourcesJar SKIPPED"
+  - description: "disableJavadocTask property (true by default here) disables the javadoc task"
+    configuration:
+      tasks:
+        - ":subproject-jvm:javadoc"
+    expectation:
+      skipped:
+        - ":subproject-jvm:javadoc"
   - description: "Sub-project :subproject-js is JS-only, hence it has tasks concerning the JS platform"
     configuration:
       tasks:
@@ -244,6 +251,20 @@ tests:
       output_contains:
         - "subproject-js: publications: "
         - "publishAllPublicationsToProjectLocalRepository - Publishes all Maven publications produced by this project to the ProjectLocal repository."
+  - description: "Sub-project :subproject-browser is browser-only JS, with custom webpack settings and executable binaries"
+    configuration:
+      tasks:
+        - ":subproject-browser:jsBrowserProductionWebpack"
+      options:
+        - "--info"
+    expectation:
+      success:
+        - ":subproject-browser:jsBrowserProductionWebpack"
+      output_contains:
+        - "subproject-browser: project configured to use Kotlin JS Browser target"
+        - "subproject-browser: configure kotlin js to produce an executable"
+        - "subproject-browser: set webpack mode to PRODUCTION"
+        - "subproject-browser: set webpack main output file name to browser-bundle"
   - description: "Sub-project :full has shadow Jar tasks"
     configuration:
       tasks:
@@ -267,6 +288,17 @@ tests:
         - "full: configure task :full:shadowJarForWin for assembling fat jars on win, with entry point org.example.MainKt, excluding dependencies for platforms [linux, mac]"
         - "full: configure task :full:shadowJarForLinux for assembling fat jars on linux, with entry point org.example.MainKt, excluding dependencies for platforms [win, mac]"
         - "full: configure task :full:shadowJarForMac for assembling fat jars on mac, with entry point org.example.MainKt, excluding dependencies for platforms [win]"
+  - description: "fatJarClassifier property overrides the classifier of the fat jars"
+    configuration:
+      tasks:
+        - ":full:shadowJar"
+      options:
+        - "-PfatJarClassifier=dist"
+    expectation:
+      success:
+        - ":full:shadowJar"
+      file_exists:
+        - name: full/build/libs/test0-full-1.0.0-dist.jar
   - description: "Sub-project :subproject-other has no prior configuration"
     configuration:
       tasks:
@@ -395,6 +427,8 @@ tests:
               <issueManagement>
                 <url>https://github.com/gciatto/kt-mpp/issues</url>
               </issueManagement>
+            - <name>Giovanni Ciatto</name>
+            - <email>giovanni.ciatto@gmail.com</email>
             - |
               <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -616,12 +650,15 @@ tests:
     configuration:
       tasks:
         - "publishJsPackageToNpmjsRegistry"
+      options:
+        - "--info"
     expectation:
       success:
         - ":full:publishJsPackageToNpmjsRegistry"
       output_contains:
         - "npm notice Publishing to https://registry.npmjs.org// with tag latest and public access (dry-run)"
         - "+ @myOrg/test0-full@1.0.0"
+        - "full: set package.json bug email to giovanni.ciatto@gmail.com"
       output_matches:
         - "npm notice name:\\s+@myOrg/test0-full"
         - "npm notice version:\\s+1\\.0\\.0"
@@ -640,18 +677,20 @@ tests:
           - "full: add free compiler arg for Kotlin compiler"
           - "full: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.js.ExperimentalJsExport"
           - "full: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.time.ExperimentalTime"
+          - "full: add JVM-specific free compiler arg for Kotlin compiler: -jvm-default=enable"
           - "subproject-js: add free compiler arg for Kotlin compiler"
           - "subproject-js: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.js.ExperimentalJsExport"
           - "subproject-js: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.time.ExperimentalTime"
           - "subproject-jvm: add free compiler arg for Kotlin compiler"
-          - "subproject-jvm: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.js.ExperimentalJsExport"
-          - "subproject-jvm: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.time.ExperimentalTime"
+          - "subproject-jvm: add JVM-specific free compiler arg for Kotlin compiler: -jvm-default=enable"
           - "subproject-mp: add free compiler arg for Kotlin compiler"
           - "subproject-mp: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.js.ExperimentalJsExport"
           - "subproject-mp: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.time.ExperimentalTime"
+          - "subproject-mp: add JVM-specific free compiler arg for Kotlin compiler: -jvm-default=enable"
           - "test0: add free compiler arg for Kotlin compiler"
           - "test0: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.js.ExperimentalJsExport"
           - "test0: add JVM-specific free compiler arg for Kotlin compiler: -opt-in=kotlin.time.ExperimentalTime"
+          - "test0: add JVM-specific free compiler arg for Kotlin compiler: -jvm-default=enable"
   - description: "JS targets are configured with default main function execution mode and module system"
     configuration:
       tasks:

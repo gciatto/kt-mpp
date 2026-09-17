@@ -60,7 +60,7 @@ abstract class AbstractKotlinProjectPlugin(
 
     context(p: Project)
     protected fun KotlinJvmCompilerOptions.configureJvmKotlinOptions() {
-        p.multiPlatformHelper.ktCompilerArgs.all {
+        p.multiPlatformHelper.ktCompilerArgsJvm.all {
             freeCompilerArgs.add(it)
             p.log("add JVM-specific free compiler arg for Kotlin compiler: $it")
         }

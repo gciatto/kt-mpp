@@ -88,10 +88,6 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override val repoOwner: Property<String> = propertyWithConvention()
 
-    override val mavenCentralPassword: Property<String> = propertyWithConvention()
-
-    override val mavenCentralUsername: Property<String> = propertyWithConvention()
-
     override val otherMavenRepo: Property<URL> = urlPropertyWithConvention()
 
     override val otherMavenPassword: Property<String> = propertyWithConvention()
@@ -204,16 +200,8 @@ internal open class MultiPlatformHelperExtensionImpl(
                 }
             }
 
-    /**
-     * The Gradle property read here must stay named `bugFinderJvmTarget`, matching this property's own
-     * name and the one documented in the README: it is the public, user-facing knob for this setting.
-     */
     override val bugFinderJvmTarget: Property<String> =
-        propertyWithConvention(
-            gradlePropertyProvider("bugFinderJvmTarget")
-                .orElse(jvmVersion)
-                .orElse(DEFAULT_JVM_VERSION),
-        )
+        propertyWithConvention(jvmVersion.orElse(DEFAULT_JVM_VERSION))
 
     override val bugFinderParallel: Property<Boolean> = booleanPropertyWithConvention(true)
 
@@ -343,11 +331,21 @@ internal open class MultiPlatformHelperExtensionImpl(
         populateArgumentsFromProperties()
     }
 
-    override fun initializeJsRelatedProperties() {
-        ::mochaTimeout.populateFromProperty()
-        ::jsBinaryType.populateFromProperty { str ->
-            str.takeIf(String::isNotBlank)?.let { JsBinaryType.valueOf(it.uppercase(Locale.getDefault())) }
+    private inline fun <reified T : Enum<T>> parseValue(str: String?): T? =
+        str?.takeIf(String::isNotBlank)?.let { value ->
+            enumValues<T>().firstOrNull { it.name.equals(value, ignoreCase = true) }
         }
+
+    override fun initializeJsRelatedProperties() {
+        ::jsBinaryType.populateFromProperty(::parseValue)
+        ::jsMainFunctionExecutionMode.populateFromProperty(::parseValue)
+        ::jsModuleSystem.populateFromProperty(::parseValue)
+        ::jsTargetBrowser.populateFromProperty()
+        ::jsTargetNode.populateFromProperty()
+        ::jsWebPackMode.populateFromProperty(::parseValue)
+        ::jsWebPackOutputFileName.populateFromProperty()
+        ::mochaTimeout.populateFromProperty()
+        ::jsPackageName.populateFromProperty()
     }
 
     override fun initializeJvmRelatedProperties() {
@@ -363,14 +361,16 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override fun initializeBugFinderRelatedProperties() {
         ::bugFinderConfigPath.populateFromProperty()
+        // The Gradle property read here must stay named `bugFinderJvmTarget`, matching this property's own
+        // name and the one documented in the README: it is the public, user-facing knob for this setting.
+        ::bugFinderJvmTarget.populateFromProperty()
+        ::bugFinderParallel.populateFromProperty()
     }
 
     override fun initializeMavenRelatedProperties() {
         ::issuesEmail.populateFromProperty()
         ::issuesUrl.populateFromProperty()
         ::repoOwner.populateFromProperty()
-        ::mavenCentralPassword.populateFromProperty()
-        ::mavenCentralUsername.populateFromProperty()
         ::otherMavenRepo.populateFromProperty()
         ::otherMavenPassword.populateFromProperty()
         ::otherMavenUsername.populateFromProperty()

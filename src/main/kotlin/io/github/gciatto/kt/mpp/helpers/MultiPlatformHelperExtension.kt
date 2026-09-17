@@ -23,8 +23,6 @@ interface MultiPlatformHelperExtension {
     val ktTargetJsDisable: Property<Boolean>
     val ktTargetJvmDisable: Property<Boolean>
     val repoOwner: Property<String>
-    val mavenCentralPassword: Property<String>
-    val mavenCentralUsername: Property<String>
     val otherMavenRepo: Property<URL>
     val otherMavenPassword: Property<String>
     val otherMavenUsername: Property<String>

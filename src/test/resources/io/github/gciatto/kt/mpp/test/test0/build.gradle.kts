@@ -14,7 +14,7 @@ version = "1.0.0"
 multiProjectHelper {
     defaultProjectType = ProjectType.KOTLIN
     jvmProjects(":subproject-jvm")
-    jsProjects(":subproject-js")
+    jsProjects(":subproject-js", ":subproject-browser")
     otherProjects(":subproject-other")
     applyProjectTemplates()
 }
