@@ -12,15 +12,13 @@ import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Dependency
+import org.gradle.api.logging.LogLevel
 import org.gradle.kotlin.dsl.DependencyHandlerScope
-import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
-import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsBinaryContainer
 import java.util.Locale
@@ -72,10 +70,6 @@ abstract class AbstractKotlinProjectPlugin(
             main.set(it)
             p.log("set JS main function execution mode to $it")
         }
-        p.multiPlatformHelper.ktCompilerArgs.all {
-            freeCompilerArgs.add(it)
-            p.log("add JVM-specific free compiler arg for Kotlin compiler: $it")
-        }
         p.multiPlatformHelper.ktCompilerArgsJs.all {
             freeCompilerArgs.add(it)
             p.log("add JS-specific free compiler arg for Kotlin compiler: $it")
@@ -94,7 +88,7 @@ abstract class AbstractKotlinProjectPlugin(
         )
         p.multiPlatformHelper.ktCompilerArgs.all {
             freeCompilerArgs.add(it)
-            p.log("add free compiler arg for Kotlin compiler")
+            p.log("add free compiler arg for Kotlin compiler: $it")
         }
     }
 
@@ -192,17 +186,21 @@ abstract class AbstractKotlinProjectPlugin(
     protected fun KotlinMultiplatformExtension.configureJsTarget() {
         js {
             p.multiPlatformHelper.initializeJsRelatedProperties()
-            if (p.multiPlatformHelper.jsTargetBrowser.get()) {
-                configureJsForBrowser()
-            }
             binaries.configureAutomatically()
             configureJsModuleSystem()
             compilerOptions {
-                configureKotlinOptions()
                 configureJsKotlinOptions()
             }
-            if (p.multiPlatformHelper.jsTargetNode.get()) {
+            val nodeTarget = p.multiPlatformHelper.jsTargetNode.orNull == true
+            if (nodeTarget) {
                 configureNodeJs()
+            }
+            val browserTarget = p.multiPlatformHelper.jsTargetBrowser.orNull == true
+            if (nodeTarget && browserTarget) {
+                p.log("Targetting Browser and NodeJS simultaneously!", LogLevel.WARN)
+            }
+            if (browserTarget) {
+                configureJsForBrowser()
             }
             this@configureJsTarget.dependenciesFor("jsMain") {
                 val useBom = p.multiPlatformHelper.useKotlinBom.orNull ?: false
@@ -282,7 +280,13 @@ abstract class AbstractKotlinProjectPlugin(
                 p.log("configure kotlin js to produce an executable")
             }
 
-            else -> {}
+            else -> {
+                p.log(
+                    "kotlin js binary is unconfigured: " +
+                        "set jsBinaryType property to either 'library' or 'executable' to configure it",
+                    LogLevel.WARN,
+                )
+            }
         }
     }
 }

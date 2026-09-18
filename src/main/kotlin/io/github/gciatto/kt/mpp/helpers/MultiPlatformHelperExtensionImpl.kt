@@ -36,8 +36,10 @@ internal open class MultiPlatformHelperExtensionImpl(
     private val objects: ObjectFactory
         get() = project.objects
 
+    private inline fun <reified T : Any> propertyWithoutConvention() = objects.property(T::class.java)
+
     private inline fun <reified T : Any> propertyWithConvention(defaultValue: T?) =
-        objects.property(T::class.java).let {
+        propertyWithoutConvention<T>().let {
             if (defaultValue != null) {
                 it.convention(defaultValue)
             } else {
@@ -46,7 +48,7 @@ internal open class MultiPlatformHelperExtensionImpl(
         }
 
     private inline fun <reified T : Any> propertyWithConvention(defaultValue: Provider<T>) =
-        objects.property(T::class.java).convention(defaultValue)
+        propertyWithoutConvention<T>().convention(defaultValue)
 
     private fun gradlePropertyProvider(name: String): Provider<String> =
         project.provider {
@@ -54,7 +56,7 @@ internal open class MultiPlatformHelperExtensionImpl(
         }
 
     private inline fun <reified T : Any> propertyWithLazyConvention(crossinline defaultValue: () -> T?) =
-        objects.property(T::class.java).convention(project.provider { defaultValue() })
+        propertyWithoutConvention<T>().convention(project.provider { defaultValue() })
 
     private fun booleanPropertyWithConvention(defaultValue: Boolean = false) = propertyWithConvention(defaultValue)
 
@@ -169,22 +171,21 @@ internal open class MultiPlatformHelperExtensionImpl(
             project.jsPackageName
         }
 
-    override val jsMainFunctionExecutionMode: Property<JsMainFunctionExecutionMode> =
-        propertyWithConvention(JsMainFunctionExecutionMode.NO_CALL)
+    override val jsBinaryType: Property<JsBinaryType> = propertyWithConvention(JsBinaryType.LIBRARY)
 
-    override val jsModuleSystem: Property<JsModuleSystem> = propertyWithConvention(JsModuleSystem.COMMON_JS)
+    override val jsMainFunctionExecutionMode: Property<JsMainFunctionExecutionMode> =
+        propertyWithoutConvention()
+
+    override val jsModuleSystem: Property<JsModuleSystem> = propertyWithoutConvention()
 
     override val jsTargetBrowser: Property<Boolean> = booleanPropertyWithConvention(false)
 
     override val jsTargetNode: Property<Boolean> = booleanPropertyWithConvention(true)
 
-    override val jsWebPackMode: Property<KotlinWebpackConfig.Mode> =
-        propertyWithConvention(KotlinWebpackConfig.Mode.DEVELOPMENT)
+    override val jsWebPackMode: Property<KotlinWebpackConfig.Mode> = propertyWithoutConvention()
 
     override val jsWebPackOutputFileName: Property<String> =
-        propertyWithConvention(
-            "${project.rootProject.name}-${project.name}",
-        )
+        propertyWithConvention(project.jsPackageName)
 
     override val bugFinderConfigPath =
         filePropertyWithConvention(
@@ -204,8 +205,6 @@ internal open class MultiPlatformHelperExtensionImpl(
         propertyWithConvention(jvmVersion.orElse(DEFAULT_JVM_VERSION))
 
     override val bugFinderParallel: Property<Boolean> = booleanPropertyWithConvention(true)
-
-    override val jsBinaryType: Property<JsBinaryType> = propertyWithConvention(JsBinaryType.LIBRARY)
 
     override val fatJarPlatforms: DomainObjectSet<String> = objects.domainObjectSet(String::class.java)
 
