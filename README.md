@@ -190,9 +190,9 @@ Overall, you may need to define, provide the following properties:
 - `jsBinaryType` (optional, default value: `"library"`): the type of binary to be generated for a Kotlin JS project (one of {`"executable"`, `"library"`, `"none"`).
   Publishing on NPM requires `"library"`.
 
-- `jsMainFunctionExecutionMode` (optional, default value: `NO_CALL`; only assignable via the `multiPlatformHelper` DSL block): whether the Kotlin JS `main` function should be called automatically (one of `org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode`'s values, e.g. `NO_CALL`, `CALL_MAIN`).
+- `jsMainFunctionExecutionMode` (optional, no default value: if unset, Kotlin's own default is used; only assignable via the `multiPlatformHelper` DSL block): whether the Kotlin JS `main` function should be called automatically (one of `org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode`'s values, e.g. `NO_CALL`, `CALL_MAIN`).
 
-- `jsModuleSystem` (optional, default value: `COMMON_JS`; only assignable via the `multiPlatformHelper` DSL block): the JS module system targeted by Kotlin JS compilation (one of `COMMON_JS`, `ES_MODULES`, `UMD`).
+- `jsModuleSystem` (optional, no default value: if unset, Kotlin's own default (`UMD`) is used; only assignable via the `multiPlatformHelper` DSL block): the JS module system targeted by Kotlin JS compilation (one of `COMMON_JS`, `ES_MODULES`, `UMD`).
 
 - `jsPackageName` (optional, default value: `"<rootProject.name>-<project.name>"`): the name of the NPM package to be generated for a Kotlin JS project. If missing or blank, the package name will be `<rootProject.name>-<project.name>`.
 
@@ -200,9 +200,9 @@ Overall, you may need to define, provide the following properties:
 
 - `jsTargetNode` (optional, default value: `true`; only assignable via the `multiPlatformHelper` DSL block): if true, the Kotlin JS target is configured to run on NodeJS.
 
-- `jsWebPackMode` (optional, default value: `DEVELOPMENT`; only assignable via the `multiPlatformHelper` DSL block): the Webpack mode used when bundling for the browser (one of `org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode`'s values, e.g. `DEVELOPMENT`, `PRODUCTION`). Only relevant if `jsTargetBrowser` is `true`.
+- `jsWebPackMode` (optional, no default value: if unset, Kotlin's own default is used; only assignable via the `multiPlatformHelper` DSL block): the Webpack mode used when bundling for the browser (one of `org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode`'s values, e.g. `DEVELOPMENT`, `PRODUCTION`). Only relevant if `jsTargetBrowser` is `true`.
 
-- `jsWebPackOutputFileName` (optional, default value: `"<rootProject.name>-<project.name>"`; only assignable via the `multiPlatformHelper` DSL block): the name of the Webpack bundle output file. Only relevant if `jsTargetBrowser` is `true`.
+- `jsWebPackOutputFileName` (optional, default value: same as `jsPackageName`; only assignable via the `multiPlatformHelper` DSL block): the name of the Webpack bundle output file. Only relevant if `jsTargetBrowser` is `true`.
 
 - `ktCompilerArgsJs` (mandatory, default value: `""`): free compiler arguments to be passed to the Kotlin compiler when compiling JS sources.
 

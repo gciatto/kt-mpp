@@ -43,6 +43,7 @@ tests:
         - ":compileKotlinJvm"
       options:
         - "--info"
+        - "-PkotlinVersion=2.4.0"
     expectation:
       success:
         - ":compileKotlinJvm"

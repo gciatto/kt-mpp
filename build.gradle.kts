@@ -89,7 +89,7 @@ dependencies {
 }
 
 // Enforce Kotlin version coherence
-configurations.matching { "detekt" !in it.name }.all {
+configurations.matching { "detekt" !in it.name && "ktlint" !in it.name }.all {
     val configuration = this
     resolutionStrategy.eachDependency {
         if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin")) {

@@ -23,6 +23,9 @@ class JsOnlyPlugin : AbstractKotlinProjectPlugin("multiplatform") {
         configureNodeVersionFromCatalogIfPossible()
         configure(KotlinMultiplatformExtension::class) {
             configureJsTarget()
+            compilerOptions {
+                configureKotlinOptions()
+            }
         }
     }
 }
