@@ -1,3 +1,14 @@
+## [6.0.1](https://github.com/gciatto/kt-mpp/compare/6.0.0...6.0.1) (2026-09-18)
+
+### Dependency updates
+
+* **deps:** use kotlin 2.4.20 ([9a70c0a](https://github.com/gciatto/kt-mpp/commit/9a70c0a66f1cd0f0c2125bf61a6ff72a72923726))
+
+### Bug Fixes
+
+* JS-only common compiler args, ktlint/kotlin version coherence, and test fallout ([2e306dc](https://github.com/gciatto/kt-mpp/commit/2e306dc218d68fc95ea50373504e5cb7daf9b21a))
+* properties default and initialization order ([fa13322](https://github.com/gciatto/kt-mpp/commit/fa13322cee679fc8ff4ae1c169d55bbad398b566))
+
 ## [6.0.0](https://github.com/gciatto/kt-mpp/compare/5.5.0...6.0.0) (2026-09-17)
 
 ### ⚠ BREAKING CHANGES
