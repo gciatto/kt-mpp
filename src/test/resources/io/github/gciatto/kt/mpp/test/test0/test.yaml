@@ -360,6 +360,77 @@ tests:
         - ":full:detektJsMain"
         - ":full:detektJvmTest"
         - ":full:detektJsTest"
+  - description: "detektAll task itself succeeds on the root project and on every sub-project"
+    configuration:
+      tasks: "detektAll"
+    expectation:
+      success:
+        - ":detektAll"
+        - ":full:detektAll"
+        - ":subproject-jvm:detektAll"
+        - ":subproject-js:detektAll"
+        - ":subproject-browser:detektAll"
+        - ":subproject-mp:detektAll"
+  - description: "ktlintCheck task succeeds on the root project and on every sub-project"
+    configuration:
+      tasks: "ktlintCheck"
+    expectation:
+      success:
+        - ":ktlintCheck"
+        - ":full:ktlintCheck"
+        - ":subproject-jvm:ktlintCheck"
+        - ":subproject-js:ktlintCheck"
+        - ":subproject-browser:ktlintCheck"
+        - ":subproject-mp:ktlintCheck"
+  - description: "ktlintFormat task succeeds on the root project and on every sub-project"
+    configuration:
+      tasks: "ktlintFormat"
+    expectation:
+      success:
+        - ":ktlintFormat"
+        - ":full:ktlintFormat"
+        - ":subproject-jvm:ktlintFormat"
+        - ":subproject-js:ktlintFormat"
+        - ":subproject-browser:ktlintFormat"
+        - ":subproject-mp:ktlintFormat"
+  - description: "jvmMainClasses task succeeds on the root project and on every JVM-capable sub-project"
+    configuration:
+      tasks: "jvmMainClasses"
+    expectation:
+      success:
+        - ":jvmMainClasses"
+        - ":full:jvmMainClasses"
+        - ":subproject-jvm:jvmMainClasses"
+        - ":subproject-mp:jvmMainClasses"
+  - description: "jvmTestClasses task succeeds on the root project and on every JVM-capable sub-project"
+    configuration:
+      tasks: "jvmTestClasses"
+    expectation:
+      success:
+        - ":jvmTestClasses"
+        - ":full:jvmTestClasses"
+        - ":subproject-jvm:jvmTestClasses"
+        - ":subproject-mp:jvmTestClasses"
+  - description: "jsMainClasses task succeeds on the root project and on every JS-capable sub-project"
+    configuration:
+      tasks: "jsMainClasses"
+    expectation:
+      success:
+        - ":jsMainClasses"
+        - ":full:jsMainClasses"
+        - ":subproject-js:jsMainClasses"
+        - ":subproject-browser:jsMainClasses"
+        - ":subproject-mp:jsMainClasses"
+  - description: "jsTestClasses task succeeds on the root project and on every JS-capable sub-project"
+    configuration:
+      tasks: "jsTestClasses"
+    expectation:
+      success:
+        - ":jsTestClasses"
+        - ":full:jsTestClasses"
+        - ":subproject-js:jsTestClasses"
+        - ":subproject-browser:jsTestClasses"
+        - ":subproject-mp:jsTestClasses"
   - description: "All sub-projects should have the same version of the rootProject"
     configuration:
       tasks: "printVersion"

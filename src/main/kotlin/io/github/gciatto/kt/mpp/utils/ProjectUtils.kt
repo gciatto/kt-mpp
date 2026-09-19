@@ -62,7 +62,7 @@ fun Project.kotlinVersion(version: String) = kotlinVersion(provider { version })
 
 fun Project.kotlinVersion(provider: Provider<String>) {
     val version = provider.getOrElse(KotlinVersion.CURRENT.toString())
-    configurations.matching { "detekt" !in it.name }.all { configuration ->
+    configurations.matching { "detekt" !in it.name && "ktlint" !in it.name }.all { configuration ->
         configuration.resolutionStrategy.eachDependency { dependency ->
             if (dependency.requested.let { it.group == "org.jetbrains.kotlin" && it.name.startsWith("kotlin") }) {
                 dependency.useVersion(version)

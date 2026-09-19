@@ -1,7 +1,5 @@
 import io.github.gciatto.kt.mpp.helpers.ProjectType
 import io.github.gciatto.kt.mpp.utils.log
-import org.gradle.api.publish.maven.tasks.PublishToMavenLocal
-import org.gradle.kotlin.dsl.withType
 import org.gradle.api.logging.LogLevel
 
 plugins {
@@ -38,7 +36,7 @@ allprojects {
     }
 }
 
-//tasks.create("printMavenLocal") {
+// tasks.create("printMavenLocal") {
 //    doLast {
 //        fileTree(localMavenRepoDir).forEach {
 //            println(it)
@@ -48,4 +46,4 @@ allprojects {
 //    tasks.withType<PublishToMavenLocal> {
 //        printMavenLocal.mustRunAfter(this)
 //    }
-//}
+// }
