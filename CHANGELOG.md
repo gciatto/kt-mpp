@@ -1,3 +1,14 @@
+## [6.0.2](https://github.com/gciatto/kt-mpp/compare/6.0.1...6.0.2) (2026-09-19)
+
+### Bug Fixes
+
+* exercise ktlintCheck, ktlintFormat, detektAll and *Classes tasks for real, fixing issue in ktlint tasks configuration ([2c494ce](https://github.com/gciatto/kt-mpp/commit/2c494ce64ffe29548419063a3b7909f3454c2e9a))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.47 ([66f14ea](https://github.com/gciatto/kt-mpp/commit/66f14eaaf5c1b6abc5f32ea6bcfbdbdb2c894e5c))
+* **deps:** update dependency ubuntu to v26 ([a7b16ef](https://github.com/gciatto/kt-mpp/commit/a7b16ef434ef7297e4e92ea49aee07c7340d307d))
+
 ## [6.0.1](https://github.com/gciatto/kt-mpp/compare/6.0.0...6.0.1) (2026-09-18)
 
 ### Dependency updates
