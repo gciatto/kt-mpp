@@ -1,3 +1,12 @@
+## [6.0.3](https://github.com/gciatto/kt-mpp/compare/6.0.2...6.0.3) (2026-09-25)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.8.0 ([27746e7](https://github.com/gciatto/kt-mpp/commit/27746e769ee36dc6895f8f1aa67898886fc65858))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.196 ([d44f7db](https://github.com/gciatto/kt-mpp/commit/d44f7db66bed225e364d7932395c8bd2ceb9cc59))
+* **deps:** update plugin kotlin-qa to v1.9.3 ([a7db452](https://github.com/gciatto/kt-mpp/commit/a7db452c8d4773ed84f299e531a14bdec0a21f1b))
+* **deps:** update publishoncentral to v9.2.12 ([92e0ea6](https://github.com/gciatto/kt-mpp/commit/92e0ea60bd92a6929307d92c9076d05f2f3c4d09))
+
 ## [6.0.2](https://github.com/gciatto/kt-mpp/compare/6.0.1...6.0.2) (2026-09-19)
 
 ### Bug Fixes
