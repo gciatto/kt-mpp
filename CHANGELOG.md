@@ -1,3 +1,19 @@
+## [6.0.4](https://github.com/gciatto/kt-mpp/compare/6.0.3...6.0.4) (2026-10-01)
+
+### Dependency updates
+
+* **deps:** update plugin com.gradle.develocity to v4.6.0 ([471e1d4](https://github.com/gciatto/kt-mpp/commit/471e1d4c14e952b4fff8833544c7ba488880d332))
+* **deps:** update plugin kotlin-qa to v1.10.0 ([630b612](https://github.com/gciatto/kt-mpp/commit/630b612ccf98571df7b88d4d36bef4c94ed804f5))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.25 ([d133266](https://github.com/gciatto/kt-mpp/commit/d133266fe942174c596299bb9495b5bf0aaa6ed2))
+
+### Bug Fixes
+
+* refresh bundled Node.js version fallback list ([d13c64f](https://github.com/gciatto/kt-mpp/commit/d13c64f416a95aa9d66552118c93bd7f553def33))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.48 ([8992470](https://github.com/gciatto/kt-mpp/commit/89924704b3dc6b016bb5ab16f19841034fd5f93a))
+
 ## [6.0.3](https://github.com/gciatto/kt-mpp/compare/6.0.2...6.0.3) (2026-09-25)
 
 ### Dependency updates
