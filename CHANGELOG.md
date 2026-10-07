@@ -1,3 +1,11 @@
+## [6.0.5](https://github.com/gciatto/kt-mpp/compare/6.0.4...6.0.5) (2026-10-07)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.8.1 ([8cf6f84](https://github.com/gciatto/kt-mpp/commit/8cf6f841fa745cf70e7211002189bd7859f9f663))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.197 ([e26d521](https://github.com/gciatto/kt-mpp/commit/e26d52177dd9c15d5d40354bfaaf3e3caa9eb685))
+* **deps:** update publishoncentral to v9.2.13 ([f38c299](https://github.com/gciatto/kt-mpp/commit/f38c299c6d29b75135451fa95fe6287f86edebad))
+
 ## [6.0.4](https://github.com/gciatto/kt-mpp/compare/6.0.3...6.0.4) (2026-10-01)
 
 ### Dependency updates
