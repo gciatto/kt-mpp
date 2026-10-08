@@ -1,3 +1,16 @@
+## [6.0.6](https://github.com/gciatto/kt-mpp/compare/6.0.5...6.0.6) (2026-10-08)
+
+### Dependency updates
+
+* **core-deps:** update dependency org.jetbrains.kotlin.jvm to v2.4.21 ([55a4ec2](https://github.com/gciatto/kt-mpp/commit/55a4ec2191f69fa3c8d6b5480344464f60ec8f99))
+* **deps:** update plugin kotlin-qa to v1.10.1 ([fb67df4](https://github.com/gciatto/kt-mpp/commit/fb67df4363156efbf2e34b3869da8acae0482ca3))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.26 ([d63d36a](https://github.com/gciatto/kt-mpp/commit/d63d36ad884b47fa97796f67ba5ad57cd7ad2164))
+* **deps:** update publishoncentral to v9.2.14 ([8f21245](https://github.com/gciatto/kt-mpp/commit/8f21245393f7e66f2b7fe2cb445d45058f6419d5))
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v7.1.0 ([350f630](https://github.com/gciatto/kt-mpp/commit/350f6307a40f0a2c79c1672e1e29590de18817c5))
+
 ## [6.0.5](https://github.com/gciatto/kt-mpp/compare/6.0.4...6.0.5) (2026-10-07)
 
 ### Dependency updates
