@@ -1,3 +1,20 @@
+## [6.0.7](https://github.com/gciatto/kt-mpp/compare/6.0.6...6.0.7) (2026-10-20)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.8.2 ([9528c95](https://github.com/gciatto/kt-mpp/commit/9528c9547229c08975fd385b9f310390bc465e6f))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.198 ([93f97ec](https://github.com/gciatto/kt-mpp/commit/93f97ec4c82558315bb9ee87a8c15946c41db951))
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.199 ([5497b01](https://github.com/gciatto/kt-mpp/commit/5497b016f57aa8a149ac4ba7d9521e2a1d822a37))
+* **deps:** update kotest to v6.2.6 ([d5c7eef](https://github.com/gciatto/kt-mpp/commit/d5c7eef82e0f498ba869e85f8921959fecf67dc3))
+* **deps:** update node.js to 24.22 ([6cd1f76](https://github.com/gciatto/kt-mpp/commit/6cd1f7652cd9b27c1ebdb9d0bf0c01c3618555d2))
+* **deps:** update plugin gitsemver to v7.0.25 ([741b082](https://github.com/gciatto/kt-mpp/commit/741b082878545679e8b64d2de28d499ea22b0ce9))
+* **deps:** update plugin kotlin-qa to v1.10.2 ([f6c578a](https://github.com/gciatto/kt-mpp/commit/f6c578a4cd9a66c90c9a1cd391b988b1ae56fa40))
+* **deps:** update plugin org.danilopianini.gradle-pre-commit-git-hooks to v2.1.27 ([67ffc07](https://github.com/gciatto/kt-mpp/commit/67ffc07e833a96c720ae1f7085b9b43deaa57236))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.49 ([f50b1fb](https://github.com/gciatto/kt-mpp/commit/f50b1fb62450ec0890aa498335249ce3e8bb3e74))
+
 ## [6.0.6](https://github.com/gciatto/kt-mpp/compare/6.0.5...6.0.6) (2026-10-08)
 
 ### Dependency updates
