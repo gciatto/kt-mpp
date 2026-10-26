@@ -24,6 +24,9 @@ class LinterPlugin : AbstractProjectPlugin() {
             }
             filter {
                 it.exclude("**/generated/**")
+                // generated source roots (e.g. KSP's build/generated/ksp/<target>/<sourceSet>/kotlin) are matched
+                // by the pattern above only relative to themselves, where "generated" never appears
+                it.exclude { element -> element.file.startsWith(layout.buildDirectory.get().asFile) }
                 it.include("**/kotlin/**")
             }
         }

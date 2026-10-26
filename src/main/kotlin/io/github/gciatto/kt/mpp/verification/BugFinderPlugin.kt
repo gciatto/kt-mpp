@@ -36,6 +36,8 @@ class BugFinderPlugin : AbstractProjectPlugin() {
             buildUponDefaultConfig = true
         }
         tasks.withType(Detekt::class.java).configureEach { task ->
+            // generated sources (e.g. KSP output under build/generated) are not this project's code to lint
+            task.exclude { element -> element.file.startsWith(layout.buildDirectory.get().asFile) }
             // Detekt exposes this setter as internal Kotlin API but public Gradle API.
             val jvmTarget = multiPlatformHelper.bugFinderJvmTarget.get()
             task.javaClass
