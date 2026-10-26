@@ -64,7 +64,7 @@ class MultiplatformPlugin : AbstractKotlinProjectPlugin("multiplatform") {
                 addMainDependencies(p.project, "jdk8", skipBom = !useBom)
             }
             this@configureJvmTarget.dependenciesFor("jvmTest") {
-                addTestDependencies(p.project, "junit", skipAnnotations = true)
+                addTestDependencies(p.project, p.configureJvmTestFramework(), skipAnnotations = true)
             }
             p.addMultiplatformTaskAliases("jvm")
         }

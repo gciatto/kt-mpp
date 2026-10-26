@@ -34,7 +34,7 @@ class JvmOnlyPlugin : AbstractKotlinProjectPlugin("jvm") {
         dependencies {
             val useBom = multiPlatformHelper.useKotlinBom.orNull ?: false
             addMainDependencies(project, target = "jdk8", skipBom = !useBom)
-            addTestDependencies(project, target = "junit", skipAnnotations = true)
+            addTestDependencies(project, target = configureJvmTestFramework(), skipAnnotations = true)
         }
         configure(JavaPluginExtension::class) {
             withSourcesJar()
