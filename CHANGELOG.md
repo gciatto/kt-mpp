@@ -1,3 +1,20 @@
+## [6.1.0](https://github.com/gciatto/kt-mpp/compare/6.0.7...6.1.0) (2026-10-26)
+
+### Features
+
+* add jvmTestFramework property to choose the kotlin-test JVM flavour ([15fd2a9](https://github.com/gciatto/kt-mpp/commit/15fd2a9ec5fe712e6122736cba379ce866ace2fc))
+
+### Dependency updates
+
+* **deps:** update plugin com.gradle.develocity to v4.6.1 ([7f2a2d9](https://github.com/gciatto/kt-mpp/commit/7f2a2d94091a4604a794363d08a1cf8bcee715e1))
+* **deps:** update plugin gitsemver to v7.2.0 ([067d8d6](https://github.com/gciatto/kt-mpp/commit/067d8d6a5083056d68c42efd654b9607ebd281ac))
+* **deps:** update plugin gitsemver to v7.3.0 ([bcc8596](https://github.com/gciatto/kt-mpp/commit/bcc859687412ffea3cb2b168df6b6f4a4c8eaad9))
+* **deps:** update publishoncentral to v9.2.15 ([f69f26b](https://github.com/gciatto/kt-mpp/commit/f69f26be2b71844b1dabdf7009e4b27a5c0d258d))
+
+### Bug Fixes
+
+* exclude build-directory sources from ktlint and detekt ([e9083df](https://github.com/gciatto/kt-mpp/commit/e9083dfbc6c0dd9bda6eb8f7bad78832e42c8731))
+
 ## [6.0.7](https://github.com/gciatto/kt-mpp/compare/6.0.6...6.0.7) (2026-10-20)
 
 ### Dependency updates
