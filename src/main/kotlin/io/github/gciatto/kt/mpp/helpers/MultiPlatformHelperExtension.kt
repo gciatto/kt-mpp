@@ -22,6 +22,7 @@ interface MultiPlatformHelperExtension {
     val ktCompilerArgsJvm: DomainObjectSet<String>
     val ktTargetJsDisable: Property<Boolean>
     val ktTargetJvmDisable: Property<Boolean>
+    val jvmTestFramework: Property<String>
     val repoOwner: Property<String>
     val otherMavenRepo: Property<URL>
     val otherMavenPassword: Property<String>

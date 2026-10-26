@@ -214,6 +214,8 @@ Overall, you may need to define, provide the following properties:
 
 - `ktTargetJvmDisable` (optional, default value: `false`): if true, disables the JVM target on a multi-platform project.
 
+- `jvmTestFramework` (optional, default value: `"junit"`): the `kotlin-test` flavour added to JVM test dependencies, either `junit` (JUnit 4) or `junit5`. With `junit5`, every JVM `Test` task also runs on the JUnit Platform, which lets JUnit Platform engines such as Kotest's run alongside `kotlin.test` tests.
+
 - `mochaTimeout` (mandatory, default value: `"180s"`): the amount of time to be .
 
 - `npmDryRun` (optional, default value: false): if true, release of NPM packages will simply be simulated (i.e., no actual release).

@@ -13,7 +13,9 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.DependencyHandlerScope
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
@@ -151,6 +153,22 @@ abstract class AbstractKotlinProjectPlugin(
         target: String = targetName,
         skipAnnotations: Boolean = false,
     ) = DependencyScope.of(this).addTestDependencies(project, target, skipAnnotations)
+
+    /**
+     * Returns the `kotlin-test` flavour to use for JVM tests (the `jvmTestFramework` property),
+     * switching every JVM [Test] task to the JUnit Platform when it is `junit5`.
+     */
+    protected fun Project.configureJvmTestFramework(): String {
+        val framework = multiPlatformHelper.jvmTestFramework.get()
+        require(framework in setOf("junit", "junit5")) {
+            "Unsupported jvmTestFramework '$framework' in project $path: expected 'junit' or 'junit5'"
+        }
+        if (framework == "junit5") {
+            tasks.withType<Test>().configureEach { it.useJUnitPlatform() }
+            log("use the JUnit Platform for JVM tests")
+        }
+        return framework
+    }
 
     protected fun Project.addPlatformSpecificTaskAliases() {
         tasks.register("${targetName}Test") {

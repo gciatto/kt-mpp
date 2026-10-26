@@ -98,6 +98,8 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override val mochaTimeout: Property<String> = propertyWithConvention("10m")
 
+    override val jvmTestFramework: Property<String> = propertyWithConvention("junit")
+
     override val npmDryRun: Property<Boolean> = booleanPropertyWithConvention(false)
 
     override val npmOrganization: Property<String> = propertyWithConvention()
@@ -349,6 +351,7 @@ internal open class MultiPlatformHelperExtensionImpl(
 
     override fun initializeJvmRelatedProperties() {
         ::disableJavadocTask.populateFromProperty()
+        ::jvmTestFramework.populateFromProperty()
     }
 
     override fun initializeFatJarRelatedProperties() {
