@@ -1,3 +1,17 @@
+## [6.1.1](https://github.com/gciatto/kt-mpp/compare/6.1.0...6.1.1) (2026-11-01)
+
+### Dependency updates
+
+* **deps:** update node.js to v26 ([364d35b](https://github.com/gciatto/kt-mpp/commit/364d35b23ee9fb20ae0239d324abff0ab911936c))
+
+### Bug Fixes
+
+* refresh bundled Node.js version fallback list ([86c0c91](https://github.com/gciatto/kt-mpp/commit/86c0c9124a10653bdddecd435926dbc0d96aab61))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.50 ([539fb0a](https://github.com/gciatto/kt-mpp/commit/539fb0a3cd84335f564adbd257c3b58a9186dc3c))
+
 ## [6.1.0](https://github.com/gciatto/kt-mpp/compare/6.0.7...6.1.0) (2026-10-26)
 
 ### Features
