@@ -1,3 +1,18 @@
+## [6.1.2](https://github.com/gciatto/kt-mpp/compare/6.1.1...6.1.2) (2026-11-06)
+
+### Dependency updates
+
+* **deps:** update dependency io.github.classgraph:classgraph to v4.8.200 ([0a6bcce](https://github.com/gciatto/kt-mpp/commit/0a6bcce9df5a495a355d6334cbc6b37481c28f39))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.158 ([9359ea2](https://github.com/gciatto/kt-mpp/commit/9359ea2713fed637385cf155eb529fd65a5cbb54))
+
+### Documentation
+
+* **deps:** update dokka to v2.3.0 ([249d2c3](https://github.com/gciatto/kt-mpp/commit/249d2c31deef4181f72d43c6e399e40dc42e16e4))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.51 ([5ff1adc](https://github.com/gciatto/kt-mpp/commit/5ff1adc42e51a28e7ff37c6293ff42f9c87386d5))
+
 ## [6.1.1](https://github.com/gciatto/kt-mpp/compare/6.1.0...6.1.1) (2026-11-01)
 
 ### Dependency updates
