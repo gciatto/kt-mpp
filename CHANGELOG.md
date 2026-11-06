@@ -1,3 +1,11 @@
+## [6.1.3](https://github.com/gciatto/kt-mpp/compare/6.1.2...6.1.3) (2026-11-06)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.9.0 ([10dcfb0](https://github.com/gciatto/kt-mpp/commit/10dcfb045090abbcb6cb87b889e2003e3bcf8942))
+* **deps:** update publishoncentral to v9.3.0 ([6d67c9d](https://github.com/gciatto/kt-mpp/commit/6d67c9d44db867a2e3a20339af7a74c04bd114fb))
+* **deps:** update publishoncentral to v9.3.1 ([3f26264](https://github.com/gciatto/kt-mpp/commit/3f2626427b4964237e2f7cd805c37740e1e01aee))
+
 ## [6.1.2](https://github.com/gciatto/kt-mpp/compare/6.1.1...6.1.2) (2026-11-06)
 
 ### Dependency updates
