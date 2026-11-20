@@ -1,3 +1,15 @@
+## [6.1.5](https://github.com/gciatto/kt-mpp/compare/6.1.4...6.1.5) (2026-11-20)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.9.2 ([43ed216](https://github.com/gciatto/kt-mpp/commit/43ed216f8d03350e003e9e8b4fbe785c8558e0c7))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.159 ([3c46cb2](https://github.com/gciatto/kt-mpp/commit/3c46cb276542a88a1083875ceb890f73c81daf3a))
+* **deps:** update kotest to v6.2.7 ([9ae2779](https://github.com/gciatto/kt-mpp/commit/9ae27793da394fb48ad337955eb4cce69c1b8e04))
+
+### Build and continuous integration
+
+* **deps:** update danysk/build-check-deploy-gradle-action action to v4.0.52 ([2ce585c](https://github.com/gciatto/kt-mpp/commit/2ce585cdfa95b69ae3ced07309fae08323e756aa))
+
 ## [6.1.4](https://github.com/gciatto/kt-mpp/compare/6.1.3...6.1.4) (2026-11-10)
 
 ### Dependency updates
