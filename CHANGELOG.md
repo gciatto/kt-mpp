@@ -1,3 +1,11 @@
+## [6.1.6](https://github.com/gciatto/kt-mpp/compare/6.1.5...6.1.6) (2026-11-27)
+
+### Dependency updates
+
+* **core-deps:** update gradle to v9.9.3 ([81078dc](https://github.com/gciatto/kt-mpp/commit/81078dc903be983f5a3cc0812f193c7b838c2cc8))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.160 ([a242d1a](https://github.com/gciatto/kt-mpp/commit/a242d1a677bd09965f1c7a230648e0ff59caf48d))
+* **deps:** update publishoncentral to v9.3.3 ([20e4051](https://github.com/gciatto/kt-mpp/commit/20e40517938fb1173c1df21f2bef2d94b62ec315))
+
 ## [6.1.5](https://github.com/gciatto/kt-mpp/compare/6.1.4...6.1.5) (2026-11-20)
 
 ### Dependency updates
